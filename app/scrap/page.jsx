@@ -8,158 +8,158 @@ import { useRouter } from "next/navigation";
 
 // ── MASTER DATA ─────────────────────────────────────────────
 const MOULDS = [
-  { id:"MLD-0042", name:"Bumper Front LH",      type:"Injection Mould", plant:"Plant A – Mumbai",     location:"Shop Floor A",   shots:470000, maxShots:500000, assetValue:1850000, bookValue:185000,  age:"6.2 yrs", status:"Active",           lastMaint:"2025-01-15", condition:"Fair" },
-  { id:"MLD-0118", name:"Dashboard Panel RH",   type:"Injection Mould", plant:"Plant B – Pune",       location:"Shop Floor B",   shots:440000, maxShots:500000, assetValue:2200000, bookValue:264000,  age:"5.8 yrs", status:"Active",           lastMaint:"2025-02-01", condition:"Poor" },
-  { id:"MLD-0203", name:"Door Trim Inner LH",   type:"Blow Mould",      plant:"Plant A – Mumbai",     location:"Warehouse 1",    shots:499200, maxShots:500000, assetValue:1600000, bookValue:32000,   age:"7.5 yrs", status:"End of Life",      lastMaint:"2024-12-20", condition:"Critical" },
-  { id:"MLD-0087", name:"Grille Centre",         type:"Die Cast Mould",  plant:"Plant C – Nashik",     location:"Shop Floor A",   shots:395000, maxShots:500000, assetValue:2800000, bookValue:560000,  age:"4.1 yrs", status:"Active",           lastMaint:"2025-01-28", condition:"Good" },
-  { id:"MLD-0311", name:"Headlamp Bezel RH",    type:"Injection Mould", plant:"Plant D – Aurangabad", location:"Maintenance Bay", shots:498500, maxShots:500000, assetValue:1950000, bookValue:48750,   age:"8.0 yrs", status:"Under Maintenance",lastMaint:"2025-02-10", condition:"Poor" },
-  { id:"MLD-0512", name:"A-Pillar Cover RH",    type:"Blow Mould",      plant:"Plant B – Pune",       location:"Shop Floor A",   shots:220000, maxShots:500000, assetValue:1400000, bookValue:700000,  age:"3.2 yrs", status:"Active",           lastMaint:"2025-01-05", condition:"Good" },
-  { id:"MLD-0634", name:"Rear Bumper Assembly", type:"Compression Mould",plant:"Plant A – Mumbai",    location:"Warehouse 2",    shots:495000, maxShots:500000, assetValue:3200000, bookValue:96000,   age:"9.1 yrs", status:"End of Life",      lastMaint:"2024-11-30", condition:"Critical" },
-  { id:"MLD-0721", name:"Console Side Panel",   type:"Injection Mould", plant:"Plant B – Pune",       location:"Maintenance Bay", shots:310000, maxShots:500000, assetValue:1750000, bookValue:437500,  age:"4.8 yrs", status:"Under Maintenance",lastMaint:"2025-02-18", condition:"Fair" },
-  { id:"MLD-0819", name:"Fender Extension LH",  type:"Die Cast Mould",  plant:"Plant C – Nashik",     location:"Shop Floor B",   shots:497800, maxShots:500000, assetValue:2100000, bookValue:42000,   age:"7.8 yrs", status:"End of Life",      lastMaint:"2024-10-12", condition:"Critical" },
-  { id:"MLD-0923", name:"Tailgate Inner Panel", type:"Injection Mould", plant:"Plant A – Mumbai",     location:"Warehouse 1",    shots:492000, maxShots:500000, assetValue:2450000, bookValue:122500,  age:"8.5 yrs", status:"Retired",          lastMaint:"2024-09-05", condition:"Scrap" },
+  { id: "MLD-0042", name: "Bumper Front LH", type: "Injection Mould", plant: "Plant A – Mumbai", location: "Shop Floor A", shots: 470000, maxShots: 500000, assetValue: 1850000, bookValue: 185000, age: "6.2 yrs", status: "Active", lastMaint: "2025-01-15", condition: "Fair" },
+  { id: "MLD-0118", name: "Dashboard Panel RH", type: "Injection Mould", plant: "Plant B – Pune", location: "Shop Floor B", shots: 440000, maxShots: 500000, assetValue: 2200000, bookValue: 264000, age: "5.8 yrs", status: "Active", lastMaint: "2025-02-01", condition: "Poor" },
+  { id: "MLD-0203", name: "Door Trim Inner LH", type: "Blow Mould", plant: "Plant A – Mumbai", location: "Warehouse 1", shots: 499200, maxShots: 500000, assetValue: 1600000, bookValue: 32000, age: "7.5 yrs", status: "End of Life", lastMaint: "2024-12-20", condition: "Critical" },
+  { id: "MLD-0087", name: "Grille Centre", type: "Die Cast Mould", plant: "Plant C – Nashik", location: "Shop Floor A", shots: 395000, maxShots: 500000, assetValue: 2800000, bookValue: 560000, age: "4.1 yrs", status: "Active", lastMaint: "2025-01-28", condition: "Good" },
+  { id: "MLD-0311", name: "Headlamp Bezel RH", type: "Injection Mould", plant: "Plant D – Aurangabad", location: "Maintenance Bay", shots: 498500, maxShots: 500000, assetValue: 1950000, bookValue: 48750, age: "8.0 yrs", status: "Under Maintenance", lastMaint: "2025-02-10", condition: "Poor" },
+  { id: "MLD-0512", name: "A-Pillar Cover RH", type: "Blow Mould", plant: "Plant B – Pune", location: "Shop Floor A", shots: 220000, maxShots: 500000, assetValue: 1400000, bookValue: 700000, age: "3.2 yrs", status: "Active", lastMaint: "2025-01-05", condition: "Good" },
+  { id: "MLD-0634", name: "Rear Bumper Assembly", type: "Compression Mould", plant: "Plant A – Mumbai", location: "Warehouse 2", shots: 495000, maxShots: 500000, assetValue: 3200000, bookValue: 96000, age: "9.1 yrs", status: "End of Life", lastMaint: "2024-11-30", condition: "Critical" },
+  { id: "MLD-0721", name: "Console Side Panel", type: "Injection Mould", plant: "Plant B – Pune", location: "Maintenance Bay", shots: 310000, maxShots: 500000, assetValue: 1750000, bookValue: 437500, age: "4.8 yrs", status: "Under Maintenance", lastMaint: "2025-02-18", condition: "Fair" },
+  { id: "MLD-0819", name: "Fender Extension LH", type: "Die Cast Mould", plant: "Plant C – Nashik", location: "Shop Floor B", shots: 497800, maxShots: 500000, assetValue: 2100000, bookValue: 42000, age: "7.8 yrs", status: "End of Life", lastMaint: "2024-10-12", condition: "Critical" },
+  { id: "MLD-0923", name: "Tailgate Inner Panel", type: "Injection Mould", plant: "Plant A – Mumbai", location: "Warehouse 1", shots: 492000, maxShots: 500000, assetValue: 2450000, bookValue: 122500, age: "8.5 yrs", status: "Retired", lastMaint: "2024-09-05", condition: "Scrap" },
 ];
 
 const SCRAP_REASONS = [
-  { key:"eol",           label:"End of Life – Shot Count Exceeded",    icon:"⏱",  color:"#6b7280" },
-  { key:"irreparable",   label:"Irreparable Damage / Beyond Repair",  icon:"💥", color:"#dc2626" },
-  { key:"obsolete",      label:"Product Obsolescence / Model Change",  icon:"📦", color:"#d97706" },
-  { key:"cost_unviable", label:"Repair Cost Unviable (> 60% Asset)",   icon:"💰", color:"#7c3aed" },
-  { key:"quality_fail",  label:"Consistent Quality Failure / Rejects", icon:"❌", color:"#ef4444" },
-  { key:"tech_upgrade",  label:"Technology Upgrade / Replacement",     icon:"🔄", color:"#0891b2" },
-  { key:"safety",        label:"Safety Hazard / Compliance Issue",     icon:"⚠️",  color:"#b91c1c" },
-  { key:"customer_req",  label:"Customer Requirement / Directive",     icon:"📋", color:"#059669" },
+  { key: "eol", label: "End of Life – Shot Count Exceeded", icon: "⏱", color: "#6b7280" },
+  { key: "irreparable", label: "Irreparable Damage / Beyond Repair", icon: "💥", color: "#dc2626" },
+  { key: "obsolete", label: "Product Obsolescence / Model Change", icon: "📦", color: "#d97706" },
+  { key: "cost_unviable", label: "Repair Cost Unviable (> 60% Asset)", icon: "💰", color: "#7c3aed" },
+  { key: "quality_fail", label: "Consistent Quality Failure / Rejects", icon: "❌", color: "#ef4444" },
+  { key: "tech_upgrade", label: "Technology Upgrade / Replacement", icon: "🔄", color: "#0891b2" },
+  { key: "safety", label: "Safety Hazard / Compliance Issue", icon: "⚠️", color: "#b91c1c" },
+  { key: "customer_req", label: "Customer Requirement / Directive", icon: "📋", color: "#059669" },
 ];
 
 const DISPOSAL_METHODS = [
-  { key:"scrap_sale",     label:"Scrap Sale (Metal Weight)",     icon:"⚖️",  description:"Sell mould as scrap metal by weight" },
-  { key:"auction",        label:"Auction / Tender Sale",         icon:"🔨", description:"Sell via auction or tender process" },
-  { key:"return_customer",label:"Return to Customer / OEM",      icon:"🔙", description:"Return to customer who owns the mould" },
-  { key:"donate",         label:"Donate to Training Institute",  icon:"🎓", description:"Donate for educational purposes" },
-  { key:"destroy",        label:"Destroy / Dismantle",           icon:"🗑", description:"Complete destruction and disposal" },
-  { key:"recycle",        label:"Recycle Components",            icon:"♻️",  description:"Salvage reusable components before scrap" },
+  { key: "scrap_sale", label: "Scrap Sale (Metal Weight)", icon: "⚖️", description: "Sell mould as scrap metal by weight" },
+  { key: "auction", label: "Auction / Tender Sale", icon: "🔨", description: "Sell via auction or tender process" },
+  { key: "return_customer", label: "Return to Customer / OEM", icon: "🔙", description: "Return to customer who owns the mould" },
+  { key: "donate", label: "Donate to Training Institute", icon: "🎓", description: "Donate for educational purposes" },
+  { key: "destroy", label: "Destroy / Dismantle", icon: "🗑", description: "Complete destruction and disposal" },
+  { key: "recycle", label: "Recycle Components", icon: "♻️", description: "Salvage reusable components before scrap" },
 ];
 
 const CONDITION_RATINGS = [
-  { key:"critical", label:"Critical – Unusable",     color:"#dc2626", bg:"#fef2f2", border:"#fca5a5", pct:0  },
-  { key:"poor",     label:"Poor – Major Issues",     color:"#d97706", bg:"#fffbeb", border:"#fcd34d", pct:25 },
-  { key:"fair",     label:"Fair – Needs Repair",     color:"#0891b2", bg:"#e0f2fe", border:"#7dd3fc", pct:50 },
-  { key:"good",     label:"Good – Minor Wear",       color:"#059669", bg:"#f0fdf4", border:"#6ee7b7", pct:75 },
-  { key:"excellent",label:"Excellent – Like New",     color:"#15803d", bg:"#dcfce7", border:"#86efac", pct:100 },
+  { key: "critical", label: "Critical – Unusable", color: "#dc2626", bg: "#fef2f2", border: "#fca5a5", pct: 0 },
+  { key: "poor", label: "Poor – Major Issues", color: "#d97706", bg: "#fffbeb", border: "#fcd34d", pct: 25 },
+  { key: "fair", label: "Fair – Needs Repair", color: "#0891b2", bg: "#e0f2fe", border: "#7dd3fc", pct: 50 },
+  { key: "good", label: "Good – Minor Wear", color: "#059669", bg: "#f0fdf4", border: "#6ee7b7", pct: 75 },
+  { key: "excellent", label: "Excellent – Like New", color: "#15803d", bg: "#dcfce7", border: "#86efac", pct: 100 },
 ];
 
 const EVALUATION_CHECKLIST = [
-  { id:"EV01", task:"Cavity surface condition assessment", category:"Surface",    weight:15 },
-  { id:"EV02", task:"Core & cavity alignment check",       category:"Alignment",  weight:10 },
-  { id:"EV03", task:"Cooling channel integrity test",      category:"Cooling",    weight:10 },
-  { id:"EV04", task:"Hot runner / gate system evaluation",  category:"Gate System", weight:12 },
-  { id:"EV05", task:"Ejector system functionality test",    category:"Ejector",    weight:10 },
-  { id:"EV06", task:"Guide pin & bush wear measurement",   category:"Guide",      weight:8  },
-  { id:"EV07", task:"Dimensional accuracy (CMM report)",    category:"Precision",  weight:15 },
-  { id:"EV08", task:"Trial production quality check",       category:"Quality",    weight:12 },
-  { id:"EV09", task:"Structural integrity & crack test",    category:"Structure",  weight:8  },
+  { id: "EV01", task: "Cavity surface condition assessment", category: "Surface", weight: 15 },
+  { id: "EV02", task: "Core & cavity alignment check", category: "Alignment", weight: 10 },
+  { id: "EV03", task: "Cooling channel integrity test", category: "Cooling", weight: 10 },
+  { id: "EV04", task: "Hot runner / gate system evaluation", category: "Gate System", weight: 12 },
+  { id: "EV05", task: "Ejector system functionality test", category: "Ejector", weight: 10 },
+  { id: "EV06", task: "Guide pin & bush wear measurement", category: "Guide", weight: 8 },
+  { id: "EV07", task: "Dimensional accuracy (CMM report)", category: "Precision", weight: 15 },
+  { id: "EV08", task: "Trial production quality check", category: "Quality", weight: 12 },
+  { id: "EV09", task: "Structural integrity & crack test", category: "Structure", weight: 8 },
 ];
 
 const SCRAP_VENDORS = [
-  { code:"SV-001", name:"Metro Scrap Dealers",         city:"Mumbai",     rate:42, uom:"₹/kg" },
-  { code:"SV-002", name:"National Metal Recyclers",    city:"Pune",       rate:45, uom:"₹/kg" },
-  { code:"SV-003", name:"Green Earth Recycling",       city:"Nashik",     rate:40, uom:"₹/kg" },
-  { code:"SV-004", name:"Industrial Salvage Corp",     city:"Aurangabad", rate:44, uom:"₹/kg" },
+  { code: "SV-001", name: "Metro Scrap Dealers", city: "Mumbai", rate: 42, uom: "₹/kg" },
+  { code: "SV-002", name: "National Metal Recyclers", city: "Pune", rate: 45, uom: "₹/kg" },
+  { code: "SV-003", name: "Green Earth Recycling", city: "Nashik", rate: 40, uom: "₹/kg" },
+  { code: "SV-004", name: "Industrial Salvage Corp", city: "Aurangabad", rate: 44, uom: "₹/kg" },
 ];
 
-const PLANTS = ["Plant A – Mumbai","Plant B – Pune","Plant C – Nashik","Plant D – Aurangabad"];
+const PLANTS = ["Plant A – Mumbai", "Plant B – Pune", "Plant C – Nashik", "Plant D – Aurangabad"];
 
 const USERS = {
-  maker:       { id:"USR-001", name:"Rajesh Kumar",     role:"Maker",         avatar:"RK" },
-  reviewer:    { id:"USR-003", name:"Priya Mehta",      role:"Technical Reviewer", avatar:"PM" },
-  approver:    { id:"USR-002", name:"Sunita Rao",       role:"Approver",      avatar:"SR" },
-  finance:     { id:"USR-004", name:"Amit Desai",       role:"Finance Head",  avatar:"AD" },
+  maker: { id: "USR-001", name: "Rajesh Kumar", role: "Maker", avatar: "RK" },
+  reviewer: { id: "USR-003", name: "Priya Mehta", role: "Technical Reviewer", avatar: "PM" },
+  approver: { id: "USR-002", name: "Sunita Rao", role: "Approver", avatar: "SR" },
+  finance: { id: "USR-004", name: "Amit Desai", role: "Finance Head", avatar: "AD" },
 };
 
 const NAV_ITEMS = [
-  { label:"Dashboard",           icon:"📊", route:"/dashboard"       },
-  { label:"Mould Registry",      icon:"🔩", route:"/mould-registry"  },
-  { label:"Maintenance",         icon:"🔧", route:"/maintenance"     },
-  { label:"Transfers & Challan", icon:"🔄", route:"/challan"         },
-  {label:"Mould Return",        icon:"📥", route:"/return" },
-  {label:"Depreciation",        icon:"📉", route:"/depreciation"},
-  { label:"Scrap / Dispose",     icon:"🗑", route:"/scrap", active:true },
-  { label:"Masters",             icon:"🗂", route:"/masters"         },
-  { label:"User Management",     icon:"👥", route:"/user-management" },
-  { label:"Reports",             icon:"📈", route:"/reports"         },
+  { label: "Dashboard", icon: "📊", route: "/dashboard" },
+  { label: "User Management", icon: "👥", route: "/user-management" },
+  { label: "Masters", icon: "🗂", route: "/masters" },
+  { label: "Mould Registry", icon: "🔩", route: "/mould-registry" },
+  { label: "Transfers & Challan", icon: "🔄", route: "/challan" },
+  { label: "Mould Return", icon: "📥", route: "/return" },
+  { label: "Depreciation", icon: "📉", route: "/depreciation" },
+  { label: "Maintenance", icon: "🔧", route: "/maintenance" },
+  { label: "Scrap / Dispose", icon: "🗑", route: "/scrap", active: true },
+  { label: "Reports", icon: "📈", route: "/reports" },
 ];
 
 // ── Counters ────────────────────────────────────────────────
 let scrapCounter = 18;
-const nextScrapId = () => `SCR-2025-${String(++scrapCounter).padStart(4,"0")}`;
+const nextScrapId = () => `SCR-2025-${String(++scrapCounter).padStart(4, "0")}`;
 
 // ── SEED SCRAP RECORDS ──────────────────────────────────────
 const SEED_RECORDS = [
   {
-    id:"SCR-2025-0016", mouldId:"MLD-0203", mouldName:"Door Trim Inner LH", mouldType:"Blow Mould", plant:"Plant A – Mumbai",
-    scrapReason:"eol", reasonDetail:"Shot count 499,200 exceeds guaranteed life of 500,000. Cavity wear beyond acceptable limits. Multiple repair attempts exhausted.",
-    conditionRating:"critical",
-    evaluationScore:18, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({...c,score:2,remark:"Failed"})),
-    disposalMethod:"scrap_sale", scrapVendor:"SV-001", scrapWeight:4200, scrapRate:42, estimatedScrapValue:176400,
-    originalAssetValue:1600000, currentBookValue:32000, accumulatedDepreciation:1568000, netLoss:0, salvageValue:176400,
-    mouldWeight:4200, mouldMaterial:"Aluminium",
-    lastMaintenanceDate:"2024-12-20", totalMaintenanceCost:385000, lifetimeShots:499200, maxShots:500000,
-    requestedBy:USERS.maker, reviewedBy:USERS.reviewer, approvedBy:USERS.approver, financeApprovedBy:USERS.finance,
-    requestDate:"2025-02-20", reviewDate:"2025-02-22", approvalDate:"2025-02-24", financeApprovalDate:"2025-02-25", disposalDate:"2025-03-01",
-    gatePassNo:"GP-2025-0312", invoiceNo:"INV-SCR-2025-0089", ewayBillNo:"EWB-2025-44556",
-    certificateOfDestruction:"", environmentalClearance:"ENV-CLR-2025-044",
-    beforeImages:[], afterImages:[], documents:[],
-    remarks:"End of life. All repair options exhausted. Scrap sale to Metro Scrap Dealers completed.",
-    status:"Disposed",
-    timeline:[
-      { event:"Scrap Request Created",   by:"Rajesh Kumar",  at:"20 Feb 2025, 10:00 AM", note:"EOL – 499,200 shots completed" },
-      { event:"Technical Review Started", by:"Priya Mehta",   at:"21 Feb 2025, 09:30 AM", note:"Evaluation checklist initiated" },
-      { event:"Review Completed",         by:"Priya Mehta",   at:"22 Feb 2025, 04:00 PM", note:"Score: 18/100 – Recommended for scrap" },
-      { event:"Management Approval",      by:"Sunita Rao",    at:"24 Feb 2025, 11:00 AM", note:"Approved for disposal" },
-      { event:"Finance Approval",         by:"Amit Desai",    at:"25 Feb 2025, 02:00 PM", note:"Asset write-off approved" },
-      { event:"Disposal Completed",       by:"Rajesh Kumar",  at:"01 Mar 2025, 03:30 PM", note:"Scrap sale completed. GP-2025-0312 issued" },
+    id: "SCR-2025-0016", mouldId: "MLD-0203", mouldName: "Door Trim Inner LH", mouldType: "Blow Mould", plant: "Plant A – Mumbai",
+    scrapReason: "eol", reasonDetail: "Shot count 499,200 exceeds guaranteed life of 500,000. Cavity wear beyond acceptable limits. Multiple repair attempts exhausted.",
+    conditionRating: "critical",
+    evaluationScore: 18, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 2, remark: "Failed" })),
+    disposalMethod: "scrap_sale", scrapVendor: "SV-001", scrapWeight: 4200, scrapRate: 42, estimatedScrapValue: 176400,
+    originalAssetValue: 1600000, currentBookValue: 32000, accumulatedDepreciation: 1568000, netLoss: 0, salvageValue: 176400,
+    mouldWeight: 4200, mouldMaterial: "Aluminium",
+    lastMaintenanceDate: "2024-12-20", totalMaintenanceCost: 385000, lifetimeShots: 499200, maxShots: 500000,
+    requestedBy: USERS.maker, reviewedBy: USERS.reviewer, approvedBy: USERS.approver, financeApprovedBy: USERS.finance,
+    requestDate: "2025-02-20", reviewDate: "2025-02-22", approvalDate: "2025-02-24", financeApprovalDate: "2025-02-25", disposalDate: "2025-03-01",
+    gatePassNo: "GP-2025-0312", invoiceNo: "INV-SCR-2025-0089", ewayBillNo: "EWB-2025-44556",
+    certificateOfDestruction: "", environmentalClearance: "ENV-CLR-2025-044",
+    beforeImages: [], afterImages: [], documents: [],
+    remarks: "End of life. All repair options exhausted. Scrap sale to Metro Scrap Dealers completed.",
+    status: "Disposed",
+    timeline: [
+      { event: "Scrap Request Created", by: "Rajesh Kumar", at: "20 Feb 2025, 10:00 AM", note: "EOL – 499,200 shots completed" },
+      { event: "Technical Review Started", by: "Priya Mehta", at: "21 Feb 2025, 09:30 AM", note: "Evaluation checklist initiated" },
+      { event: "Review Completed", by: "Priya Mehta", at: "22 Feb 2025, 04:00 PM", note: "Score: 18/100 – Recommended for scrap" },
+      { event: "Management Approval", by: "Sunita Rao", at: "24 Feb 2025, 11:00 AM", note: "Approved for disposal" },
+      { event: "Finance Approval", by: "Amit Desai", at: "25 Feb 2025, 02:00 PM", note: "Asset write-off approved" },
+      { event: "Disposal Completed", by: "Rajesh Kumar", at: "01 Mar 2025, 03:30 PM", note: "Scrap sale completed. GP-2025-0312 issued" },
     ]
   },
   {
-    id:"SCR-2025-0017", mouldId:"MLD-0634", mouldName:"Rear Bumper Assembly", mouldType:"Compression Mould", plant:"Plant A – Mumbai",
-    scrapReason:"irreparable", reasonDetail:"Major structural crack in cavity block (150mm+). Cooling channel corrosion severe. Repair estimate ₹22,00,000 exceeds 60% of asset value.",
-    conditionRating:"critical",
-    evaluationScore:12, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({...c,score:1,remark:"Critical"})),
-    disposalMethod:"recycle", scrapVendor:"SV-002", scrapWeight:6800, scrapRate:45, estimatedScrapValue:306000,
-    originalAssetValue:3200000, currentBookValue:96000, accumulatedDepreciation:3104000, netLoss:0, salvageValue:306000,
-    mouldWeight:6800, mouldMaterial:"P20 Steel",
-    lastMaintenanceDate:"2024-11-30", totalMaintenanceCost:620000, lifetimeShots:495000, maxShots:500000,
-    requestedBy:USERS.maker, reviewedBy:USERS.reviewer, approvedBy:null, financeApprovedBy:null,
-    requestDate:"2025-03-02", reviewDate:"2025-03-04", approvalDate:"", financeApprovalDate:"", disposalDate:"",
-    gatePassNo:"", invoiceNo:"", ewayBillNo:"",
-    certificateOfDestruction:"", environmentalClearance:"",
-    beforeImages:[], afterImages:[], documents:[],
-    remarks:"Crack propagation beyond repair. Components to be salvaged before scrap.",
-    status:"Pending Approval",
-    timeline:[
-      { event:"Scrap Request Created",   by:"Rajesh Kumar",  at:"02 Mar 2025, 09:00 AM", note:"Irreparable damage – structural crack" },
-      { event:"Technical Review Started", by:"Priya Mehta",   at:"03 Mar 2025, 10:00 AM", note:"On-site evaluation with CMM" },
-      { event:"Review Completed",         by:"Priya Mehta",   at:"04 Mar 2025, 03:00 PM", note:"Score: 12/100 – Scrap recommended" },
+    id: "SCR-2025-0017", mouldId: "MLD-0634", mouldName: "Rear Bumper Assembly", mouldType: "Compression Mould", plant: "Plant A – Mumbai",
+    scrapReason: "irreparable", reasonDetail: "Major structural crack in cavity block (150mm+). Cooling channel corrosion severe. Repair estimate ₹22,00,000 exceeds 60% of asset value.",
+    conditionRating: "critical",
+    evaluationScore: 12, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 1, remark: "Critical" })),
+    disposalMethod: "recycle", scrapVendor: "SV-002", scrapWeight: 6800, scrapRate: 45, estimatedScrapValue: 306000,
+    originalAssetValue: 3200000, currentBookValue: 96000, accumulatedDepreciation: 3104000, netLoss: 0, salvageValue: 306000,
+    mouldWeight: 6800, mouldMaterial: "P20 Steel",
+    lastMaintenanceDate: "2024-11-30", totalMaintenanceCost: 620000, lifetimeShots: 495000, maxShots: 500000,
+    requestedBy: USERS.maker, reviewedBy: USERS.reviewer, approvedBy: null, financeApprovedBy: null,
+    requestDate: "2025-03-02", reviewDate: "2025-03-04", approvalDate: "", financeApprovalDate: "", disposalDate: "",
+    gatePassNo: "", invoiceNo: "", ewayBillNo: "",
+    certificateOfDestruction: "", environmentalClearance: "",
+    beforeImages: [], afterImages: [], documents: [],
+    remarks: "Crack propagation beyond repair. Components to be salvaged before scrap.",
+    status: "Pending Approval",
+    timeline: [
+      { event: "Scrap Request Created", by: "Rajesh Kumar", at: "02 Mar 2025, 09:00 AM", note: "Irreparable damage – structural crack" },
+      { event: "Technical Review Started", by: "Priya Mehta", at: "03 Mar 2025, 10:00 AM", note: "On-site evaluation with CMM" },
+      { event: "Review Completed", by: "Priya Mehta", at: "04 Mar 2025, 03:00 PM", note: "Score: 12/100 – Scrap recommended" },
     ]
   },
   {
-    id:"SCR-2025-0018", mouldId:"MLD-0819", mouldName:"Fender Extension LH", mouldType:"Die Cast Mould", plant:"Plant C – Nashik",
-    scrapReason:"obsolete", reasonDetail:"Vehicle model XM-200 discontinued. No alternate usage identified. Customer confirmed no further requirement.",
-    conditionRating:"poor",
-    evaluationScore:35, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({...c,score:4,remark:"Moderate wear"})),
-    disposalMethod:"return_customer", scrapVendor:"", scrapWeight:5100, scrapRate:0, estimatedScrapValue:0,
-    originalAssetValue:2100000, currentBookValue:42000, accumulatedDepreciation:2058000, netLoss:42000, salvageValue:0,
-    mouldWeight:5100, mouldMaterial:"H13 Steel",
-    lastMaintenanceDate:"2024-10-12", totalMaintenanceCost:290000, lifetimeShots:497800, maxShots:500000,
-    requestedBy:USERS.maker, reviewedBy:null, approvedBy:null, financeApprovedBy:null,
-    requestDate:"2025-03-05", reviewDate:"", approvalDate:"", financeApprovalDate:"", disposalDate:"",
-    gatePassNo:"", invoiceNo:"", ewayBillNo:"",
-    certificateOfDestruction:"", environmentalClearance:"",
-    beforeImages:[], afterImages:[], documents:[],
-    remarks:"Customer (OEM) confirmed model discontinuation. Awaiting return logistics.",
-    status:"Under Review",
-    timeline:[
-      { event:"Scrap Request Created", by:"Rajesh Kumar", at:"05 Mar 2025, 11:30 AM", note:"Product obsolescence – model XM-200 discontinued" },
+    id: "SCR-2025-0018", mouldId: "MLD-0819", mouldName: "Fender Extension LH", mouldType: "Die Cast Mould", plant: "Plant C – Nashik",
+    scrapReason: "obsolete", reasonDetail: "Vehicle model XM-200 discontinued. No alternate usage identified. Customer confirmed no further requirement.",
+    conditionRating: "poor",
+    evaluationScore: 35, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 4, remark: "Moderate wear" })),
+    disposalMethod: "return_customer", scrapVendor: "", scrapWeight: 5100, scrapRate: 0, estimatedScrapValue: 0,
+    originalAssetValue: 2100000, currentBookValue: 42000, accumulatedDepreciation: 2058000, netLoss: 42000, salvageValue: 0,
+    mouldWeight: 5100, mouldMaterial: "H13 Steel",
+    lastMaintenanceDate: "2024-10-12", totalMaintenanceCost: 290000, lifetimeShots: 497800, maxShots: 500000,
+    requestedBy: USERS.maker, reviewedBy: null, approvedBy: null, financeApprovedBy: null,
+    requestDate: "2025-03-05", reviewDate: "", approvalDate: "", financeApprovalDate: "", disposalDate: "",
+    gatePassNo: "", invoiceNo: "", ewayBillNo: "",
+    certificateOfDestruction: "", environmentalClearance: "",
+    beforeImages: [], afterImages: [], documents: [],
+    remarks: "Customer (OEM) confirmed model discontinuation. Awaiting return logistics.",
+    status: "Under Review",
+    timeline: [
+      { event: "Scrap Request Created", by: "Rajesh Kumar", at: "05 Mar 2025, 11:30 AM", note: "Product obsolescence – model XM-200 discontinued" },
     ]
   },
 ];
@@ -410,27 +410,27 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 // ── HELPERS ─────────────────────────────────────────────────
 function statusBadge(s) {
   const map = {
-    "Under Review":      { bg:"#e0f2fe", color:"#0891b2", border:"#7dd3fc" },
-    "Pending Approval":  { bg:"#fffbeb", color:"#d97706", border:"#fcd34d" },
-    "Approved":          { bg:"#f0fdf4", color:"#059669", border:"#6ee7b7" },
-    "Disposed":          { bg:"#f3f4f6", color:"#6b7280", border:"#d1d5db" },
-    "Rejected":          { bg:"#fef2f2", color:"#dc2626", border:"#fca5a5" },
-    "Disposal In Progress":{ bg:"#f5f3ff", color:"#7c3aed", border:"#c4b5fd" },
+    "Under Review": { bg: "#e0f2fe", color: "#0891b2", border: "#7dd3fc" },
+    "Pending Approval": { bg: "#fffbeb", color: "#d97706", border: "#fcd34d" },
+    "Approved": { bg: "#f0fdf4", color: "#059669", border: "#6ee7b7" },
+    "Disposed": { bg: "#f3f4f6", color: "#6b7280", border: "#d1d5db" },
+    "Rejected": { bg: "#fef2f2", color: "#dc2626", border: "#fca5a5" },
+    "Disposal In Progress": { bg: "#f5f3ff", color: "#7c3aed", border: "#c4b5fd" },
   };
   const m = map[s] || map["Under Review"];
-  return <span className="badge" style={{ background:m.bg, color:m.color, border:`1px solid ${m.border}` }}><span className="badge-dot" style={{ background:m.color }}/>{s}</span>;
+  return <span className="badge" style={{ background: m.bg, color: m.color, border: `1px solid ${m.border}` }}><span className="badge-dot" style={{ background: m.color }} />{s}</span>;
 }
 
 function conditionBadge(c) {
   const cr = CONDITION_RATINGS.find(x => x.key === c);
   if (!cr) return null;
-  return <span className="badge" style={{ background:cr.bg, color:cr.color, border:`1px solid ${cr.border}` }}>{cr.label.split(" – ")[0]}</span>;
+  return <span className="badge" style={{ background: cr.bg, color: cr.color, border: `1px solid ${cr.border}` }}>{cr.label.split(" – ")[0]}</span>;
 }
 
 function reasonBadge(r) {
   const sr = SCRAP_REASONS.find(x => x.key === r);
   if (!sr) return null;
-  return <span className="badge" style={{ background:"#fef2f2", color:sr.color, border:`1px solid #fca5a5` }}>{sr.icon} {sr.label.split(" – ")[0]}</span>;
+  return <span className="badge" style={{ background: "#fef2f2", color: sr.color, border: `1px solid #fca5a5` }}>{sr.icon} {sr.label.split(" – ")[0]}</span>;
 }
 
 function getScoreColor(score) {
@@ -440,7 +440,7 @@ function getScoreColor(score) {
   return "#059669";
 }
 
-function initials(name) { return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2); }
+function initials(name) { return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2); }
 
 // ══════════════════════════════════════════════════════════════
 //  COMPONENT
@@ -468,17 +468,17 @@ export default function MouldScrap() {
 
   // ── Form state ──
   const emptyForm = {
-    mouldId:"", scrapReason:"", reasonDetail:"",
-    conditionRating:"", evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({...c, score:0, remark:""})),
-    disposalMethod:"", scrapVendor:"", scrapWeight:"", scrapRate:"",
-    remarks:"",
-    gatePassNo:"", invoiceNo:"", ewayBillNo:"",
-    environmentalClearance:"",
+    mouldId: "", scrapReason: "", reasonDetail: "",
+    conditionRating: "", evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 0, remark: "" })),
+    disposalMethod: "", scrapVendor: "", scrapWeight: "", scrapRate: "",
+    remarks: "",
+    gatePassNo: "", invoiceNo: "", ewayBillNo: "",
+    environmentalClearance: "",
   };
-  const [form, setForm] = useState({...emptyForm});
-  const set = (k, v) => setForm(f => ({...f, [k]:v}));
+  const [form, setForm] = useState({ ...emptyForm });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  const showToast = msg => { setToast(msg); setTimeout(()=>setToast(null), 3500); };
+  const showToast = msg => { setToast(msg); setTimeout(() => setToast(null), 3500); };
 
   const selectedMould = MOULDS.find(m => m.id === form.mouldId);
 
@@ -497,7 +497,7 @@ export default function MouldScrap() {
   const filtered = records.filter(r => {
     if (activeTab !== "all") {
       if (activeTab === "disposed" && r.status !== "Disposed") return false;
-      if (activeTab === "pending" && !["Under Review","Pending Approval"].includes(r.status)) return false;
+      if (activeTab === "pending" && !["Under Review", "Pending Approval"].includes(r.status)) return false;
       if (activeTab === "approved" && r.status !== "Approved" && r.status !== "Disposal In Progress") return false;
     }
     if (filterStatus !== "all" && r.status !== filterStatus) return false;
@@ -511,10 +511,10 @@ export default function MouldScrap() {
   // ── KPIs ──
   const kpis = {
     total: records.length,
-    pending: records.filter(r => ["Under Review","Pending Approval"].includes(r.status)).length,
+    pending: records.filter(r => ["Under Review", "Pending Approval"].includes(r.status)).length,
     disposed: records.filter(r => r.status === "Disposed").length,
-    totalAssetValue: records.reduce((s,r) => s + (r.originalAssetValue || 0), 0),
-    totalSalvage: records.reduce((s,r) => s + (r.salvageValue || r.estimatedScrapValue || 0), 0),
+    totalAssetValue: records.reduce((s, r) => s + (r.originalAssetValue || 0), 0),
+    totalSalvage: records.reduce((s, r) => s + (r.salvageValue || r.estimatedScrapValue || 0), 0),
   };
 
   // ── Validate ──
@@ -568,20 +568,20 @@ export default function MouldScrap() {
       totalMaintenanceCost: 0,
       lifetimeShots: mould?.shots || 0,
       maxShots: mould?.maxShots || 0,
-      requestedBy: USERS.maker, reviewedBy:null, approvedBy:null, financeApprovedBy:null,
-      requestDate: new Date().toISOString().slice(0,10),
-      reviewDate:"", approvalDate:"", financeApprovalDate:"", disposalDate:"",
-      gatePassNo:"", invoiceNo:"", ewayBillNo:"",
-      certificateOfDestruction:"", environmentalClearance: form.environmentalClearance,
-      beforeImages:[], afterImages:[], documents:[],
+      requestedBy: USERS.maker, reviewedBy: null, approvedBy: null, financeApprovedBy: null,
+      requestDate: new Date().toISOString().slice(0, 10),
+      reviewDate: "", approvalDate: "", financeApprovalDate: "", disposalDate: "",
+      gatePassNo: "", invoiceNo: "", ewayBillNo: "",
+      certificateOfDestruction: "", environmentalClearance: form.environmentalClearance,
+      beforeImages: [], afterImages: [], documents: [],
       remarks: form.remarks,
-      status:"Under Review",
-      timeline:[
-        { event:"Scrap Request Created", by:USERS.maker.name, at:new Date().toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`${SCRAP_REASONS.find(r=>r.key===form.scrapReason)?.label || ""}` },
+      status: "Under Review",
+      timeline: [
+        { event: "Scrap Request Created", by: USERS.maker.name, at: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }), note: `${SCRAP_REASONS.find(r => r.key === form.scrapReason)?.label || ""}` },
       ]
     };
     setRecords(prev => [newRec, ...prev]);
-    setForm({...emptyForm});
+    setForm({ ...emptyForm });
     setCreateStep(1);
     setCurrentView("list");
     showToast(`🗑 Scrap request ${newRec.id} created for ${newRec.mouldId}`);
@@ -590,23 +590,23 @@ export default function MouldScrap() {
   // ── Update evaluation score ──
   const setEvalScore = (idx, score) => {
     const items = [...form.evaluationChecklist];
-    items[idx] = {...items[idx], score};
+    items[idx] = { ...items[idx], score };
     set("evaluationChecklist", items);
   };
   const setEvalRemark = (idx, remark) => {
     const items = [...form.evaluationChecklist];
-    items[idx] = {...items[idx], remark};
+    items[idx] = { ...items[idx], remark };
     set("evaluationChecklist", items);
   };
 
   // ── Workflow step state for detail view ──
   const getWorkflowSteps = (rec) => {
     const steps = [
-      { label:"Request", sub:"Maker", icon:"📋" },
-      { label:"Review", sub:"Technical", icon:"🔍" },
-      { label:"Approval", sub:"Manager", icon:"✅" },
-      { label:"Finance", sub:"Finance Head", icon:"💰" },
-      { label:"Disposal", sub:"Execution", icon:"🗑" },
+      { label: "Request", sub: "Maker", icon: "📋" },
+      { label: "Review", sub: "Technical", icon: "🔍" },
+      { label: "Approval", sub: "Manager", icon: "✅" },
+      { label: "Finance", sub: "Finance Head", icon: "💰" },
+      { label: "Disposal", sub: "Execution", icon: "🗑" },
     ];
     const statusMap = {
       "Under Review": 1,
@@ -637,7 +637,7 @@ export default function MouldScrap() {
           <div className="sb-brand">
             <div className="sb-brand-row">
               <div className="sb-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9"/><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6"/><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6"/><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9"/><circle cx="10" cy="10" r="1.8" fill="white"/></svg>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><circle cx="10" cy="10" r="1.8" fill="white" /></svg>
               </div>
               <div>
                 <div className="sb-name">MouldSys <span>Enterprise</span></div>
@@ -648,7 +648,7 @@ export default function MouldScrap() {
           <div className="sb-nav">
             <div className="sb-section">Main</div>
             {NAV_ITEMS.map(n => (
-              <div key={n.label} className={`sb-item${n.active?" active":""}`}
+              <div key={n.label} className={`sb-item${n.active ? " active" : ""}`}
                 onClick={() => router.push(n.route)}><span>{n.icon}</span>{n.label}</div>
             ))}
           </div>
@@ -666,14 +666,14 @@ export default function MouldScrap() {
             <div className="topbar-left">
               <div className="topbar-breadcrumb">
                 <span>Modules</span>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="#d1d5db" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="#d1d5db" strokeWidth="1.5" strokeLinecap="round" /></svg>
               </div>
               <div className="topbar-title">Mould Scrap & Disposal</div>
             </div>
             <div className="topbar-right">
               <div className="notif-btn">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v2l-1 2h12l-1-2V7a5 5 0 00-5-5zM6.5 13.5a1.5 1.5 0 003 0" stroke="#6b7280" strokeWidth="1.4" strokeLinecap="round"/></svg>
-                <div className="notif-dot"/>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v2l-1 2h12l-1-2V7a5 5 0 00-5-5zM6.5 13.5a1.5 1.5 0 003 0" stroke="#6b7280" strokeWidth="1.4" strokeLinecap="round" /></svg>
+                <div className="notif-dot" />
               </div>
               <div className="tb-user-pill"><div className="tb-avatar">{userInitials}</div><span className="tb-uname">{user.name}</span></div>
             </div>
@@ -689,8 +689,8 @@ export default function MouldScrap() {
                   <div className="page-hdr-sub">Evaluate, approve and track mould scrap requests with full asset write-off</div>
                 </div>
                 <div className="page-hdr-right">
-                  <button className="btn btn-danger" onClick={() => { setForm({...emptyForm}); setErrors({}); setCreateStep(1); setCurrentView("create"); }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
+                  <button className="btn btn-danger" onClick={() => { setForm({ ...emptyForm }); setErrors({}); setCreateStep(1); setCurrentView("create"); }}>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round" /></svg>
                     New Scrap Request
                   </button>
                 </div>
@@ -704,70 +704,70 @@ export default function MouldScrap() {
                 </div>
                 <div className="kpi-card">
                   <div className="kpi-label">Pending Review</div>
-                  <div className="kpi-value" style={{color:"#d97706"}}>{kpis.pending}</div>
+                  <div className="kpi-value" style={{ color: "#d97706" }}>{kpis.pending}</div>
                   <div className="kpi-sub">Awaiting action</div>
                 </div>
                 <div className="kpi-card">
                   <div className="kpi-label">Disposed</div>
-                  <div className="kpi-value" style={{color:"#6b7280"}}>{kpis.disposed}</div>
+                  <div className="kpi-value" style={{ color: "#6b7280" }}>{kpis.disposed}</div>
                   <div className="kpi-sub">Completed</div>
                 </div>
                 <div className="kpi-card">
                   <div className="kpi-label">Asset Value</div>
-                  <div className="kpi-value">₹{(kpis.totalAssetValue/100000).toFixed(1)}L</div>
+                  <div className="kpi-value">₹{(kpis.totalAssetValue / 100000).toFixed(1)}L</div>
                   <div className="kpi-sub">Original value</div>
                 </div>
                 <div className="kpi-card">
                   <div className="kpi-label">Salvage Recovered</div>
-                  <div className="kpi-value" style={{color:"#059669"}}>₹{(kpis.totalSalvage/1000).toFixed(1)}K</div>
+                  <div className="kpi-value" style={{ color: "#059669" }}>₹{(kpis.totalSalvage / 1000).toFixed(1)}K</div>
                   <div className="kpi-sub">Scrap sale value</div>
                 </div>
               </div>
 
               <div className="tab-strip">
-                {[{k:"all",l:"All Requests"},{k:"pending",l:"Pending"},{k:"approved",l:"Approved"},{k:"disposed",l:"Disposed"}].map(t => (
-                  <button key={t.k} className={`tab-btn${activeTab===t.k?" active":""}`} onClick={()=>setActiveTab(t.k)}>{t.l}</button>
+                {[{ k: "all", l: "All Requests" }, { k: "pending", l: "Pending" }, { k: "approved", l: "Approved" }, { k: "disposed", l: "Disposed" }].map(t => (
+                  <button key={t.k} className={`tab-btn${activeTab === t.k ? " active" : ""}`} onClick={() => setActiveTab(t.k)}>{t.l}</button>
                 ))}
               </div>
 
               <div className="filter-bar">
                 <div className="search-box">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#9ca3af" strokeWidth="1.5"/><path d="M10 10l3 3" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                  <input placeholder="Search by Scrap ID, Mould ID or Name…" value={search} onChange={e=>setSearch(e.target.value)}/>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#9ca3af" strokeWidth="1.5" /><path d="M10 10l3 3" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                  <input placeholder="Search by Scrap ID, Mould ID or Name…" value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
-                {["all","Under Review","Pending Approval","Approved","Disposed","Rejected"].map(s => (
-                  <button key={s} className={`filter-pill${filterStatus===s?" active":""}`} onClick={()=>setFilterStatus(s)}>{s==="all"?"All Status":s}</button>
+                {["all", "Under Review", "Pending Approval", "Approved", "Disposed", "Rejected"].map(s => (
+                  <button key={s} className={`filter-pill${filterStatus === s ? " active" : ""}`} onClick={() => setFilterStatus(s)}>{s === "all" ? "All Status" : s}</button>
                 ))}
               </div>
 
-              <div className="card" style={{overflow:"auto"}}>
+              <div className="card" style={{ overflow: "auto" }}>
                 <table className="tbl">
                   <thead><tr>
                     <th>Scrap ID</th><th>Mould</th><th>Reason</th><th>Condition</th><th>Eval Score</th><th>Book Value</th><th>Salvage</th><th>Status</th><th>Action</th>
                   </tr></thead>
                   <tbody>
-                    {filtered.length === 0 && <tr><td colSpan={9} style={{textAlign:"center",color:"#9ca3af",padding:40}}>No scrap records found</td></tr>}
+                    {filtered.length === 0 && <tr><td colSpan={9} style={{ textAlign: "center", color: "#9ca3af", padding: 40 }}>No scrap records found</td></tr>}
                     {filtered.map(r => (
                       <tr key={r.id}>
-                        <td><span className="tbl-link" onClick={()=>{setSelectedRecord(r);setCurrentView("detail")}}>{r.id}</span></td>
+                        <td><span className="tbl-link" onClick={() => { setSelectedRecord(r); setCurrentView("detail") }}>{r.id}</span></td>
                         <td>
-                          <div style={{fontWeight:600}}>{r.mouldId}</div>
-                          <div style={{fontSize:11,color:"#6b7280"}}>{r.mouldName}</div>
+                          <div style={{ fontWeight: 600 }}>{r.mouldId}</div>
+                          <div style={{ fontSize: 11, color: "#6b7280" }}>{r.mouldName}</div>
                         </td>
                         <td>{reasonBadge(r.scrapReason)}</td>
                         <td>{conditionBadge(r.conditionRating)}</td>
                         <td>
-                          <div style={{display:"flex",alignItems:"center",gap:8}}>
-                            <div style={{width:50,height:6,background:"#f3f4f6",borderRadius:3,overflow:"hidden"}}>
-                              <div style={{height:"100%",width:`${r.evaluationScore}%`,background:getScoreColor(r.evaluationScore),borderRadius:3}}/>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ width: 50, height: 6, background: "#f3f4f6", borderRadius: 3, overflow: "hidden" }}>
+                              <div style={{ height: "100%", width: `${r.evaluationScore}%`, background: getScoreColor(r.evaluationScore), borderRadius: 3 }} />
                             </div>
-                            <span style={{fontSize:12,fontWeight:700,color:getScoreColor(r.evaluationScore)}}>{r.evaluationScore}%</span>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: getScoreColor(r.evaluationScore) }}>{r.evaluationScore}%</span>
                           </div>
                         </td>
-                        <td style={{fontWeight:600}}>₹{(r.currentBookValue/1000).toFixed(0)}K</td>
-                        <td style={{fontWeight:600,color:"#059669"}}>₹{((r.salvageValue||r.estimatedScrapValue)/1000).toFixed(0)}K</td>
+                        <td style={{ fontWeight: 600 }}>₹{(r.currentBookValue / 1000).toFixed(0)}K</td>
+                        <td style={{ fontWeight: 600, color: "#059669" }}>₹{((r.salvageValue || r.estimatedScrapValue) / 1000).toFixed(0)}K</td>
                         <td>{statusBadge(r.status)}</td>
-                        <td><button className="btn btn-outline btn-xs" onClick={()=>{setSelectedRecord(r);setCurrentView("detail")}}>View</button></td>
+                        <td><button className="btn btn-outline btn-xs" onClick={() => { setSelectedRecord(r); setCurrentView("detail") }}>View</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -780,27 +780,29 @@ export default function MouldScrap() {
               <div className="page-hdr">
                 <div>
                   <div className="page-hdr-title">New Scrap Request</div>
-                  <div className="page-hdr-sub">Step {createStep} of 4 — {["Mould & Reason","Technical Evaluation","Disposal & Finance","Review & Submit"][createStep-1]}</div>
+                  <div className="page-hdr-sub">Step {createStep} of 4 — {["Mould & Reason", "Technical Evaluation", "Disposal & Finance", "Review & Submit"][createStep - 1]}</div>
                 </div>
                 <div className="page-hdr-right">
-                  <button className="btn btn-ghost" onClick={()=>{setCurrentView("list");setForm({...emptyForm});setCreateStep(1);setErrors({})}}>← Back to List</button>
+                  <button className="btn btn-ghost" onClick={() => { setCurrentView("list"); setForm({ ...emptyForm }); setCreateStep(1); setErrors({}) }}>← Back to List</button>
                 </div>
               </div>
 
               {/* Step indicator */}
-              <div style={{display:"flex",alignItems:"center",gap:0,marginBottom:22}}>
-                {["Mould & Reason","Evaluation","Disposal","Submit"].map((s,i) => (
-                  <div key={i} style={{display:"flex",alignItems:"center",flex:i<3?1:"initial"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <div style={{width:32,height:32,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,
-                        background:i+1<createStep?"linear-gradient(135deg,#059669,#047857)":i+1===createStep?"linear-gradient(135deg,#dc2626,#b91c1c)":"#f3f4f6",
-                        color:i+1<=createStep?"#fff":"#9ca3af",border:i+1>createStep?"1.5px solid #e5e7eb":"none",
-                        boxShadow:i+1===createStep?"0 3px 12px rgba(220,38,38,.35)":"none"}}>
-                        {i+1<createStep ? <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg> : i+1}
+              <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 22 }}>
+                {["Mould & Reason", "Evaluation", "Disposal", "Submit"].map((s, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", flex: i < 3 ? 1 : "initial" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{
+                        width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800,
+                        background: i + 1 < createStep ? "linear-gradient(135deg,#059669,#047857)" : i + 1 === createStep ? "linear-gradient(135deg,#dc2626,#b91c1c)" : "#f3f4f6",
+                        color: i + 1 <= createStep ? "#fff" : "#9ca3af", border: i + 1 > createStep ? "1.5px solid #e5e7eb" : "none",
+                        boxShadow: i + 1 === createStep ? "0 3px 12px rgba(220,38,38,.35)" : "none"
+                      }}>
+                        {i + 1 < createStep ? <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg> : i + 1}
                       </div>
-                      <span style={{fontSize:12,fontWeight:i+1===createStep?700:500,color:i+1<=createStep?"#111827":"#9ca3af"}}>{s}</span>
+                      <span style={{ fontSize: 12, fontWeight: i + 1 === createStep ? 700 : 500, color: i + 1 <= createStep ? "#111827" : "#9ca3af" }}>{s}</span>
                     </div>
-                    {i<3 && <div style={{flex:1,height:2,background:i+1<createStep?"#059669":"#e5e7eb",margin:"0 8px",minWidth:20}}/>}
+                    {i < 3 && <div style={{ flex: 1, height: 2, background: i + 1 < createStep ? "#059669" : "#e5e7eb", margin: "0 8px", minWidth: 20 }} />}
                   </div>
                 ))}
               </div>
@@ -809,44 +811,44 @@ export default function MouldScrap() {
               {createStep === 1 && (<>
                 <div className="card">
                   <div className="sec-hdr">
-                    <div className="sec-hdr-icon" style={{background:"#fef2f2"}}>🔩</div>
+                    <div className="sec-hdr-icon" style={{ background: "#fef2f2" }}>🔩</div>
                     <div className="sec-hdr-title">Mould Selection</div>
                     <span className="sec-hdr-badge">Step 1</span>
                   </div>
                   <div className="form-grid cols-3">
                     <div className="field">
                       <label className="field-label">Mould ID <span className="req">*</span></label>
-                      <select className={`field-select${errors.mouldId?" err":""}`} value={form.mouldId} onChange={e=>set("mouldId",e.target.value)}>
+                      <select className={`field-select${errors.mouldId ? " err" : ""}`} value={form.mouldId} onChange={e => set("mouldId", e.target.value)}>
                         <option value="">— Select Mould —</option>
                         {MOULDS.map(m => <option key={m.id} value={m.id}>{m.id} – {m.name} ({m.condition})</option>)}
                       </select>
                       {errors.mouldId && <div className="field-err">{errors.mouldId}</div>}
                     </div>
-                    <div className="field"><label className="field-label">Mould Name</label><input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould?.name || ""} readOnly/></div>
-                    <div className="field"><label className="field-label">Mould Type</label><input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould?.type || ""} readOnly/></div>
-                    <div className="field"><label className="field-label">Plant / Location</label><input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould ? `${selectedMould.plant} – ${selectedMould.location}` : ""} readOnly/></div>
-                    <div className="field"><label className="field-label">Current Status</label><input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould?.status || ""} readOnly/></div>
-                    <div className="field"><label className="field-label">Condition</label><input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould?.condition || ""} readOnly/></div>
+                    <div className="field"><label className="field-label">Mould Name</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.name || ""} readOnly /></div>
+                    <div className="field"><label className="field-label">Mould Type</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.type || ""} readOnly /></div>
+                    <div className="field"><label className="field-label">Plant / Location</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould ? `${selectedMould.plant} – ${selectedMould.location}` : ""} readOnly /></div>
+                    <div className="field"><label className="field-label">Current Status</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.status || ""} readOnly /></div>
+                    <div className="field"><label className="field-label">Condition</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.condition || ""} readOnly /></div>
                   </div>
                   {selectedMould && (
-                    <div style={{padding:"0 22px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:16}}>
-                      <div style={{background:"#f9fafb",borderRadius:10,padding:"10px 14px",border:"1px solid #e5e7eb"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".06em"}}>Shot Count</div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#111827",marginTop:4}}>{selectedMould.shots.toLocaleString()}</div>
-                        <div className="shot-bar"><div className="shot-fill" style={{width:`${(selectedMould.shots/selectedMould.maxShots)*100}%`,background:(selectedMould.shots/selectedMould.maxShots) > 0.9 ? "#dc2626" : "#d97706"}}/></div>
-                        <div style={{fontSize:10,color:"#6b7280",marginTop:2}}>{((selectedMould.shots/selectedMould.maxShots)*100).toFixed(1)}% of {selectedMould.maxShots.toLocaleString()}</div>
+                    <div style={{ padding: "0 22px 16px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16 }}>
+                      <div style={{ background: "#f9fafb", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em" }}>Shot Count</div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: "#111827", marginTop: 4 }}>{selectedMould.shots.toLocaleString()}</div>
+                        <div className="shot-bar"><div className="shot-fill" style={{ width: `${(selectedMould.shots / selectedMould.maxShots) * 100}%`, background: (selectedMould.shots / selectedMould.maxShots) > 0.9 ? "#dc2626" : "#d97706" }} /></div>
+                        <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>{((selectedMould.shots / selectedMould.maxShots) * 100).toFixed(1)}% of {selectedMould.maxShots.toLocaleString()}</div>
                       </div>
-                      <div style={{background:"#f9fafb",borderRadius:10,padding:"10px 14px",border:"1px solid #e5e7eb"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".06em"}}>Original Value</div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#111827",marginTop:4}}>₹{(selectedMould.assetValue/100000).toFixed(2)}L</div>
+                      <div style={{ background: "#f9fafb", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em" }}>Original Value</div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: "#111827", marginTop: 4 }}>₹{(selectedMould.assetValue / 100000).toFixed(2)}L</div>
                       </div>
-                      <div style={{background:"#f9fafb",borderRadius:10,padding:"10px 14px",border:"1px solid #e5e7eb"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".06em"}}>Book Value</div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#dc2626",marginTop:4}}>₹{(selectedMould.bookValue/1000).toFixed(0)}K</div>
+                      <div style={{ background: "#f9fafb", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em" }}>Book Value</div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: "#dc2626", marginTop: 4 }}>₹{(selectedMould.bookValue / 1000).toFixed(0)}K</div>
                       </div>
-                      <div style={{background:"#f9fafb",borderRadius:10,padding:"10px 14px",border:"1px solid #e5e7eb"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#9ca3af",textTransform:"uppercase",letterSpacing:".06em"}}>Age</div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#111827",marginTop:4}}>{selectedMould.age}</div>
+                      <div style={{ background: "#f9fafb", borderRadius: 10, padding: "10px 14px", border: "1px solid #e5e7eb" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: ".06em" }}>Age</div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: "#111827", marginTop: 4 }}>{selectedMould.age}</div>
                       </div>
                     </div>
                   )}
@@ -854,30 +856,30 @@ export default function MouldScrap() {
 
                 <div className="card">
                   <div className="sec-hdr">
-                    <div className="sec-hdr-icon" style={{background:"#fffbeb"}}>⚠️</div>
+                    <div className="sec-hdr-icon" style={{ background: "#fffbeb" }}>⚠️</div>
                     <div className="sec-hdr-title">Scrap Reason</div>
-                    {errors.scrapReason && <span className="sec-hdr-badge" style={{background:"#fef2f2",color:"#dc2626",borderColor:"#fca5a5"}}>{errors.scrapReason}</span>}
+                    {errors.scrapReason && <span className="sec-hdr-badge" style={{ background: "#fef2f2", color: "#dc2626", borderColor: "#fca5a5" }}>{errors.scrapReason}</span>}
                   </div>
                   <div className="reason-grid">
                     {SCRAP_REASONS.map(r => (
-                      <div key={r.key} className={`reason-card${form.scrapReason===r.key?" selected":""}`} onClick={()=>set("scrapReason",r.key)}>
-                        <div className="reason-icon" style={{background:form.scrapReason===r.key?"#fecaca":"#f3f4f6"}}>{r.icon}</div>
-                        <div style={{flex:1}}><div className="reason-label">{r.label}</div></div>
+                      <div key={r.key} className={`reason-card${form.scrapReason === r.key ? " selected" : ""}`} onClick={() => set("scrapReason", r.key)}>
+                        <div className="reason-icon" style={{ background: form.scrapReason === r.key ? "#fecaca" : "#f3f4f6" }}>{r.icon}</div>
+                        <div style={{ flex: 1 }}><div className="reason-label">{r.label}</div></div>
                         <div className="reason-check">
-                          {form.scrapReason===r.key && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                          {form.scrapReason === r.key && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l2.5 2.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="form-grid cols-2" style={{paddingTop:0}}>
+                  <div className="form-grid cols-2" style={{ paddingTop: 0 }}>
                     <div className="field full-span">
                       <label className="field-label">Detailed Reason / Justification <span className="req">*</span></label>
-                      <textarea className={`field-textarea${errors.reasonDetail?" err":""}`} value={form.reasonDetail} onChange={e=>set("reasonDetail",e.target.value)} placeholder="Provide detailed justification for scrapping this mould…" rows={4}/>
+                      <textarea className={`field-textarea${errors.reasonDetail ? " err" : ""}`} value={form.reasonDetail} onChange={e => set("reasonDetail", e.target.value)} placeholder="Provide detailed justification for scrapping this mould…" rows={4} />
                       {errors.reasonDetail && <div className="field-err">{errors.reasonDetail}</div>}
                     </div>
                     <div className="field">
                       <label className="field-label">Condition Rating</label>
-                      <select className="field-select" value={form.conditionRating} onChange={e=>set("conditionRating",e.target.value)}>
+                      <select className="field-select" value={form.conditionRating} onChange={e => set("conditionRating", e.target.value)}>
                         <option value="">— Select —</option>
                         {CONDITION_RATINGS.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
                       </select>
@@ -885,9 +887,9 @@ export default function MouldScrap() {
                     <div className="field">
                       <label className="field-label">Mould Condition Photos</label>
                       <div className="file-wrap">
-                        <div className="file-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> Upload Photos</div>
+                        <div className="file-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg> Upload Photos</div>
                         <span className="file-name">JPG, PNG · Max 5MB each</span>
-                        <input type="file" accept="image/*" multiple/>
+                        <input type="file" accept="image/*" multiple />
                       </div>
                     </div>
                   </div>
@@ -898,43 +900,45 @@ export default function MouldScrap() {
               {createStep === 2 && (<>
                 <div className="card">
                   <div className="sec-hdr">
-                    <div className="sec-hdr-icon" style={{background:"#e0f2fe"}}>🔍</div>
+                    <div className="sec-hdr-icon" style={{ background: "#e0f2fe" }}>🔍</div>
                     <div className="sec-hdr-title">Technical Evaluation Checklist</div>
-                    <span className="sec-hdr-badge" style={{background:evalPct<=30?"#fef2f2":evalPct<=60?"#fffbeb":"#f0fdf4",
-                      color:getScoreColor(evalPct),borderColor:evalPct<=30?"#fca5a5":evalPct<=60?"#fcd34d":"#6ee7b7"}}>
+                    <span className="sec-hdr-badge" style={{
+                      background: evalPct <= 30 ? "#fef2f2" : evalPct <= 60 ? "#fffbeb" : "#f0fdf4",
+                      color: getScoreColor(evalPct), borderColor: evalPct <= 30 ? "#fca5a5" : evalPct <= 60 ? "#fcd34d" : "#6ee7b7"
+                    }}>
                       Score: {evalPct}%
                     </span>
                   </div>
-                  <div style={{padding:"16px 22px"}}>
-                    <div style={{marginBottom:14}}>
-                      <div style={{fontSize:12,fontWeight:600,color:"#6b7280",marginBottom:6}}>Overall Evaluation Score</div>
+                  <div style={{ padding: "16px 22px" }}>
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", marginBottom: 6 }}>Overall Evaluation Score</div>
                       <div className="score-bar-wrap">
-                        <div className="score-bar-bg"><div className="score-bar-fill" style={{width:`${evalPct}%`,background:getScoreColor(evalPct)}}/></div>
-                        <span className="score-value" style={{color:getScoreColor(evalPct)}}>{evalPct}%</span>
+                        <div className="score-bar-bg"><div className="score-bar-fill" style={{ width: `${evalPct}%`, background: getScoreColor(evalPct) }} /></div>
+                        <span className="score-value" style={{ color: getScoreColor(evalPct) }}>{evalPct}%</span>
                       </div>
-                      <div style={{fontSize:11,color:"#9ca3af"}}>Rate each item 1 (Critical) to 3 (Acceptable). Score below 30% = recommended for scrap.</div>
+                      <div style={{ fontSize: 11, color: "#9ca3af" }}>Rate each item 1 (Critical) to 3 (Acceptable). Score below 30% = recommended for scrap.</div>
                     </div>
 
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 80px 60px 120px 100px",gap:0,padding:"8px 14px",background:"#fafbff",borderRadius:8,marginBottom:8}}>
-                      <span style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".06em"}}>Evaluation Task</span>
-                      <span style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".06em"}}>Category</span>
-                      <span style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".06em",textAlign:"center"}}>Wt.</span>
-                      <span style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".06em",textAlign:"center"}}>Score (1-3)</span>
-                      <span style={{fontSize:10,fontWeight:700,color:"#6b7280",textTransform:"uppercase",letterSpacing:".06em"}}>Remark</span>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 80px 60px 120px 100px", gap: 0, padding: "8px 14px", background: "#fafbff", borderRadius: 8, marginBottom: 8 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".06em" }}>Evaluation Task</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".06em" }}>Category</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".06em", textAlign: "center" }}>Wt.</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".06em", textAlign: "center" }}>Score (1-3)</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".06em" }}>Remark</span>
                     </div>
                     {form.evaluationChecklist.map((ck, i) => (
-                      <div key={ck.id} className="eval-item" style={{display:"grid",gridTemplateColumns:"1fr 80px 60px 120px 100px",gap:0}}>
+                      <div key={ck.id} className="eval-item" style={{ display: "grid", gridTemplateColumns: "1fr 80px 60px 120px 100px", gap: 0 }}>
                         <span className="eval-task">{ck.task}</span>
                         <span className="eval-cat">{ck.category}</span>
                         <span className="eval-weight">{ck.weight}%</span>
-                        <div className="eval-score" style={{justifyContent:"center"}}>
-                          {[1,2,3].map(s => (
-                            <div key={s} className={`eval-dot${ck.score===s?(s===1?" on1":s===2?" on2":" on3"):""}`} onClick={()=>setEvalScore(i,s)}>
+                        <div className="eval-score" style={{ justifyContent: "center" }}>
+                          {[1, 2, 3].map(s => (
+                            <div key={s} className={`eval-dot${ck.score === s ? (s === 1 ? " on1" : s === 2 ? " on2" : " on3") : ""}`} onClick={() => setEvalScore(i, s)}>
                               {s}
                             </div>
                           ))}
                         </div>
-                        <input className="eval-remark" placeholder="Remark" value={ck.remark} onChange={e=>setEvalRemark(i,e.target.value)}/>
+                        <input className="eval-remark" placeholder="Remark" value={ck.remark} onChange={e => setEvalRemark(i, e.target.value)} />
                       </div>
                     ))}
                   </div>
@@ -945,13 +949,13 @@ export default function MouldScrap() {
               {createStep === 3 && (<>
                 <div className="card">
                   <div className="sec-hdr">
-                    <div className="sec-hdr-icon" style={{background:"#f5f3ff"}}>🗑</div>
+                    <div className="sec-hdr-icon" style={{ background: "#f5f3ff" }}>🗑</div>
                     <div className="sec-hdr-title">Disposal Method</div>
-                    {errors.disposalMethod && <span className="sec-hdr-badge" style={{background:"#fef2f2",color:"#dc2626",borderColor:"#fca5a5"}}>{errors.disposalMethod}</span>}
+                    {errors.disposalMethod && <span className="sec-hdr-badge" style={{ background: "#fef2f2", color: "#dc2626", borderColor: "#fca5a5" }}>{errors.disposalMethod}</span>}
                   </div>
                   <div className="disposal-grid">
                     {DISPOSAL_METHODS.map(d => (
-                      <div key={d.key} className={`disposal-card${form.disposalMethod===d.key?" selected":""}`} onClick={()=>set("disposalMethod",d.key)}>
+                      <div key={d.key} className={`disposal-card${form.disposalMethod === d.key ? " selected" : ""}`} onClick={() => set("disposalMethod", d.key)}>
                         <div className="disposal-icon">{d.icon}</div>
                         <div className="disposal-label">{d.label}</div>
                         <div className="disposal-desc">{d.description}</div>
@@ -962,16 +966,16 @@ export default function MouldScrap() {
 
                 <div className="card">
                   <div className="sec-hdr">
-                    <div className="sec-hdr-icon" style={{background:"#fffbeb"}}>💰</div>
+                    <div className="sec-hdr-icon" style={{ background: "#fffbeb" }}>💰</div>
                     <div className="sec-hdr-title">Financial & Scrap Details</div>
-                    <span className="sec-hdr-badge" style={{background:"#fffbeb",color:"#d97706",borderColor:"#fcd34d"}}>Asset Write-Off</span>
+                    <span className="sec-hdr-badge" style={{ background: "#fffbeb", color: "#d97706", borderColor: "#fcd34d" }}>Asset Write-Off</span>
                   </div>
                   <div className="form-grid cols-3">
                     <div className="field">
                       <label className="field-label">Scrap Vendor / Buyer</label>
-                      <select className="field-select" value={form.scrapVendor} onChange={e=>{
-                        set("scrapVendor",e.target.value);
-                        const v = SCRAP_VENDORS.find(v=>v.code===e.target.value);
+                      <select className="field-select" value={form.scrapVendor} onChange={e => {
+                        set("scrapVendor", e.target.value);
+                        const v = SCRAP_VENDORS.find(v => v.code === e.target.value);
                         if (v) set("scrapRate", String(v.rate));
                       }}>
                         <option value="">— Select Vendor —</option>
@@ -981,66 +985,66 @@ export default function MouldScrap() {
                     <div className="field">
                       <label className="field-label">Mould Weight (kg)</label>
                       <div className="num-wrap">
-                        <input type="number" className="field-input" value={form.scrapWeight} onChange={e=>set("scrapWeight",e.target.value)} placeholder="e.g. 4200"/>
+                        <input type="number" className="field-input" value={form.scrapWeight} onChange={e => set("scrapWeight", e.target.value)} placeholder="e.g. 4200" />
                         <span className="num-tag">Kg</span>
                       </div>
                     </div>
                     <div className="field">
                       <label className="field-label">Scrap Rate (₹/kg)</label>
                       <div className="num-wrap">
-                        <input type="number" className="field-input" value={form.scrapRate} onChange={e=>set("scrapRate",e.target.value)} placeholder="e.g. 42"/>
+                        <input type="number" className="field-input" value={form.scrapRate} onChange={e => set("scrapRate", e.target.value)} placeholder="e.g. 42" />
                         <span className="num-tag">₹/kg</span>
                       </div>
                     </div>
                   </div>
                   {selectedMould && (
-                    <div style={{padding:"0 22px 20px"}}>
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
-                        <div style={{background:"#f9fafb",borderRadius:12,padding:16,border:"1px solid #e5e7eb"}}>
-                          <div style={{fontSize:12,fontWeight:800,color:"#111827",marginBottom:12,textTransform:"uppercase",letterSpacing:".06em"}}>Asset Summary</div>
+                    <div style={{ padding: "0 22px 20px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                        <div style={{ background: "#f9fafb", borderRadius: 12, padding: 16, border: "1px solid #e5e7eb" }}>
+                          <div style={{ fontSize: 12, fontWeight: 800, color: "#111827", marginBottom: 12, textTransform: "uppercase", letterSpacing: ".06em" }}>Asset Summary</div>
                           {[
-                            ["Original Asset Value", `₹${(selectedMould.assetValue/100000).toFixed(2)}L`],
-                            ["Accumulated Depreciation", `₹${((selectedMould.assetValue - selectedMould.bookValue)/100000).toFixed(2)}L`],
-                            ["Current Book Value", `₹${(selectedMould.bookValue/1000).toFixed(0)}K`],
-                          ].map(([l,v],i) => (
-                            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<2?"1px solid #e5e7eb":"none"}}>
-                              <span style={{fontSize:13,color:"#374151"}}>{l}</span>
-                              <span style={{fontSize:13,fontWeight:600,color:"#111827"}}>{v}</span>
+                            ["Original Asset Value", `₹${(selectedMould.assetValue / 100000).toFixed(2)}L`],
+                            ["Accumulated Depreciation", `₹${((selectedMould.assetValue - selectedMould.bookValue) / 100000).toFixed(2)}L`],
+                            ["Current Book Value", `₹${(selectedMould.bookValue / 1000).toFixed(0)}K`],
+                          ].map(([l, v], i) => (
+                            <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: i < 2 ? "1px solid #e5e7eb" : "none" }}>
+                              <span style={{ fontSize: 13, color: "#374151" }}>{l}</span>
+                              <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{v}</span>
                             </div>
                           ))}
                         </div>
-                        <div style={{background:"#fffafa",borderRadius:12,padding:16,border:"1px solid #fce4e4"}}>
-                          <div style={{fontSize:12,fontWeight:800,color:"#dc2626",marginBottom:12,textTransform:"uppercase",letterSpacing:".06em"}}>Scrap Value Estimate</div>
+                        <div style={{ background: "#fffafa", borderRadius: 12, padding: 16, border: "1px solid #fce4e4" }}>
+                          <div style={{ fontSize: 12, fontWeight: 800, color: "#dc2626", marginBottom: 12, textTransform: "uppercase", letterSpacing: ".06em" }}>Scrap Value Estimate</div>
                           {[
                             ["Estimated Scrap Value", `₹${estScrapValue.toLocaleString()}`],
                             ["Net Loss on Disposal", `₹${Math.max(0, selectedMould.bookValue - estScrapValue).toLocaleString()}`],
                             ["Recovery %", `${selectedMould.assetValue > 0 ? ((estScrapValue / selectedMould.assetValue) * 100).toFixed(1) : 0}%`],
-                          ].map(([l,v],i) => (
-                            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<2?"1px solid #fce4e4":"none"}}>
-                              <span style={{fontSize:13,color:"#374151"}}>{l}</span>
-                              <span style={{fontSize:13,fontWeight:700,color:i===1?"#dc2626":"#059669"}}>{v}</span>
+                          ].map(([l, v], i) => (
+                            <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: i < 2 ? "1px solid #fce4e4" : "none" }}>
+                              <span style={{ fontSize: 13, color: "#374151" }}>{l}</span>
+                              <span style={{ fontSize: 13, fontWeight: 700, color: i === 1 ? "#dc2626" : "#059669" }}>{v}</span>
                             </div>
                           ))}
                         </div>
                       </div>
                     </div>
                   )}
-                  <div className="form-grid cols-3" style={{paddingTop:0}}>
+                  <div className="form-grid cols-3" style={{ paddingTop: 0 }}>
                     <div className="field">
                       <label className="field-label">Environmental Clearance No.</label>
-                      <input className="field-input" value={form.environmentalClearance} onChange={e=>set("environmentalClearance",e.target.value)} placeholder="e.g. ENV-CLR-2025-XXX"/>
+                      <input className="field-input" value={form.environmentalClearance} onChange={e => set("environmentalClearance", e.target.value)} placeholder="e.g. ENV-CLR-2025-XXX" />
                     </div>
                     <div className="field">
                       <label className="field-label">Supporting Documents</label>
                       <div className="file-wrap">
-                        <div className="file-btn" style={{background:"linear-gradient(135deg,#7c3aed,#6d28d9)"}}><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> Upload</div>
+                        <div className="file-btn" style={{ background: "linear-gradient(135deg,#7c3aed,#6d28d9)" }}><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg> Upload</div>
                         <span className="file-name">PDF, Images · Max 10MB</span>
-                        <input type="file" multiple/>
+                        <input type="file" multiple />
                       </div>
                     </div>
                     <div className="field">
                       <label className="field-label">Remarks / Notes</label>
-                      <textarea className="field-textarea" value={form.remarks} onChange={e=>set("remarks",e.target.value)} placeholder="Additional notes…" rows={2}/>
+                      <textarea className="field-textarea" value={form.remarks} onChange={e => set("remarks", e.target.value)} placeholder="Additional notes…" rows={2} />
                     </div>
                   </div>
                 </div>
@@ -1050,43 +1054,43 @@ export default function MouldScrap() {
               {createStep === 4 && (<>
                 <div className="card">
                   <div className="sec-hdr">
-                    <div className="sec-hdr-icon" style={{background:"#f0fdf4"}}>📋</div>
+                    <div className="sec-hdr-icon" style={{ background: "#f0fdf4" }}>📋</div>
                     <div className="sec-hdr-title">Review Summary</div>
-                    <span className="sec-hdr-badge" style={{background:"#f0fdf4",color:"#059669",borderColor:"#6ee7b7"}}>Final Check</span>
+                    <span className="sec-hdr-badge" style={{ background: "#f0fdf4", color: "#059669", borderColor: "#6ee7b7" }}>Final Check</span>
                   </div>
                   <div className="detail-grid">
                     <div className="detail-item"><span className="detail-label">Mould</span><span className="detail-value">{form.mouldId} – {selectedMould?.name}</span></div>
                     <div className="detail-item"><span className="detail-label">Type</span><span className="detail-value">{selectedMould?.type}</span></div>
                     <div className="detail-item"><span className="detail-label">Plant</span><span className="detail-value">{selectedMould?.plant}</span></div>
-                    <div className="detail-item"><span className="detail-label">Scrap Reason</span><span className="detail-value">{SCRAP_REASONS.find(r=>r.key===form.scrapReason)?.label || "—"}</span></div>
-                    <div className="detail-item"><span className="detail-label">Condition</span><span className="detail-value">{CONDITION_RATINGS.find(c=>c.key===form.conditionRating)?.label || "—"}</span></div>
-                    <div className="detail-item"><span className="detail-label">Eval Score</span><span className="detail-value" style={{color:getScoreColor(evalPct)}}>{evalPct}%</span></div>
-                    <div className="detail-item"><span className="detail-label">Disposal Method</span><span className="detail-value">{DISPOSAL_METHODS.find(d=>d.key===form.disposalMethod)?.label || "—"}</span></div>
-                    <div className="detail-item"><span className="detail-label">Scrap Vendor</span><span className="detail-value">{SCRAP_VENDORS.find(v=>v.code===form.scrapVendor)?.name || "N/A"}</span></div>
-                    <div className="detail-item"><span className="detail-label">Estimated Scrap Value</span><span className="detail-value" style={{color:"#059669"}}>₹{estScrapValue.toLocaleString()}</span></div>
+                    <div className="detail-item"><span className="detail-label">Scrap Reason</span><span className="detail-value">{SCRAP_REASONS.find(r => r.key === form.scrapReason)?.label || "—"}</span></div>
+                    <div className="detail-item"><span className="detail-label">Condition</span><span className="detail-value">{CONDITION_RATINGS.find(c => c.key === form.conditionRating)?.label || "—"}</span></div>
+                    <div className="detail-item"><span className="detail-label">Eval Score</span><span className="detail-value" style={{ color: getScoreColor(evalPct) }}>{evalPct}%</span></div>
+                    <div className="detail-item"><span className="detail-label">Disposal Method</span><span className="detail-value">{DISPOSAL_METHODS.find(d => d.key === form.disposalMethod)?.label || "—"}</span></div>
+                    <div className="detail-item"><span className="detail-label">Scrap Vendor</span><span className="detail-value">{SCRAP_VENDORS.find(v => v.code === form.scrapVendor)?.name || "N/A"}</span></div>
+                    <div className="detail-item"><span className="detail-label">Estimated Scrap Value</span><span className="detail-value" style={{ color: "#059669" }}>₹{estScrapValue.toLocaleString()}</span></div>
                   </div>
                   {selectedMould && (
-                    <div style={{padding:"0 22px 16px",display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
-                      <div style={{background:"#fef2f2",borderRadius:10,padding:"12px 14px",border:"1px solid #fca5a5",textAlign:"center"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#dc2626",textTransform:"uppercase"}}>Book Value</div>
-                        <div style={{fontSize:18,fontWeight:800,color:"#dc2626",marginTop:4}}>₹{(selectedMould.bookValue/1000).toFixed(0)}K</div>
+                    <div style={{ padding: "0 22px 16px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                      <div style={{ background: "#fef2f2", borderRadius: 10, padding: "12px 14px", border: "1px solid #fca5a5", textAlign: "center" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#dc2626", textTransform: "uppercase" }}>Book Value</div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: "#dc2626", marginTop: 4 }}>₹{(selectedMould.bookValue / 1000).toFixed(0)}K</div>
                       </div>
-                      <div style={{background:"#f0fdf4",borderRadius:10,padding:"12px 14px",border:"1px solid #6ee7b7",textAlign:"center"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#059669",textTransform:"uppercase"}}>Salvage Value</div>
-                        <div style={{fontSize:18,fontWeight:800,color:"#059669",marginTop:4}}>₹{estScrapValue.toLocaleString()}</div>
+                      <div style={{ background: "#f0fdf4", borderRadius: 10, padding: "12px 14px", border: "1px solid #6ee7b7", textAlign: "center" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#059669", textTransform: "uppercase" }}>Salvage Value</div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: "#059669", marginTop: 4 }}>₹{estScrapValue.toLocaleString()}</div>
                       </div>
-                      <div style={{background:"#fffbeb",borderRadius:10,padding:"12px 14px",border:"1px solid #fcd34d",textAlign:"center"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:"#d97706",textTransform:"uppercase"}}>Net Loss</div>
-                        <div style={{fontSize:18,fontWeight:800,color:"#d97706",marginTop:4}}>₹{Math.max(0, selectedMould.bookValue - estScrapValue).toLocaleString()}</div>
+                      <div style={{ background: "#fffbeb", borderRadius: 10, padding: "12px 14px", border: "1px solid #fcd34d", textAlign: "center" }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "#d97706", textTransform: "uppercase" }}>Net Loss</div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: "#d97706", marginTop: 4 }}>₹{Math.max(0, selectedMould.bookValue - estScrapValue).toLocaleString()}</div>
                       </div>
                     </div>
                   )}
-                  <div style={{padding:"0 22px 16px"}}>
-                    <div style={{background:"#fffafa",border:"1.5px solid #fca5a5",borderRadius:12,padding:16,display:"flex",gap:12,alignItems:"flex-start"}}>
-                      <span style={{fontSize:20}}>⚠️</span>
+                  <div style={{ padding: "0 22px 16px" }}>
+                    <div style={{ background: "#fffafa", border: "1.5px solid #fca5a5", borderRadius: 12, padding: 16, display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <span style={{ fontSize: 20 }}>⚠️</span>
                       <div>
-                        <div style={{fontSize:13,fontWeight:700,color:"#991b1b"}}>Irreversible Action Warning</div>
-                        <div style={{fontSize:12,color:"#7f1d1d",marginTop:3}}>Submitting this scrap request will initiate the approval workflow. Once approved and disposed, the mould asset will be permanently written off from the asset register. This action cannot be undone.</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#991b1b" }}>Irreversible Action Warning</div>
+                        <div style={{ fontSize: 12, color: "#7f1d1d", marginTop: 3 }}>Submitting this scrap request will initiate the approval workflow. Once approved and disposed, the mould asset will be permanently written off from the asset register. This action cannot be undone.</div>
                       </div>
                     </div>
                   </div>
@@ -1098,7 +1102,7 @@ export default function MouldScrap() {
             {currentView === "detail" && selectedRecord && (<>
               <div className="page-hdr">
                 <div>
-                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <div className="page-hdr-title">{selectedRecord.id}</div>
                     {statusBadge(selectedRecord.status)}
                     {conditionBadge(selectedRecord.conditionRating)}
@@ -1106,25 +1110,25 @@ export default function MouldScrap() {
                   <div className="page-hdr-sub">{selectedRecord.mouldId} – {selectedRecord.mouldName} | {selectedRecord.plant}</div>
                 </div>
                 <div className="page-hdr-right">
-                  <button className="btn btn-ghost" onClick={()=>{setCurrentView("list");setSelectedRecord(null)}}>← Back to List</button>
+                  <button className="btn btn-ghost" onClick={() => { setCurrentView("list"); setSelectedRecord(null) }}>← Back to List</button>
                 </div>
               </div>
 
               {/* Workflow stepper */}
               <div className="wf-wrap">
                 <div className="wf-inner">
-                  {getWorkflowSteps(selectedRecord).map((s,i,arr) => (
-                    <div key={i} style={{display:"flex",alignItems:"center",flex:i<arr.length-1?1:"initial"}}>
+                  {getWorkflowSteps(selectedRecord).map((s, i, arr) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", flex: i < arr.length - 1 ? 1 : "initial" }}>
                       <div className="wf-step">
-                        <div className={`wf-circle ${s.state==="done"?"wf-done":s.state==="active"?"wf-active":s.state==="rejected"?"wf-rejected":"wf-pending"}`}>
-                          {s.state==="done" ? <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg> : s.icon}
+                        <div className={`wf-circle ${s.state === "done" ? "wf-done" : s.state === "active" ? "wf-active" : s.state === "rejected" ? "wf-rejected" : "wf-pending"}`}>
+                          {s.state === "done" ? <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg> : s.icon}
                         </div>
                         <div>
                           <div className="wf-lbl">{s.label}</div>
                           <div className="wf-sub">{s.sub}</div>
                         </div>
                       </div>
-                      {i<arr.length-1 && <div className={`wf-line${s.state==="done"?" done":""}`}/>}
+                      {i < arr.length - 1 && <div className={`wf-line${s.state === "done" ? " done" : ""}`} />}
                     </div>
                   ))}
                 </div>
@@ -1133,7 +1137,7 @@ export default function MouldScrap() {
               {/* Overview */}
               <div className="card">
                 <div className="sec-hdr">
-                  <div className="sec-hdr-icon" style={{background:"#fef2f2"}}>📋</div>
+                  <div className="sec-hdr-icon" style={{ background: "#fef2f2" }}>📋</div>
                   <div className="sec-hdr-title">Scrap Request Overview</div>
                   {reasonBadge(selectedRecord.scrapReason)}
                 </div>
@@ -1145,43 +1149,43 @@ export default function MouldScrap() {
                   <div className="detail-item"><span className="detail-label">Lifetime Shots</span><span className="detail-value">{selectedRecord.lifetimeShots?.toLocaleString()} / {selectedRecord.maxShots?.toLocaleString()}</span></div>
                   <div className="detail-item"><span className="detail-label">Mould Material</span><span className="detail-value">{selectedRecord.mouldMaterial}</span></div>
                   <div className="detail-item"><span className="detail-label">Weight</span><span className="detail-value">{selectedRecord.mouldWeight?.toLocaleString()} Kg</span></div>
-                  <div className="detail-item"><span className="detail-label">Eval Score</span><span className="detail-value" style={{color:getScoreColor(selectedRecord.evaluationScore)}}>{selectedRecord.evaluationScore}%</span></div>
-                  <div className="detail-item"><span className="detail-label">Disposal Method</span><span className="detail-value">{DISPOSAL_METHODS.find(d=>d.key===selectedRecord.disposalMethod)?.label || "—"}</span></div>
+                  <div className="detail-item"><span className="detail-label">Eval Score</span><span className="detail-value" style={{ color: getScoreColor(selectedRecord.evaluationScore) }}>{selectedRecord.evaluationScore}%</span></div>
+                  <div className="detail-item"><span className="detail-label">Disposal Method</span><span className="detail-value">{DISPOSAL_METHODS.find(d => d.key === selectedRecord.disposalMethod)?.label || "—"}</span></div>
                 </div>
-                <div style={{padding:"0 22px 16px"}}>
-                  <div className="detail-label" style={{marginBottom:4}}>Reason Detail</div>
-                  <div style={{fontSize:13,color:"#374151",background:"#fffafa",padding:"10px 14px",borderRadius:10,border:"1px solid #fce4e4"}}>{selectedRecord.reasonDetail}</div>
+                <div style={{ padding: "0 22px 16px" }}>
+                  <div className="detail-label" style={{ marginBottom: 4 }}>Reason Detail</div>
+                  <div style={{ fontSize: 13, color: "#374151", background: "#fffafa", padding: "10px 14px", borderRadius: 10, border: "1px solid #fce4e4" }}>{selectedRecord.reasonDetail}</div>
                 </div>
               </div>
 
               {/* Financial */}
               <div className="card">
                 <div className="sec-hdr">
-                  <div className="sec-hdr-icon" style={{background:"#fffbeb"}}>💰</div>
+                  <div className="sec-hdr-icon" style={{ background: "#fffbeb" }}>💰</div>
                   <div className="sec-hdr-title">Financial Summary & Asset Write-Off</div>
                 </div>
                 <div className="writeoff-grid">
                   <div className="wo-col">
-                    <div style={{fontSize:11,fontWeight:800,color:"#6b7280",textTransform:"uppercase",letterSpacing:".06em",marginBottom:10}}>Asset Details</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>Asset Details</div>
                     {[
-                      ["Original Asset Value", `₹${(selectedRecord.originalAssetValue/100000).toFixed(2)}L`],
-                      ["Accumulated Depreciation", `₹${(selectedRecord.accumulatedDepreciation/100000).toFixed(2)}L`],
-                      ["Current Book Value", `₹${(selectedRecord.currentBookValue/1000).toFixed(0)}K`],
-                      ["Total Maintenance Spent", `₹${(selectedRecord.totalMaintenanceCost/1000).toFixed(0)}K`],
-                    ].map(([l,v],i) => (
+                      ["Original Asset Value", `₹${(selectedRecord.originalAssetValue / 100000).toFixed(2)}L`],
+                      ["Accumulated Depreciation", `₹${(selectedRecord.accumulatedDepreciation / 100000).toFixed(2)}L`],
+                      ["Current Book Value", `₹${(selectedRecord.currentBookValue / 1000).toFixed(0)}K`],
+                      ["Total Maintenance Spent", `₹${(selectedRecord.totalMaintenanceCost / 1000).toFixed(0)}K`],
+                    ].map(([l, v], i) => (
                       <div key={i} className="wo-row"><span className="wo-label">{l}</span><span className="wo-value">{v}</span></div>
                     ))}
                   </div>
                   <div className="wo-col">
-                    <div style={{fontSize:11,fontWeight:800,color:"#dc2626",textTransform:"uppercase",letterSpacing:".06em",marginBottom:10}}>Disposal & Recovery</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, color: "#dc2626", textTransform: "uppercase", letterSpacing: ".06em", marginBottom: 10 }}>Disposal & Recovery</div>
                     {[
-                      ["Scrap Vendor", SCRAP_VENDORS.find(v=>v.code===selectedRecord.scrapVendor)?.name || "N/A"],
+                      ["Scrap Vendor", SCRAP_VENDORS.find(v => v.code === selectedRecord.scrapVendor)?.name || "N/A"],
                       ["Scrap Weight", `${selectedRecord.scrapWeight?.toLocaleString()} Kg`],
                       ["Scrap Rate", `₹${selectedRecord.scrapRate}/kg`],
-                      ["Salvage / Scrap Value", `₹${(selectedRecord.salvageValue||selectedRecord.estimatedScrapValue||0).toLocaleString()}`],
-                      ["Net Loss", `₹${(selectedRecord.netLoss||0).toLocaleString()}`],
-                    ].map(([l,v],i) => (
-                      <div key={i} className="wo-row"><span className="wo-label">{l}</span><span className="wo-value" style={{color:i===4?"#dc2626":i===3?"#059669":"#111827"}}>{v}</span></div>
+                      ["Salvage / Scrap Value", `₹${(selectedRecord.salvageValue || selectedRecord.estimatedScrapValue || 0).toLocaleString()}`],
+                      ["Net Loss", `₹${(selectedRecord.netLoss || 0).toLocaleString()}`],
+                    ].map(([l, v], i) => (
+                      <div key={i} className="wo-row"><span className="wo-label">{l}</span><span className="wo-value" style={{ color: i === 4 ? "#dc2626" : i === 3 ? "#059669" : "#111827" }}>{v}</span></div>
                     ))}
                   </div>
                 </div>
@@ -1190,10 +1194,10 @@ export default function MouldScrap() {
               {/* Compliance & Docs */}
               <div className="card">
                 <div className="sec-hdr">
-                  <div className="sec-hdr-icon" style={{background:"#f0fdf4"}}>📄</div>
+                  <div className="sec-hdr-icon" style={{ background: "#f0fdf4" }}>📄</div>
                   <div className="sec-hdr-title">Compliance & Documentation</div>
                 </div>
-                <div className="detail-grid" style={{gridTemplateColumns:"1fr 1fr 1fr 1fr"}}>
+                <div className="detail-grid" style={{ gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
                   <div className="detail-item"><span className="detail-label">Gate Pass No.</span><span className="detail-value">{selectedRecord.gatePassNo || "—"}</span></div>
                   <div className="detail-item"><span className="detail-label">Invoice No.</span><span className="detail-value">{selectedRecord.invoiceNo || "—"}</span></div>
                   <div className="detail-item"><span className="detail-label">E-Way Bill</span><span className="detail-value">{selectedRecord.ewayBillNo || "—"}</span></div>
@@ -1208,13 +1212,13 @@ export default function MouldScrap() {
               {/* Timeline */}
               <div className="card">
                 <div className="sec-hdr">
-                  <div className="sec-hdr-icon" style={{background:"#fef2f2"}}>⏱</div>
+                  <div className="sec-hdr-icon" style={{ background: "#fef2f2" }}>⏱</div>
                   <div className="sec-hdr-title">Activity Timeline</div>
                 </div>
-                <div style={{padding:"18px 22px"}}>
-                  {selectedRecord.timeline?.map((t,i) => (
+                <div style={{ padding: "18px 22px" }}>
+                  {selectedRecord.timeline?.map((t, i) => (
                     <div key={i} className="tl-item">
-                      <div className="tl-dot">{i===0?"🔔":i===selectedRecord.timeline.length-1?"📌":"➡️"}</div>
+                      <div className="tl-dot">{i === 0 ? "🔔" : i === selectedRecord.timeline.length - 1 ? "📌" : "➡️"}</div>
                       <div className="tl-body">
                         <div className="tl-event">{t.event}</div>
                         <div className="tl-meta">By {t.by} · {t.at}</div>
@@ -1232,16 +1236,16 @@ export default function MouldScrap() {
           {currentView === "create" && (
             <div className="form-footer">
               <div className="footer-hint">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#9ca3af" strokeWidth="1.2"/><line x1="7" y1="5" x2="7" y2="7.5" stroke="#9ca3af" strokeWidth="1.4" strokeLinecap="round"/><circle cx="7" cy="9.5" r=".7" fill="#9ca3af"/></svg>
-                Step {createStep} of 4 — {["Select mould & reason","Evaluate mould condition","Configure disposal","Review & submit"][createStep-1]}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#9ca3af" strokeWidth="1.2" /><line x1="7" y1="5" x2="7" y2="7.5" stroke="#9ca3af" strokeWidth="1.4" strokeLinecap="round" /><circle cx="7" cy="9.5" r=".7" fill="#9ca3af" /></svg>
+                Step {createStep} of 4 — {["Select mould & reason", "Evaluate mould condition", "Configure disposal", "Review & submit"][createStep - 1]}
               </div>
               <div className="footer-actions">
                 {createStep > 1 && <button className="btn btn-ghost" onClick={handleBack}>← Previous</button>}
-                <button className="btn btn-outline" onClick={()=>{setCurrentView("list");setForm({...emptyForm});setCreateStep(1);setErrors({})}}>Cancel</button>
+                <button className="btn btn-outline" onClick={() => { setCurrentView("list"); setForm({ ...emptyForm }); setCreateStep(1); setErrors({}) }}>Cancel</button>
                 {createStep < 4 && <button className="btn btn-primary" onClick={handleNext}>Next Step →</button>}
                 {createStep === 4 && (
                   <button className="btn btn-danger" onClick={handleSubmit}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                     Submit Scrap Request
                   </button>
                 )}

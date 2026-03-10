@@ -12,21 +12,21 @@ import * as Papa from "papaparse";
 
 // ── Generate realistic sample data (500 moulds to demonstrate) ──
 function generateMoulds(count) {
-  const types = ["Injection Mould","Blow Mould","Die Cast Mould","Compression Mould"];
-  const plants = ["Plant A - Mumbai","Plant B - Pune","Plant C - Nashik","Plant D - Aurangabad"];
-  const vendors = ["Tata Moulds Pvt Ltd","Bharat Engineering","Precision Tooling Co","Elite Mould Makers","Global Tool Craft","Shree Tools","Star Jobwork"];
-  const parts = ["Bumper Front","Bumper Rear","Dashboard","Door Trim","Grille","Headlamp Bezel","Fender","Console","A-Pillar","B-Pillar","Tailgate","Hood Inner","Wheel Arch","Rocker Panel","Mirror Housing","Air Dam","Fog Lamp","Side Skirt","Spoiler","Diffuser"];
-  const sides = ["LH","RH","CTR","","Assembly"];
+  const types = ["Injection Mould", "Blow Mould", "Die Cast Mould", "Compression Mould"];
+  const plants = ["Plant A - Mumbai", "Plant B - Pune", "Plant C - Nashik", "Plant D - Aurangabad"];
+  const vendors = ["Tata Moulds Pvt Ltd", "Bharat Engineering", "Precision Tooling Co", "Elite Mould Makers", "Global Tool Craft", "Shree Tools", "Star Jobwork"];
+  const parts = ["Bumper Front", "Bumper Rear", "Dashboard", "Door Trim", "Grille", "Headlamp Bezel", "Fender", "Console", "A-Pillar", "B-Pillar", "Tailgate", "Hood Inner", "Wheel Arch", "Rocker Panel", "Mirror Housing", "Air Dam", "Fog Lamp", "Side Skirt", "Spoiler", "Diffuser"];
+  const sides = ["LH", "RH", "CTR", "", "Assembly"];
   const arr = [];
   for (let i = 1; i <= count; i++) {
     const cost = Math.round((800000 + Math.random() * 4200000) / 1000) * 1000;
-    const maxShots = [300000,400000,500000,600000,750000][Math.floor(Math.random()*5)];
+    const maxShots = [300000, 400000, 500000, 600000, 750000][Math.floor(Math.random() * 5)];
     const ageYrs = +(Math.random() * 9).toFixed(1);
     const lifeUsedPct = Math.min(0.99, ageYrs / 8 + (Math.random() * 0.15 - 0.075));
     const currentShots = Math.round(maxShots * Math.min(0.998, Math.random() * 0.3 + lifeUsedPct * 0.7));
-    const capDate = new Date(2025 - Math.floor(ageYrs), Math.floor(Math.random()*12), Math.floor(Math.random()*28)+1);
+    const capDate = new Date(2025 - Math.floor(ageYrs), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
     arr.push({
-      id: `MLD-${String(i).padStart(5,"0")}`,
+      id: `MLD-${String(i).padStart(5, "0")}`,
       name: `${parts[i % parts.length]} ${sides[i % sides.length]}`.trim(),
       type: types[i % types.length],
       plant: plants[i % plants.length],
@@ -36,7 +36,7 @@ function generateMoulds(count) {
       usefulLife: 8,
       maxShots,
       currentShots,
-      capDate: capDate.toISOString().slice(0,10),
+      capDate: capDate.toISOString().slice(0, 10),
       ageYrs,
     });
   }
@@ -55,7 +55,7 @@ function calcDepr(m) {
   const N = m.usefulLife;
   // SLM
   const slmAnnual = DA / N;
-  const slmRate = ((1/N) * (1 - m.residualPct/100)) * 100;
+  const slmRate = ((1 / N) * (1 - m.residualPct / 100)) * 100;
   const slmToDate = Math.min(DA, slmAnnual * m.ageYrs);
   const slmBookValue = Math.max(RV, C - slmToDate);
   // Shot-based
@@ -211,15 +211,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 @keyframes ti{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 `;
 
-const NAV = [
-  {l:"Dashboard",           i:"📊", r:"/dashboard"      },
-  {l:"Mould Registry",      i:"🔩", r:"/mould-registry" },
-  {l:"Maintenance",         i:"🔧", r:"/maintenance"    },
-  {l:"Transfers & Challan", i:"🔄", r:"/challan"        },
-  {l:"Mould Return",        i:"📥", r:"/return"         },
-  {l:"Depreciation",        i:"📉", r:"/depreciation", on:true },
-  {l:"Masters",             i:"🗂", r:"/masters"        },
-  {l:"Reports",             i:"📈", r:"/reports"        },
+const NAV_ITEMS = [
+  { label: "Dashboard", icon: "📊", route: "/dashboard" },
+  { label: "User Management", icon: "👥", route: "/user-management" },
+  { label: "Masters", icon: "🗂", route: "/masters" },
+  { label: "Mould Registry", icon: "🔩", route: "/mould-registry" },
+  { label: "Transfers & Challan", icon: "🔄", route: "/challan" },
+  { label: "Mould Return", icon: "📥", route: "/return" },
+  { label: "Depreciation", icon: "📉", route: "/depreciation", active: true },
+  { label: "Maintenance", icon: "🔧", route: "/maintenance" },
+  { label: "Scrap / Dispose", icon: "🗑", route: "/scrap" },
+  { label: "Reports", icon: "📈", route: "/reports" }
 ];
 
 export default function MouldDepreciation() {
@@ -241,13 +243,13 @@ export default function MouldDepreciation() {
 
   const userInitials = user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 
-  const flash = m => { setToast(m); setTimeout(()=>setToast(null),3500); };
+  const flash = m => { setToast(m); setTimeout(() => setToast(null), 3500); };
 
   // Calculate depreciation for all moulds
   const allCalc = useMemo(() => rawMoulds.map(calcDepr), [rawMoulds]);
 
   // Filters
-  const plants = useMemo(() => [...new Set(rawMoulds.map(m=>m.plant))].sort(), [rawMoulds]);
+  const plants = useMemo(() => [...new Set(rawMoulds.map(m => m.plant))].sort(), [rawMoulds]);
   const filtered = useMemo(() => {
     return allCalc.filter(m => {
       if (plantFilter !== "all" && m.plant !== plantFilter) return false;
@@ -261,18 +263,18 @@ export default function MouldDepreciation() {
 
   // Pagination
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
+  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   // Summary totals
   const totals = useMemo(() => {
     const src = plantFilter === "all" ? allCalc : filtered;
     return {
       count: src.length,
-      totalCost: src.reduce((s,m)=>s+m.cost,0),
-      totalSlmDepr: src.reduce((s,m)=>s+m.slmToDate,0),
-      totalSlmBV: src.reduce((s,m)=>s+m.slmBookValue,0),
-      totalShotDepr: src.reduce((s,m)=>s+m.shotDepr,0),
-      totalShotBV: src.reduce((s,m)=>s+m.shotBookValue,0),
+      totalCost: src.reduce((s, m) => s + m.cost, 0),
+      totalSlmDepr: src.reduce((s, m) => s + m.slmToDate, 0),
+      totalSlmBV: src.reduce((s, m) => s + m.slmBookValue, 0),
+      totalShotDepr: src.reduce((s, m) => s + m.shotDepr, 0),
+      totalShotBV: src.reduce((s, m) => s + m.shotBookValue, 0),
     };
   }, [allCalc, filtered, plantFilter]);
 
@@ -285,7 +287,7 @@ export default function MouldDepreciation() {
       skipEmptyLines: true,
       complete: (results) => {
         const parsed = results.data.map((row, i) => ({
-          id: row.mould_id || row.id || row.MouldID || `MLD-${String(i+1).padStart(5,"0")}`,
+          id: row.mould_id || row.id || row.MouldID || `MLD-${String(i + 1).padStart(5, "0")}`,
           name: row.mould_name || row.name || row.MouldName || "Unknown",
           type: row.mould_type || row.type || "Injection Mould",
           plant: row.plant || "Plant A",
@@ -327,7 +329,7 @@ export default function MouldDepreciation() {
     const rows = filtered.map(m =>
       `${m.id},"${m.name}",${m.type},${m.plant},${m.cost},${Math.round(m.RV)},${Math.round(m.slmAnnual)},${Math.round(m.slmToDate)},${Math.round(m.slmBookValue)},${m.maxShots},${m.currentShots},${Math.round(m.shotDepr)},${Math.round(m.shotBookValue)},${m.shotLifePct.toFixed(1)}`
     ).join("\n");
-    const blob = new Blob([header + rows], {type:"text/csv"});
+    const blob = new Blob([header + rows], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url; a.download = `mould_depreciation_${filtered.length}_moulds.csv`; a.click();
@@ -342,14 +344,14 @@ export default function MouldDepreciation() {
         {/* SIDEBAR */}
         <div className="sb">
           <div className="sb-brand"><div className="sb-row">
-            <div className="sb-logo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9"/><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6"/><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6"/><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9"/><circle cx="10" cy="10" r="1.8" fill="white"/></svg></div>
+            <div className="sb-logo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><circle cx="10" cy="10" r="1.8" fill="white" /></svg></div>
             <div><div className="sb-nm">MouldSys <span>Enterprise</span></div><div className="sb-tag">Asset Management Platform</div></div>
           </div></div>
           <div className="sb-nav">
             <div className="sb-sec">Main</div>
-            {NAV.map(n => <div key={n.l} className={`sb-link${n.on?" on":""}`} onClick={() => router.push(n.r)}><span>{n.i}</span>{n.l}</div>)}
+            {NAV_ITEMS.map(n => <div key={n.label} className={`sb-link${n.active ? " on" : ""}`} onClick={() => router.push(n.route)}><span>{n.icon}</span>{n.label}</div>)}
           </div>
-          <div className="sb-foot"><div className="sb-row"><div className="sb-av">{userInitials}</div><div><div style={{fontSize:12,fontWeight:600,color:"#fff"}}>{user.name}</div><div style={{fontSize:10,color:"rgba(255,255,255,.5)"}}>{user.role}</div></div></div></div>
+          <div className="sb-foot"><div className="sb-row"><div className="sb-av">{userInitials}</div><div><div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{user.name}</div><div style={{ fontSize: 10, color: "rgba(255,255,255,.5)" }}>{user.role}</div></div></div></div>
         </div>
 
         {/* MAIN */}
@@ -384,14 +386,14 @@ export default function MouldDepreciation() {
 
             {/* Upload Bar */}
             <div className="upload-bar">
-              <div className="upload-btn primary" style={{position:"relative"}}>
+              <div className="upload-btn primary" style={{ position: "relative" }}>
                 📂 Upload CSV
-                <input type="file" accept=".csv,.txt" onChange={handleUpload} ref={fileRef}/>
+                <input type="file" accept=".csv,.txt" onChange={handleUpload} ref={fileRef} />
               </div>
-              <div className="upload-btn outline" onClick={()=>loadMore(500)}>500 Moulds</div>
-              <div className="upload-btn outline" onClick={()=>loadMore(1000)}>1,000</div>
-              <div className="upload-btn outline" onClick={()=>loadMore(5000)}>5,000</div>
-              <div className="upload-btn outline" onClick={()=>loadMore(10000)}>10,000</div>
+              <div className="upload-btn outline" onClick={() => loadMore(500)}>500 Moulds</div>
+              <div className="upload-btn outline" onClick={() => loadMore(1000)}>1,000</div>
+              <div className="upload-btn outline" onClick={() => loadMore(5000)}>5,000</div>
+              <div className="upload-btn outline" onClick={() => loadMore(10000)}>10,000</div>
               <div className="upload-info">
                 Loaded: <span className="upload-count">{rawMoulds.length.toLocaleString()}</span> moulds
               </div>
@@ -412,22 +414,22 @@ export default function MouldDepreciation() {
               </div>
               <div className="sum">
                 <div className="sum-l">SLM Depr. to Date</div>
-                <div className="sum-v" style={{color:"#0284c7"}}>{fmt(totals.totalSlmDepr)}</div>
+                <div className="sum-v" style={{ color: "#0284c7" }}>{fmt(totals.totalSlmDepr)}</div>
                 <div className="sum-s">Accumulated (SLM)</div>
               </div>
               <div className="sum">
                 <div className="sum-l">SLM Book Value</div>
-                <div className="sum-v" style={{color:"#4f46e5"}}>{fmt(totals.totalSlmBV)}</div>
+                <div className="sum-v" style={{ color: "#4f46e5" }}>{fmt(totals.totalSlmBV)}</div>
                 <div className="sum-s">Current (SLM)</div>
               </div>
               <div className="sum">
                 <div className="sum-l">Shot Depr. to Date</div>
-                <div className="sum-v" style={{color:"#059669"}}>{fmt(totals.totalShotDepr)}</div>
+                <div className="sum-v" style={{ color: "#059669" }}>{fmt(totals.totalShotDepr)}</div>
                 <div className="sum-s">Accumulated (Shots)</div>
               </div>
               <div className="sum">
                 <div className="sum-l">Shot Book Value</div>
-                <div className="sum-v" style={{color:"#15803d"}}>{fmt(totals.totalShotBV)}</div>
+                <div className="sum-v" style={{ color: "#15803d" }}>{fmt(totals.totalShotBV)}</div>
                 <div className="sum-s">Current (Shots)</div>
               </div>
             </div>
@@ -435,11 +437,11 @@ export default function MouldDepreciation() {
             {/* Toolbar */}
             <div className="toolbar">
               <div className="sbox">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#9ca3af" strokeWidth="1.5"/><path d="M10 10l3 3" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                <input placeholder="Search Mould ID, Name, Vendor..." value={search} onChange={e=>{setSearch(e.target.value);setPage(1)}}/>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#9ca3af" strokeWidth="1.5" /><path d="M10 10l3 3" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                <input placeholder="Search Mould ID, Name, Vendor..." value={search} onChange={e => { setSearch(e.target.value); setPage(1) }} />
               </div>
-              <div className={`fpill${plantFilter==="all"?" on":""}`} onClick={()=>{setPlantFilter("all");setPage(1)}}>All Plants</div>
-              {plants.map(p => <div key={p} className={`fpill${plantFilter===p?" on":""}`} onClick={()=>{setPlantFilter(p);setPage(1)}}>{p.split("-")[0].trim()}</div>)}
+              <div className={`fpill${plantFilter === "all" ? " on" : ""}`} onClick={() => { setPlantFilter("all"); setPage(1) }}>All Plants</div>
+              {plants.map(p => <div key={p} className={`fpill${plantFilter === p ? " on" : ""}`} onClick={() => { setPlantFilter(p); setPage(1) }}>{p.split("-")[0].trim()}</div>)}
               <div className="mcount">Showing {filtered.length.toLocaleString()} of {rawMoulds.length.toLocaleString()}</div>
             </div>
 
@@ -448,8 +450,8 @@ export default function MouldDepreciation() {
               <div className="tbl-wrap">
                 <table className="tbl">
                   <thead><tr>
-                    <th style={{textAlign:"left"}}>Mould ID</th>
-                    <th style={{textAlign:"left"}}>Name / Type</th>
+                    <th style={{ textAlign: "left" }}>Mould ID</th>
+                    <th style={{ textAlign: "left" }}>Name / Type</th>
                     <th>Cost ({"\u20B9"})</th>
                     <th>Residual ({"\u20B9"})</th>
                     <th>SLM Annual</th>
@@ -462,25 +464,25 @@ export default function MouldDepreciation() {
                     <th></th>
                   </tr></thead>
                   <tbody>
-                    {paged.length === 0 && <tr><td colSpan={12} style={{textAlign:"center",color:"#9ca3af",padding:30,fontFamily:"Plus Jakarta Sans"}}>No moulds found</td></tr>}
+                    {paged.length === 0 && <tr><td colSpan={12} style={{ textAlign: "center", color: "#9ca3af", padding: 30, fontFamily: "Plus Jakarta Sans" }}>No moulds found</td></tr>}
                     {paged.map(m => {
                       const critical = m.shotLifePct > 90;
                       return (
-                        <tr key={m.id} className={critical?"hl":""}>
+                        <tr key={m.id} className={critical ? "hl" : ""}>
                           <td>{m.id}</td>
-                          <td style={{fontWeight:600,maxWidth:160,overflow:"hidden",textOverflow:"ellipsis"}}>{m.name}<div style={{fontSize:10,color:"#9ca3af",fontWeight:400}}>{m.type}</div></td>
+                          <td style={{ fontWeight: 600, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis" }}>{m.name}<div style={{ fontSize: 10, color: "#9ca3af", fontWeight: 400 }}>{m.type}</div></td>
                           <td>{fmtN(m.cost)}</td>
                           <td>{fmtN(m.RV)}</td>
                           <td>{fmtN(m.slmAnnual)}</td>
                           <td>{fmtN(m.slmToDate)}</td>
-                          <td style={{fontWeight:700}}>{fmtN(m.slmBookValue)}</td>
+                          <td style={{ fontWeight: 700 }}>{fmtN(m.slmBookValue)}</td>
                           <td>{fmtN(m.currentShots)}</td>
                           <td>
-                            <span className="sbar"><span className="sfill" style={{width:`${Math.min(100,m.shotLifePct)}%`,background:m.shotLifePct>90?"#dc2626":m.shotLifePct>70?"#d97706":"#059669"}}/></span>
-                            <span style={{fontSize:11,fontWeight:700,color:m.shotLifePct>90?"#dc2626":m.shotLifePct>70?"#d97706":"#059669"}}>{pct(m.shotLifePct)}</span>
+                            <span className="sbar"><span className="sfill" style={{ width: `${Math.min(100, m.shotLifePct)}%`, background: m.shotLifePct > 90 ? "#dc2626" : m.shotLifePct > 70 ? "#d97706" : "#059669" }} /></span>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: m.shotLifePct > 90 ? "#dc2626" : m.shotLifePct > 70 ? "#d97706" : "#059669" }}>{pct(m.shotLifePct)}</span>
                           </td>
                           <td>{fmtN(m.shotDepr)}</td>
-                          <td style={{fontWeight:700,color:m.shotBookValue <= m.RV * 1.1 ? "#dc2626":"#111827"}}>{fmtN(m.shotBookValue)}</td>
+                          <td style={{ fontWeight: 700, color: m.shotBookValue <= m.RV * 1.1 ? "#dc2626" : "#111827" }}>{fmtN(m.shotBookValue)}</td>
                         </tr>
                       );
                     })}
@@ -491,16 +493,16 @@ export default function MouldDepreciation() {
               <div className="pag">
                 <div className="pag-info">Page {page} of {totalPages} ({filtered.length.toLocaleString()} moulds)</div>
                 <div className="pag-btns">
-                  <button className="pgb" disabled={page<=1} onClick={()=>setPage(1)}>First</button>
-                  <button className="pgb" disabled={page<=1} onClick={()=>setPage(p=>p-1)}>Prev</button>
-                  {Array.from({length:Math.min(5,totalPages)},(_,i)=>{
-                    const start = Math.max(1, Math.min(page-2, totalPages-4));
-                    const p = start+i;
-                    return p<=totalPages ? <button key={p} className={`pgb${page===p?" on":""}`} onClick={()=>setPage(p)}>{p}</button> : null;
+                  <button className="pgb" disabled={page <= 1} onClick={() => setPage(1)}>First</button>
+                  <button className="pgb" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Prev</button>
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+                    const p = start + i;
+                    return p <= totalPages ? <button key={p} className={`pgb${page === p ? " on" : ""}`} onClick={() => setPage(p)}>{p}</button> : null;
                   })}
-                  {totalPages > 5 && page < totalPages - 2 && <span style={{color:"#9ca3af",padding:"0 4px"}}>...</span>}
-                  <button className="pgb" disabled={page>=totalPages} onClick={()=>setPage(p=>p+1)}>Next</button>
-                  <button className="pgb" disabled={page>=totalPages} onClick={()=>setPage(totalPages)}>Last</button>
+                  {totalPages > 5 && page < totalPages - 2 && <span style={{ color: "#9ca3af", padding: "0 4px" }}>...</span>}
+                  <button className="pgb" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
+                  <button className="pgb" disabled={page >= totalPages} onClick={() => setPage(totalPages)}>Last</button>
                 </div>
               </div>
             </div>

@@ -6,8 +6,6 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800"] });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"] });
 
-
-
 // ── Data ──────────────────────────────────────────────────────────────────
 const ROLES = [
     { icon: "🏭", name: "OEM Admin", desc: "Full access" },
@@ -96,7 +94,6 @@ function PrimaryBtn({ children, onClick, loading }) {
         </button>
     );
 }
-
 
 function Checkbox({ checked, onChange, children }) {
     return (
@@ -269,7 +266,6 @@ function LoginPage({ onSwitch, onToast }) {
                     Enter your credentials to access the ToolTrack dashboard.
                 </p>
             </div>
-
 
             <InputField label="Email Address" required icon="✉️" type="email" field={email}
                 placeholder="you@company.com" />
@@ -487,8 +483,16 @@ export default function App() {
                 <div style={{
                     flex: 1, background: "#fff", display: "flex",
                     alignItems: "center", justifyContent: "center",
-                    padding: "48px 64px", overflowY: "auto"
+                    padding: "48px 64px", overflowY: "auto",
+                    position: "relative" // Added positioning context for the absolute logo
                 }}>
+                    {/* CUSTOM LOGO */}
+                    <img 
+                        src="/id-logo-160x32.png" 
+                        alt="ID Tech Solutions" 
+                        style={{ position: "absolute", top: 32, right: 40, height: 40, objectFit: "contain" }} 
+                    />
+
                     <div style={{ width: "100%", maxWidth: 400 }}>
                         {page === "login"
                             ? <LoginPage onSwitch={setPage} onToast={showToast} />

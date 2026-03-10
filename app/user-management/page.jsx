@@ -1,5 +1,6 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // ═══════════════════════════════════════════════════════════
 //  USER MANAGEMENT + ROLE CREATION — MouldSys Enterprise
@@ -57,11 +58,22 @@ const PCFG = [
     { k: "roleMgmt", l: "Role Management", t: "tgl", i: "🛡" },
 ];
 
-const NAV = [{ l: "Dashboard", i: "📊" }, { l: "Mould Registry", i: "🔩" }, { l: "Maintenance", i: "🔧" }, { l: "Challan", i: "📄" }, { l: "Transfers", i: "🔄" }, { l: "Mould Return", i: "📥" }, { l: "Depreciation", i: "📉" }, { l: "User Mgmt", i: "👥", on: true }, { l: "Reports", i: "📈" }];
+const NAV_ITEMS = [
+    { label: "Dashboard", icon: "📊", route: "/dashboard" },
+    { label: "User Management", icon: "👥", route: "/user-management", active: true },
+    { label: "Masters", icon: "🗂", route: "/masters" },
+    { label: "Mould Registry", icon: "🔩", route: "/mould-registry" },
+    { label: "Transfers & Challan", icon: "🔄", route: "/challan" },
+    { label: "Mould Return", icon: "📥", route: "/return" },
+    { label: "Depreciation", icon: "📉", route: "/depreciation" },
+    { label: "Maintenance", icon: "🔧", route: "/maintenance" },
+    { label: "Scrap / Dispose", icon: "🗑", route: "/scrap" },
+    { label: "Reports", icon: "📈", route: "/reports" }
+];
 
-function ini(n) { return n.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) }
+function ini(n) { return n ? n.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) : "U" }
 const AC = ["#4f46e5", "#7c3aed", "#0891b2", "#059669", "#d97706", "#dc2626", "#9333ea", "#0284c7"];
-function acol(s) { let h = 0; for (let c of s) h = c.charCodeAt(0) + ((h << 5) - h); return AC[Math.abs(h) % AC.length] }
+function acol(s) { let h = 0; if (!s) return AC[0]; for (let c of s) h = c.charCodeAt(0) + ((h << 5) - h); return AC[Math.abs(h) % AC.length] }
 function cntP(p) { let c = 0; if (Object.values(p.mouldReg).some(Boolean)) c++;["transfer", "challan", "maint", "ret", "scrap", "receipt", "report", "userMgmt", "roleMgmt"].forEach(k => { if (p[k]) c++ }); if (Object.values(p.masters).some(Boolean)) c++; return c }
 function pSum(p) { const r = []; if (Object.values(p.mouldReg).some(Boolean)) { const o = ["add", "view", "edit", "del"].filter(k => p.mouldReg[k]); r.push(`Reg(${o.join("/")})`) } if (p.transfer) r.push("Transfer"); if (p.challan) r.push("Challan"); if (p.maint) r.push("Maint."); if (p.ret) r.push("Return"); if (p.scrap) r.push("Scrap"); if (Object.values(p.masters).some(Boolean)) r.push("Masters"); if (p.receipt) r.push("Receipt"); if (p.report) r.push("Reports"); if (p.userMgmt) r.push("Users"); if (p.roleMgmt) r.push("Roles"); return r }
 
@@ -279,6 +291,9 @@ function RoleFormModal({ role, isEdit, onClose, onSave }) {
 // MAIN
 // ═══════════════════════════════════════════════════════════
 export default function UserManagement() {
+    const router = useRouter();
+    const [user, setUser] = useState({ name: "User", role: "Viewer" });
+
     const [users, setUsers] = useState(SEED_USERS);
     const [roles, setRoles] = useState(SEED_ROLES);
     const [tab, setTab] = useState("users");
@@ -289,6 +304,17 @@ export default function UserManagement() {
     const [toast, setToast] = useState(null);
     const [page, setPage] = useState(1);
     const PER = 8;
+
+    useEffect(() => {
+        const stored = localStorage.getItem("user");
+        if (!stored) {
+            router.push("/login");
+            return;
+        }
+        setUser(JSON.parse(stored));
+    }, []);
+
+    const currentUserInitials = ini(user.name);
 
     const flash = (msg, type = "ok") => { setToast({ msg, type }); setTimeout(() => setToast(null), 3200) };
     const roleNames = roles.map(r => r.name);
@@ -305,11 +331,11 @@ export default function UserManagement() {
         <div className="shell">
             <div className="sb">
                 <div className="sb-brand"><div className="sb-row"><div className="sb-logo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><circle cx="10" cy="10" r="1.8" fill="white" /></svg></div><div><div className="sb-nm">MouldSys <span>Enterprise</span></div><div className="sb-tag">Asset Management Platform</div></div></div></div>
-                <div className="sb-nav"><div className="sb-sec">Main</div>{NAV.map(n => <div key={n.l} className={`sb-link${n.on ? " on" : ""}`}><span>{n.i}</span>{n.l}</div>)}</div>
-                <div className="sb-foot"><div className="sb-row"><div className="sb-av">RK</div><div><div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Rajesh Kumar</div><div style={{ fontSize: 10, color: "rgba(255,255,255,.5)" }}>Admin</div></div></div></div>
+                <div className="sb-nav"><div className="sb-sec">Main</div>{NAV_ITEMS.map(n => <div key={n.label} className={`sb-link${n.active ? " on" : ""}`} onClick={() => router.push(n.route)}><span>{n.icon}</span>{n.label}</div>)}</div>
+                <div className="sb-foot"><div className="sb-row"><div className="sb-av" style={{ background: acol(user.name) }}>{currentUserInitials}</div><div><div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>{user.name}</div><div style={{ fontSize: 10, color: "rgba(255,255,255,.5)" }}>{user.role}</div></div></div></div>
             </div>
             <div className="mn">
-                <div className="top"><div><div className="top-bc">Administration</div><div className="top-t">User Management</div></div><div className="upill"><div className="uav" style={{ background: "#4f46e5" }}>RK</div><span className="unm">Rajesh Kumar</span></div></div>
+                <div className="top"><div><div className="top-bc">Administration</div><div className="top-t">User Management</div></div><div className="upill"><div className="uav" style={{ background: acol(user.name) }}>{currentUserInitials}</div><span className="unm">{user.name}</span></div></div>
                 <div className="cnt">
                     <div className="tabs">
                         <button className={`tabx${tab === "users" ? " on" : ""}`} onClick={() => { setTab("users"); setPage(1) }}>Users ({users.length})</button>
@@ -405,7 +431,7 @@ export default function UserManagement() {
             <div className="mfoot"><button className="btn btn-o" onClick={() => setModal(null)}>Cancel</button><button className="btn btn-d" onClick={() => { const n = modal.data.name; setUsers(us => us.filter(x => x.id !== modal.data.id)); setModal(null); flash(`${n} deleted`, "err") }}>Yes, Delete</button></div>
         </div></div>}
 
-        {modal?.type === "addRole" && <RoleFormModal role={{ name: "", code: "", desc: "", color: "#4f46e5", bg: "#eef2ff", border: "#c7d2fe", privs: JSON.parse(JSON.stringify(BLANK_PRIVS)) }} isEdit={false} onClose={() => setModal(null)} onSave={r => { setRoles(prev => [...prev, { ...r, id: Date.now(), createdBy: "Rajesh Kumar" }]); setModal(null); flash(`Role "${r.name}" created`) }} />}
+        {modal?.type === "addRole" && <RoleFormModal role={{ name: "", code: "", desc: "", color: "#4f46e5", bg: "#eef2ff", border: "#c7d2fe", privs: JSON.parse(JSON.stringify(BLANK_PRIVS)) }} isEdit={false} onClose={() => setModal(null)} onSave={r => { setRoles(prev => [...prev, { ...r, id: Date.now(), createdBy: user.name }]); setModal(null); flash(`Role "${r.name}" created`) }} />}
         {modal?.type === "editRole" && <RoleFormModal role={modal.data} isEdit={true} onClose={() => setModal(null)} onSave={r => { setRoles(prev => prev.map(x => x.id === r.id ? r : x)); setModal(null); flash(`Role "${r.name}" updated`) }} />}
 
         {modal?.type === "viewRole" && (() => {

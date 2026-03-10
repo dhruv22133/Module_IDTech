@@ -48,16 +48,16 @@ const RECENT_TRANSFERS = [
 ];
 
 const NAV_ITEMS = [
-  { label: "Dashboard",            icon: "📊",  route: "/dashboard", active: true },
-  { label: "Mould Registry",       icon: "🔩",  route: "/mould-registry" },
-  { label: "Maintenance",          icon: "🔧",  route: "/maintenance" },
-  { label: "Transfers & Challan",  icon: "🔄",  route: "/challan" },
-  {label:"Mould Return",        icon:"📥", route:"/return" },
-  {label:"Depreciation",        icon:"📉", route:"/depreciation"},
-  { label:"Scrap / Dispose",     icon:"🗑", route:"/scrap"},
-  { label: "Masters",              icon: "🗂",   route: "/masters" },
-  { label: "User Management",      icon: "👥",  route: "/user-management" },
-  { label: "Reports",              icon: "📈",  route: "/reports" },
+  { label: "Dashboard", icon: "📊", route: "/dashboard", active: true },
+  { label: "User Management", icon: "👥", route: "/user-management" },
+  { label: "Masters", icon: "🗂", route: "/masters" },
+  { label: "Mould Registry", icon: "🔩", route: "/mould-registry" },
+  { label: "Transfers & Challan", icon: "🔄", route: "/challan" },
+  { label: "Mould Return", icon: "📥", route: "/return" },
+  { label: "Depreciation", icon: "📉", route: "/depreciation" },
+  { label: "Maintenance", icon: "🔧", route: "/maintenance" },
+  { label: "Scrap / Dispose", icon: "🗑", route: "/scrap" },
+  { label: "Reports", icon: "📈", route: "/reports" },
 ];
 
 // ─── DONUT CHART ──────────────────────────────────────────
