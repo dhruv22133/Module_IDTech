@@ -10,17 +10,20 @@ npm install
 
 ### 2) Configure MySQL (localhost)
 
-This project uses MySQL for user authentication.
+This project uses MySQL for authentication and operational pages.
 
-1. Open MySQL Workbench and connect to your local server.
-2. Open and run `database/schema.sql`.
-3. Create your local env file:
+1. Create your local env file:
 
 ```bash
 cp env.template .env.local
 ```
 
-4. Update `.env.local` with your real MySQL username/password.
+2. Update `.env.local` with your real MySQL username/password.
+3. Initialize the schema and seed data:
+
+```bash
+npm run db:init
+```
 
 ### 3) Run the development server
 
@@ -33,8 +36,19 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Database notes
 
 - Database name: `module_idtech`
-- Main table: `users`
-- `email` is unique so duplicate signups are rejected cleanly.
+- Core tables now cover all key modules:
+  - `users`
+  - `plants`
+  - `suppliers`
+  - `moulds`
+  - `transfer_challans`
+  - `mould_returns`
+  - `maintenance_jobs`
+  - `depreciation_entries`
+  - `scrap_records`
+- `database/schema.sql` creates tables and constraints.
+- `database/seed.sql` inserts starter data for dashboard/testing.
+- Dashboard summary endpoint: `GET /api/dashboard/summary`.
 
 ## Learn More
 

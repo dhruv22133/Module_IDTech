@@ -1,19 +1,28 @@
 'use client';
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 // ─── MOCK DATA ────────────────────────────────────────────
-const KPI_DATA = {
+const DEFAULT_KPI_DATA = {
   total: 1248, atVendor: 186, atSelf: 742, inTransit: 94, inMaintenance: 67, retired: 159
 };
 
-const STATUS_DIST = [
-  { label: "At Self", value: 742, pct: 59.5, color: "#4f46e5" },
-  { label: "At Vendor", value: 186, pct: 14.9, color: "#0891b2" },
-  { label: "In Transit", value: 94, pct: 7.5, color: "#f59e0b" },
-  { label: "Maintenance", value: 67, pct: 5.4, color: "#ef4444" },
-  { label: "Retired", value: 159, pct: 12.7, color: "#9ca3af" },
-];
+function pct(value, total) {
+  if (!total) return 0;
+  return (value / total) * 100;
+}
+
+function buildStatusDist(kpiData) {
+  const total = kpiData.total || 1;
+
+  return [
+    { label: "At Self", value: kpiData.atSelf, pct: Number(((kpiData.atSelf / total) * 100).toFixed(1)), color: "#4f46e5" },
+    { label: "At Vendor", value: kpiData.atVendor, pct: Number(((kpiData.atVendor / total) * 100).toFixed(1)), color: "#0891b2" },
+    { label: "In Transit", value: kpiData.inTransit, pct: Number(((kpiData.inTransit / total) * 100).toFixed(1)), color: "#f59e0b" },
+    { label: "Maintenance", value: kpiData.inMaintenance, pct: Number(((kpiData.inMaintenance / total) * 100).toFixed(1)), color: "#ef4444" },
+    { label: "Retired", value: kpiData.retired, pct: Number(((kpiData.retired / total) * 100).toFixed(1)), color: "#9ca3af" },
+  ];
+}
 
 const PLANT_DATA = [
   { plant: "Plant A – Mumbai", total: 412, atSelf: 280, atVendor: 72, transit: 36, maint: 24 },
@@ -307,14 +316,33 @@ function trStatusStyle(status) {
 export default function Dashboard() {
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [user, setUser] = useState({ name: "User", role: "Viewer" });
+  const [kpiData, setKpiData] = useState(DEFAULT_KPI_DATA);
   const maxPlant = Math.max(...PLANT_DATA.map(p => p.total));
+  const statusDist = buildStatusDist(kpiData);
   const router = useRouter();
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) { router.push("/login"); return; }
     setUser(JSON.parse(stored));
+  }, [router]);
+
+  const loadDashboardSummary = useCallback(async () => {
+    try {
+      const response = await fetch("/api/dashboard/summary", { cache: "no-store" });
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (payload?.success && payload?.summary) {
+        setKpiData(payload.summary);
+      }
+    } catch (error) {
+      console.error("Failed to refresh dashboard summary", error);
+    }
   }, []);
+
+  useEffect(() => {
+    loadDashboardSummary();
+  }, [loadDashboardSummary]);
 
   const initials = user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 
@@ -374,7 +402,7 @@ export default function Dashboard() {
               <div className="tb-date">
                 📅 {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })} · Updated {fmt(lastRefresh)}
               </div>
-              <button className="refresh-btn" title="Refresh" onClick={() => setLastRefresh(new Date())}>
+              <button className="refresh-btn" title="Refresh" onClick={() => { setLastRefresh(new Date()); loadDashboardSummary(); }}>
                 <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5A4.5 4.5 0 1110.9 4M2 2v4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
               <div className="notif">
@@ -400,7 +428,7 @@ export default function Dashboard() {
                   <div className="kpi-label white">Total Moulds</div>
                   <div className="kpi-icon" style={{ background: "rgba(255,255,255,.15)" }}>🔩</div>
                 </div>
-                <div className="kpi-value white"><Counter target={KPI_DATA.total} /></div>
+                <div className="kpi-value white"><Counter target={kpiData.total} /></div>
                 <div className="kpi-sub white">Registered assets across all plants</div>
                 <div className="kpi-bar" style={{ background: "rgba(255,255,255,.15)", marginTop: 12 }}>
                   <div className="kpi-bar-fill" style={{ width: "100%", background: "rgba(255,255,255,.5)" }} />
@@ -413,10 +441,10 @@ export default function Dashboard() {
                   <div className="kpi-label">At Vendor</div>
                   <div className="kpi-icon" style={{ background: "#e0f2fe" }}>🏭</div>
                 </div>
-                <div className="kpi-value" style={{ color: "#0891b2" }}><Counter target={KPI_DATA.atVendor} /></div>
-                <div className="kpi-sub">{((KPI_DATA.atVendor / KPI_DATA.total) * 100).toFixed(1)}% of total</div>
+                <div className="kpi-value" style={{ color: "#0891b2" }}><Counter target={kpiData.atVendor} /></div>
+                <div className="kpi-sub">{pct(kpiData.atVendor, kpiData.total).toFixed(1)}% of total</div>
                 <div className="kpi-bar">
-                  <div className="kpi-bar-fill" style={{ width: `${(KPI_DATA.atVendor / KPI_DATA.total) * 100}%`, background: "#0891b2" }} />
+                  <div className="kpi-bar-fill" style={{ width: `${pct(kpiData.atVendor, kpiData.total)}%`, background: "#0891b2" }} />
                 </div>
               </div>
 
@@ -426,10 +454,10 @@ export default function Dashboard() {
                   <div className="kpi-label">At Self</div>
                   <div className="kpi-icon" style={{ background: "#eef2ff" }}>🏠</div>
                 </div>
-                <div className="kpi-value" style={{ color: "#4f46e5" }}><Counter target={KPI_DATA.atSelf} /></div>
-                <div className="kpi-sub">{((KPI_DATA.atSelf / KPI_DATA.total) * 100).toFixed(1)}% of total</div>
+                <div className="kpi-value" style={{ color: "#4f46e5" }}><Counter target={kpiData.atSelf} /></div>
+                <div className="kpi-sub">{pct(kpiData.atSelf, kpiData.total).toFixed(1)}% of total</div>
                 <div className="kpi-bar">
-                  <div className="kpi-bar-fill" style={{ width: `${(KPI_DATA.atSelf / KPI_DATA.total) * 100}%`, background: "#4f46e5" }} />
+                  <div className="kpi-bar-fill" style={{ width: `${pct(kpiData.atSelf, kpiData.total)}%`, background: "#4f46e5" }} />
                 </div>
               </div>
 
@@ -439,10 +467,10 @@ export default function Dashboard() {
                   <div className="kpi-label">In Transit</div>
                   <div className="kpi-icon" style={{ background: "#fffbeb" }}>🚚</div>
                 </div>
-                <div className="kpi-value" style={{ color: "#d97706" }}><Counter target={KPI_DATA.inTransit} /></div>
-                <div className="kpi-sub">{((KPI_DATA.inTransit / KPI_DATA.total) * 100).toFixed(1)}% of total</div>
+                <div className="kpi-value" style={{ color: "#d97706" }}><Counter target={kpiData.inTransit} /></div>
+                <div className="kpi-sub">{pct(kpiData.inTransit, kpiData.total).toFixed(1)}% of total</div>
                 <div className="kpi-bar">
-                  <div className="kpi-bar-fill" style={{ width: `${(KPI_DATA.inTransit / KPI_DATA.total) * 100}%`, background: "#f59e0b" }} />
+                  <div className="kpi-bar-fill" style={{ width: `${pct(kpiData.inTransit, kpiData.total)}%`, background: "#f59e0b" }} />
                 </div>
               </div>
 
@@ -452,10 +480,10 @@ export default function Dashboard() {
                   <div className="kpi-label">Maintenance</div>
                   <div className="kpi-icon" style={{ background: "#fef2f2" }}>🔧</div>
                 </div>
-                <div className="kpi-value" style={{ color: "#ef4444" }}><Counter target={KPI_DATA.inMaintenance} /></div>
-                <div className="kpi-sub">{((KPI_DATA.inMaintenance / KPI_DATA.total) * 100).toFixed(1)}% of total</div>
+                <div className="kpi-value" style={{ color: "#ef4444" }}><Counter target={kpiData.inMaintenance} /></div>
+                <div className="kpi-sub">{pct(kpiData.inMaintenance, kpiData.total).toFixed(1)}% of total</div>
                 <div className="kpi-bar">
-                  <div className="kpi-bar-fill" style={{ width: `${(KPI_DATA.inMaintenance / KPI_DATA.total) * 100}%`, background: "#ef4444" }} />
+                  <div className="kpi-bar-fill" style={{ width: `${pct(kpiData.inMaintenance, kpiData.total)}%`, background: "#ef4444" }} />
                 </div>
               </div>
 
@@ -465,10 +493,10 @@ export default function Dashboard() {
                   <div className="kpi-label">Retired</div>
                   <div className="kpi-icon" style={{ background: "#f9fafb" }}>📦</div>
                 </div>
-                <div className="kpi-value" style={{ color: "#6b7280" }}><Counter target={KPI_DATA.retired} /></div>
-                <div className="kpi-sub">{((KPI_DATA.retired / KPI_DATA.total) * 100).toFixed(1)}% of total</div>
+                <div className="kpi-value" style={{ color: "#6b7280" }}><Counter target={kpiData.retired} /></div>
+                <div className="kpi-sub">{pct(kpiData.retired, kpiData.total).toFixed(1)}% of total</div>
                 <div className="kpi-bar">
-                  <div className="kpi-bar-fill" style={{ width: `${(KPI_DATA.retired / KPI_DATA.total) * 100}%`, background: "#9ca3af" }} />
+                  <div className="kpi-bar-fill" style={{ width: `${pct(kpiData.retired, kpiData.total)}%`, background: "#9ca3af" }} />
                 </div>
               </div>
             </div>
@@ -484,20 +512,20 @@ export default function Dashboard() {
                     <span className="card-title">Status Distribution</span>
                   </div>
                   <span className="card-badge" style={{ background: "#eef2ff", color: "#4338ca", borderColor: "#c7d2fe" }}>
-                    {KPI_DATA.total.toLocaleString()} total
+                    {kpiData.total.toLocaleString()} total
                   </span>
                 </div>
                 <div className="card-body">
                   <div className="status-dist-wrap">
                     <div className="donut-wrap">
-                      <DonutChart data={STATUS_DIST} size={150} stroke={26} />
+                      <DonutChart data={statusDist} size={150} stroke={26} />
                       <div className="donut-center">
-                        <div className="donut-total">{KPI_DATA.total.toLocaleString()}</div>
+                        <div className="donut-total">{kpiData.total.toLocaleString()}</div>
                         <div className="donut-lbl">Moulds</div>
                       </div>
                     </div>
                     <div className="legend">
-                      {STATUS_DIST.map(s => (
+                      {statusDist.map(s => (
                         <div className="legend-row" key={s.label}>
                           <div className="legend-dot" style={{ background: s.color }} />
                           <span className="legend-label">{s.label}</span>
