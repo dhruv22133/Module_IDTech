@@ -1,22 +1,10 @@
 'use client';
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // ══════════════════════════════════════════════════════════════
-//  MOULD MAINTENANCE MODULE — MouldSys Enterprise
+//  MOULD MAINTENANCE MODULE
 // ══════════════════════════════════════════════════════════════
-
-// ── MASTER DATA ─────────────────────────────────────────────
-const MOULDS = [
-  { id:"MLD-0042", name:"Bumper Front LH",      type:"Injection Mould", plant:"Plant A – Mumbai",     location:"Shop Floor A", shots:470000, maxShots:500000, lastMaint:"2025-01-15", status:"Active" },
-  { id:"MLD-0118", name:"Dashboard Panel RH",   type:"Injection Mould", plant:"Plant B – Pune",       location:"Shop Floor B", shots:440000, maxShots:500000, lastMaint:"2025-02-01", status:"Active" },
-  { id:"MLD-0203", name:"Door Trim Inner LH",   type:"Blow Mould",      plant:"Plant A – Mumbai",     location:"Shop Floor A", shots:410000, maxShots:500000, lastMaint:"2024-12-20", status:"Active" },
-  { id:"MLD-0087", name:"Grille Centre",         type:"Die Cast Mould",  plant:"Plant C – Nashik",     location:"Warehouse 1",  shots:395000, maxShots:500000, lastMaint:"2025-01-28", status:"Active" },
-  { id:"MLD-0311", name:"Headlamp Bezel RH",    type:"Injection Mould", plant:"Plant D – Aurangabad", location:"Maintenance Bay", shots:380000, maxShots:500000, lastMaint:"2025-02-10", status:"Under Maintenance" },
-  { id:"MLD-0512", name:"A-Pillar Cover RH",    type:"Blow Mould",      plant:"Plant B – Pune",       location:"Shop Floor A", shots:220000, maxShots:500000, lastMaint:"2025-01-05", status:"Active" },
-  { id:"MLD-0634", name:"Rear Bumper Assembly", type:"Compression Mould",plant:"Plant A – Mumbai",    location:"Shop Floor B", shots:180000, maxShots:500000, lastMaint:"2024-11-30", status:"Active" },
-  { id:"MLD-0721", name:"Console Side Panel",   type:"Injection Mould", plant:"Plant B – Pune",       location:"Maintenance Bay", shots:310000, maxShots:500000, lastMaint:"2025-02-18", status:"Under Maintenance" },
-];
 
 const MAINTENANCE_TYPES = [
   { key:"preventive",  label:"Preventive Maintenance",  icon:"🛡", color:"#4f46e5", bg:"#eef2ff" },
@@ -71,26 +59,6 @@ const SPARE_PARTS = [
   { code:"SP-010", name:"Hydraulic Cylinder Seal Kit", category:"Hydraulic", uom:"Set", unitCost:4500 },
 ];
 
-const VENDORS = [
-  { code:"VND-001", name:"Precision Tooling Co.",    city:"Pune" },
-  { code:"VND-002", name:"Elite Mould Makers",       city:"Mumbai" },
-  { code:"VND-003", name:"Bharat Engineering Works", city:"Nashik" },
-  { code:"VND-004", name:"Star Jobwork Solutions",   city:"Aurangabad" },
-];
-
-const TECHNICIANS = [
-  { id:"TECH-001", name:"Suresh Patil",      speciality:"Injection Moulds", shift:"Day" },
-  { id:"TECH-002", name:"Ganesh Khare",      speciality:"Die Cast / Blow",  shift:"Day" },
-  { id:"TECH-003", name:"Amit Thakkar",      speciality:"Hot Runner Systems", shift:"Night" },
-  { id:"TECH-004", name:"Pradeep Jadhav",    speciality:"General Maintenance", shift:"Day" },
-  { id:"TECH-005", name:"Ravi Deshmukh",     speciality:"CMM / Precision",   shift:"Day" },
-];
-
-const USERS = {
-  maker:    { id:"USR-001", name:"Rajesh Kumar",   role:"Maker",    avatar:"RK" },
-  approver: { id:"USR-002", name:"Sunita Rao",     role:"Approver", avatar:"SR" },
-};
-
 const NAV_ITEMS = [
   { label: "Dashboard", icon: "📊", route: "/dashboard" },
   { label: "User Management", icon: "👥", route: "/user-management" },
@@ -104,128 +72,6 @@ const NAV_ITEMS = [
   { label: "Reports", icon: "📈", route: "/reports" },
 ];
 
-// ── Counters ────────────────────────────────────────────────
-let maintCounter = 48;
-const nextMaintId = () => `MNT-2025-${String(++maintCounter).padStart(4,"0")}`;
-let woCounter = 120;
-const nextWoId = () => `WO-2025-${String(++woCounter).padStart(4,"0")}`;
-
-// ── SEED MAINTENANCE RECORDS ────────────────────────────────
-const SEED_RECORDS = [
-  {
-    id:"MNT-2025-0045", workOrderNo:"WO-2025-0118",
-    mouldId:"MLD-0311", mouldName:"Headlamp Bezel RH", mouldType:"Injection Mould", plant:"Plant D – Aurangabad",
-    maintenanceType:"corrective", priority:"high",
-    issueCategory:"Ejector Pin Issue", issueDescription:"3 ejector pins broken during production run. Part sticking in cavity side.",
-    reportedBy:"Ramesh Shinde", reportedDate:"2025-03-01",
-    scheduledStart:"2025-03-02", scheduledEnd:"2025-03-04",
-    actualStart:"2025-03-02", actualEnd:"",
-    assignedTechnician:"TECH-001", assignedVendor:"",
-    maintenanceLocation:"in_house",
-    shotCountAtMaint: 380000,
-    estimatedCost:12500, actualCost:0,
-    sparesUsed:[{ code:"SP-001", name:"Ejector Pin (D=6mm)", qty:3, unitCost:450, total:1350 }],
-    checklistItems:[], beforeImages:[], afterImages:[],
-    rootCause:"", correctiveAction:"", preventiveAction:"",
-    downtime:0, status:"In Progress",
-    maker:USERS.maker, approver:null,
-    remarks:"Urgent – production line stopped",
-    createdAt:"01 Mar 2025, 09:15 AM",
-    timeline:[
-      { event:"Maintenance Request Created", by:"Rajesh Kumar", at:"01 Mar 2025, 09:15 AM", note:"Ejector pin breakage reported" },
-      { event:"Work Order Generated", by:"System", at:"01 Mar 2025, 09:20 AM", note:"WO-2025-0118 created" },
-      { event:"Technician Assigned", by:"Rajesh Kumar", at:"01 Mar 2025, 10:00 AM", note:"Assigned to Suresh Patil" },
-      { event:"Work Started", by:"Suresh Patil", at:"02 Mar 2025, 08:30 AM", note:"Dismantling ejector plate" },
-    ]
-  },
-  {
-    id:"MNT-2025-0044", workOrderNo:"WO-2025-0117",
-    mouldId:"MLD-0721", mouldName:"Console Side Panel", mouldType:"Injection Mould", plant:"Plant B – Pune",
-    maintenanceType:"preventive", priority:"medium",
-    issueCategory:"", issueDescription:"Scheduled 50K shot preventive maintenance",
-    reportedBy:"System", reportedDate:"2025-02-15",
-    scheduledStart:"2025-02-18", scheduledEnd:"2025-02-20",
-    actualStart:"2025-02-18", actualEnd:"2025-02-19",
-    assignedTechnician:"TECH-004", assignedVendor:"",
-    maintenanceLocation:"in_house",
-    shotCountAtMaint: 310000,
-    estimatedCost:8000, actualCost:6800,
-    sparesUsed:[{ code:"SP-004", name:"O-Ring Seal Kit", qty:2, unitCost:350, total:700 }, { code:"SP-008", name:"Cooling Plug Seal", qty:4, unitCost:150, total:600 }],
-    checklistItems: CHECKLIST_PREVENTIVE.map(c => ({ ...c, done:true, remark:"OK" })),
-    beforeImages:[], afterImages:[],
-    rootCause:"N/A – Preventive", correctiveAction:"All checklist items completed", preventiveAction:"Next PM at 360,000 shots",
-    downtime:16, status:"Completed",
-    maker:USERS.maker, approver:USERS.approver,
-    remarks:"Completed ahead of schedule",
-    createdAt:"15 Feb 2025, 11:00 AM",
-    timeline:[
-      { event:"PM Schedule Triggered", by:"System", at:"15 Feb 2025, 11:00 AM", note:"50K interval reached" },
-      { event:"Work Order Generated", by:"System", at:"15 Feb 2025, 11:05 AM", note:"WO-2025-0117 created" },
-      { event:"Technician Assigned", by:"Rajesh Kumar", at:"16 Feb 2025, 09:00 AM", note:"Assigned to Pradeep Jadhav" },
-      { event:"Work Started", by:"Pradeep Jadhav", at:"18 Feb 2025, 08:00 AM", note:"PM checklist started" },
-      { event:"Completed", by:"Pradeep Jadhav", at:"19 Feb 2025, 04:30 PM", note:"All tasks done" },
-      { event:"Approved & Closed", by:"Sunita Rao", at:"20 Feb 2025, 10:00 AM", note:"Verified and approved" },
-    ]
-  },
-  {
-    id:"MNT-2025-0043", workOrderNo:"WO-2025-0116",
-    mouldId:"MLD-0042", mouldName:"Bumper Front LH", mouldType:"Injection Mould", plant:"Plant A – Mumbai",
-    maintenanceType:"breakdown", priority:"critical",
-    issueCategory:"Hot Runner Failure", issueDescription:"Zone 3 heater band burnt out. Nozzle tip blocked. Production halted.",
-    reportedBy:"Vikram Joshi", reportedDate:"2025-02-28",
-    scheduledStart:"2025-02-28", scheduledEnd:"2025-03-01",
-    actualStart:"2025-02-28", actualEnd:"2025-03-01",
-    assignedTechnician:"TECH-003", assignedVendor:"VND-001",
-    maintenanceLocation:"vendor",
-    shotCountAtMaint: 468000,
-    estimatedCost:35000, actualCost:32500,
-    sparesUsed:[
-      { code:"SP-005", name:"Heater Band 220V", qty:1, unitCost:2200, total:2200 },
-      { code:"SP-006", name:"Thermocouple J-Type", qty:2, unitCost:800, total:1600 },
-    ],
-    checklistItems:[], beforeImages:[], afterImages:[],
-    rootCause:"Heater band insulation failure due to thermal cycling beyond rated cycles",
-    correctiveAction:"Replaced heater band zone 3, replaced 2 thermocouples, cleaned nozzle tip",
-    preventiveAction:"Add heater resistance check to monthly PM schedule",
-    downtime:24, status:"Completed",
-    maker:USERS.maker, approver:USERS.approver,
-    remarks:"Vendor Precision Tooling assisted on-site",
-    createdAt:"28 Feb 2025, 06:45 AM",
-    timeline:[
-      { event:"Breakdown Reported", by:"Vikram Joshi", at:"28 Feb 2025, 06:45 AM", note:"Production line A halted" },
-      { event:"Emergency WO Created", by:"Rajesh Kumar", at:"28 Feb 2025, 07:00 AM", note:"WO-2025-0116 – Priority: Critical" },
-      { event:"Vendor Contacted", by:"Rajesh Kumar", at:"28 Feb 2025, 07:15 AM", note:"Precision Tooling – Arvind Shah" },
-      { event:"Repair Started", by:"Amit Thakkar", at:"28 Feb 2025, 09:00 AM", note:"With vendor support" },
-      { event:"Repair Completed", by:"Amit Thakkar", at:"01 Mar 2025, 06:00 AM", note:"Trial run successful" },
-      { event:"Approved & Closed", by:"Sunita Rao", at:"01 Mar 2025, 10:30 AM", note:"Production resumed" },
-    ]
-  },
-  {
-    id:"MNT-2025-0042", workOrderNo:"WO-2025-0115",
-    mouldId:"MLD-0087", mouldName:"Grille Centre", mouldType:"Die Cast Mould", plant:"Plant C – Nashik",
-    maintenanceType:"predictive", priority:"medium",
-    issueCategory:"Surface Finish Degradation", issueDescription:"Increasing rejection rate (2.3% → 4.1%). Surface roughness measurement shows degradation trend.",
-    reportedBy:"Quality Team", reportedDate:"2025-02-25",
-    scheduledStart:"2025-03-05", scheduledEnd:"2025-03-07",
-    actualStart:"", actualEnd:"",
-    assignedTechnician:"TECH-005", assignedVendor:"",
-    maintenanceLocation:"in_house",
-    shotCountAtMaint: 395000,
-    estimatedCost:18000, actualCost:0,
-    sparesUsed:[],
-    checklistItems:[], beforeImages:[], afterImages:[],
-    rootCause:"", correctiveAction:"", preventiveAction:"",
-    downtime:0, status:"Scheduled",
-    maker:USERS.maker, approver:null,
-    remarks:"CMM measurement scheduled before repair",
-    createdAt:"25 Feb 2025, 03:30 PM",
-    timeline:[
-      { event:"Predictive Alert", by:"Quality Team", at:"25 Feb 2025, 03:30 PM", note:"Rejection trend identified" },
-      { event:"Maintenance Scheduled", by:"Rajesh Kumar", at:"26 Feb 2025, 09:00 AM", note:"Scheduled for 05 Mar" },
-    ]
-  },
-];
-
 // ── STYLES ──────────────────────────────────────────────────
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -237,8 +83,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 /* ── SIDEBAR ── */
 .sidebar{width:220px;flex-shrink:0;background:linear-gradient(170deg,#3b3fe8 0%,#5b2be0 45%,#7c2fe8 100%);display:flex;flex-direction:column;position:relative;overflow:hidden}
 .sidebar::after{content:'';position:absolute;bottom:-60px;left:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none}
-.sb-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.1)}
-.sb-brand-row{display:flex;align-items:center;gap:10px}
+.sb-brand{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.1);z-index:1;position:relative}
+.sb-logo-row{display:flex;align-items:center;padding:0 4px}
 .sb-icon{width:36px;height:36px;background:rgba(255,255,255,0.18);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sb-name{font-size:14px;font-weight:700;color:#fff}.sb-name span{font-weight:400;opacity:.8}
 .sb-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
@@ -347,14 +193,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .btn-sm{height:34px;padding:0 14px;font-size:12px;border-radius:8px}
 .btn-xs{height:28px;padding:0 10px;font-size:11px;border-radius:6px}
 
-/* ── FILE UPLOAD ── */
-.file-wrap{position:relative;display:flex;align-items:center;gap:0;height:42px;border:1.5px dashed #d1d5db;border-radius:10px;overflow:hidden;background:#fafafa;transition:border-color .2s}
-.file-wrap:hover{border-color:#5b2be0;background:#f5f3ff}
-.file-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.file-btn{height:100%;padding:0 14px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0}
-.file-name{flex:1;padding:0 12px;font-size:12px;color:#9ca3af;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.file-name.has-file{color:#374151;font-weight:500}
-
 /* ── CHECKLIST ── */
 .checklist-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:10px;transition:background .1s}
 .checklist-item:hover{background:#f9fafb}
@@ -388,18 +226,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .filter-pill{display:flex;align-items:center;gap:5px;height:36px;padding:0 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:#fff;color:#374151;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
 .filter-pill:hover,.filter-pill.active{border-color:#4f46e5;color:#4f46e5;background:#eef2ff}
 
-/* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(15,20,40,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
-.modal-box{background:#fff;border-radius:18px;width:100%;max-width:960px;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.2);animation:modalIn .22s ease}
-@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.modal-hdr{padding:20px 24px 16px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:2;border-radius:18px 18px 0 0}
-.modal-title{font-size:17px;font-weight:800;color:#111827;letter-spacing:-.02em}
-.modal-sub{font-size:12px;color:#6b7280;margin-top:2px}
-.modal-close{width:34px;height:34px;border-radius:9px;border:1.5px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#6b7280;transition:all .15s}
-.modal-close:hover{background:#f3f4f6;color:#111827}
-.modal-body{padding:20px 24px}
-.modal-footer{padding:16px 24px;border-top:1px solid #f3f4f6;display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:#fff}
-
 /* ── FORM FOOTER ── */
 .form-footer{background:#fff;border-top:1px solid #e5e7eb;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 -2px 8px rgba(0,0,0,.04)}
 .footer-hint{font-size:12px;color:#9ca3af;display:flex;align-items:center;gap:6px}
@@ -426,6 +252,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .cost-row:last-child{border-bottom:none;font-weight:700}
 .cost-label{font-size:13px;color:#374151}
 .cost-value{font-size:13px;font-weight:600;color:#111827}
+
+/* ── IMAGE UPLOAD OVERRIDES ── */
+.img-upload-zone{border:1.5px dashed #d1d5db;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;background:#fafafa;transition:border-color .15s;cursor:pointer}
+.img-upload-zone:hover{border-color:#4f46e5;background:#f5f3ff}
+.img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.img-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:#f3f4f6;border:1.5px solid #e5e7eb}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-rm{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:4px;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:10px}
+.img-thumb-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6);color:#fff;font-size:9px;padding:3px 5px}
+
+.logout-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
 `;
 
 // ── HELPERS ─────────────────────────────────────────────────
@@ -453,14 +306,52 @@ function typeBadge(t) {
   return <span className="badge" style={{ background:mt.bg, color:mt.color, border:`1px solid transparent` }}>{mt.icon} {mt.label}</span>;
 }
 
-function initials(name) { return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2); }
+function initials(name) { return name ? name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2) : "U"; }
+
+// ── IMAGE COMPONENT ─────────────────────────────────────────
+function ImageUpload({ images, onChange, label, color }) {
+  const inputRef = useRef(null);
+  
+  const handleFiles = useCallback((files) => {
+    const arr = [...files].filter(f => f.type.startsWith("image/"));
+    const newImgs = arr.map(file => ({
+        file: file,
+        url: URL.createObjectURL(file),
+        name: file.name
+    }));
+    onChange([...images, ...newImgs]);
+  }, [images, onChange]);
+
+  return (
+    <div>
+      <div className="img-upload-zone" onClick={() => inputRef.current?.click()}>
+        <button type="button" className="btn btn-sm" style={{ background: color, color: "#fff", pointerEvents: "none" }}>
+          ⬆ {label}
+        </button>
+        <span style={{ fontSize: 11, color: "#9ca3af" }}>JPG, PNG · Max 5MB each</span>
+        <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={e => handleFiles(e.target.files)} />
+      </div>
+      
+      {images.length > 0 && (
+        <div className="img-grid">
+          {images.map((img, i) => (
+            <div key={i} className="img-thumb">
+              <img src={img.url} alt={img.name} />
+              <div className="img-rm" onClick={(e) => { e.stopPropagation(); onChange(images.filter((_, j) => j !== i)); }}>✕</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ══════════════════════════════════════════════════════════════
 //  COMPONENT
 // ══════════════════════════════════════════════════════════════
 export default function MouldMaintenance() {
   const router = useRouter();
-  const [records, setRecords] = useState(SEED_RECORDS);
+  const [records, setRecords] = useState([]);
   const [view, setView] = useState("list"); // list | create | detail
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
@@ -468,15 +359,49 @@ export default function MouldMaintenance() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [toast, setToast] = useState(null);
   const [errors, setErrors] = useState({});
+  
   const [user, setUser] = useState({ name: "User", role: "Viewer" });
+  const [roles, setRoles] = useState([]);
+
+  const [dbMoulds, setDbMoulds] = useState([]);
+  const [dbVendors, setDbVendors] = useState([]);
+  const [dbTechnicians, setDbTechnicians] = useState([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) { router.push("/login"); return; }
     setUser(JSON.parse(stored));
-  }, []);
+    
+    // Fetch Roles for RBAC validation
+    fetch('/api/roles').then(r=>r.json()).then(setRoles).catch(console.error);
 
-  const userInitials = user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+    // Fetch maintenance records
+    fetch('/api/maintenance?_t=' + Date.now(), { cache: 'no-store' })
+      .then(res => res.ok ? res.json() : [])
+      .then(setRecords)
+      .catch(console.error);
+
+    // Fetch required master data.
+    Promise.all([
+      fetch('/api/moulds?_t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+      fetch('/api/masters?type=maint_vendors&_t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+      fetch('/api/masters?type=technicians&_t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : [])
+    ]).then(([moulds, vendors, techs]) => {
+      setDbMoulds(Array.isArray(moulds) ? moulds.map(m => ({ id: m.mouldIdAssetCode || m.mould_id_code, name: m.mouldName || m.mould_name, type: m.assetClassName || m.asset_class_name, plant: m.plant, location: m.locationName || m.location_name, shots: m.current_shots || 0, maxShots: m.guaranteed_shots || 0 })) : []);
+      
+      setDbVendors(Array.isArray(vendors) && !vendors.error ? vendors.map(v => ({ code: v.code, name: v.name, city: v.city || v.location, status: v.status })) : []);
+      
+      setDbTechnicians(Array.isArray(techs) && !techs.error ? techs.map(t => ({ code: t.code, name: t.name, speciality: t.speciality, status: t.status })) : []);
+    }).catch(console.error);
+
+  }, [router]);
+
+  const userInitials = initials(user.name);
+
+  // ── Role Privileges ──
+  const activeRole = roles.find(r => r.name === user.role);
+  const privs = activeRole ? activeRole.privs : null;
+  const canEdit = user.role === 'Admin' || privs?.maint === true;
 
   // ── Create form state ──
   const emptyForm = {
@@ -488,14 +413,10 @@ export default function MouldMaintenance() {
     maintenanceLocation:"in_house",
     estimatedCost:"",
     remarks:"",
-    // Checklist
     checklistItems: CHECKLIST_PREVENTIVE.map(c => ({ ...c, done:false, remark:"" })),
-    // Spare parts
     sparesUsed:[],
-    // RCA fields
-    rootCause:"", correctiveAction:"", preventiveAction:"",
-    // Images
     beforeImages:[], afterImages:[],
+    rootCause:"", correctiveAction:"", preventiveAction:"",
   };
   const [form, setForm] = useState({ ...emptyForm });
 
@@ -503,8 +424,7 @@ export default function MouldMaintenance() {
 
   const showToast = msg => { setToast(msg); setTimeout(() => setToast(null), 3500); };
 
-  // ── Derived mould info ──
-  const selectedMould = MOULDS.find(m => m.id === form.mouldId);
+  const selectedMould = dbMoulds.find(m => m.id === form.mouldId);
 
   // ── Filters ──
   const filtered = records.filter(r => {
@@ -523,10 +443,10 @@ export default function MouldMaintenance() {
     inProgress: records.filter(r => r.status === "In Progress").length,
     scheduled: records.filter(r => r.status === "Scheduled").length,
     completed: records.filter(r => r.status === "Completed").length,
-    totalCost: records.reduce((s,r) => s + (r.actualCost || r.estimatedCost || 0), 0),
+    totalCost: records.reduce((s,r) => s + (Number(r.actualCost) || Number(r.estimatedCost) || 0), 0),
   };
 
-  // ── Validate create form ──
+  // ── Validate ──
   const validate = () => {
     const e = {};
     if (!form.mouldId) e.mouldId = "Required";
@@ -538,42 +458,103 @@ export default function MouldMaintenance() {
   };
 
   // ── Submit ──
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
     setErrors({});
-    const mould = MOULDS.find(m => m.id === form.mouldId);
-    const tech = TECHNICIANS.find(t => t.id === form.assignedTechnician);
-    const newRec = {
-      id: nextMaintId(), workOrderNo: nextWoId(),
-      mouldId: form.mouldId, mouldName: mould?.name || "", mouldType: mould?.type || "", plant: mould?.plant || "",
-      maintenanceType: form.maintenanceType, priority: form.priority,
-      issueCategory: form.issueCategory, issueDescription: form.issueDescription || "Scheduled preventive maintenance",
-      reportedBy: form.reportedBy || USERS.maker.name, reportedDate: form.reportedDate || new Date().toISOString().slice(0,10),
-      scheduledStart: form.scheduledStart, scheduledEnd: form.scheduledEnd,
-      actualStart:"", actualEnd:"",
-      assignedTechnician: form.assignedTechnician, assignedVendor: form.assignedVendor,
-      maintenanceLocation: form.maintenanceLocation,
-      shotCountAtMaint: mould?.shots || 0,
-      estimatedCost: parseFloat(form.estimatedCost) || 0, actualCost:0,
-      sparesUsed: form.sparesUsed,
-      checklistItems: form.maintenanceType === "preventive" ? form.checklistItems : [],
-      beforeImages:[], afterImages:[],
-      rootCause:"", correctiveAction:"", preventiveAction:"",
-      downtime:0, status:"Scheduled",
-      maker: USERS.maker, approver:null,
-      remarks: form.remarks,
-      createdAt: new Date().toLocaleString("en-GB",{ day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit" }),
-      timeline:[
-        { event:"Maintenance Request Created", by:USERS.maker.name, at:new Date().toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`${MAINTENANCE_TYPES.find(t=>t.key===form.maintenanceType)?.label} scheduled` },
-        { event:"Work Order Generated", by:"System", at:new Date().toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`${nextWoId()} created` },
-        { event:"Technician Assigned", by:USERS.maker.name, at:new Date().toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`Assigned to ${tech?.name || ""}` },
-      ]
-    };
-    setRecords(prev => [newRec, ...prev]);
-    setForm({ ...emptyForm });
-    setView("list");
-    showToast(`✅ Maintenance ${newRec.id} created with ${newRec.workOrderNo}`);
+
+    const mould = dbMoulds.find(m => m.id === form.mouldId);
+    const tech = dbTechnicians.find(t => t.code === form.assignedTechnician);
+    
+    // Auto-generate ID
+    const randomSuffix = String(Math.floor(Math.random() * 9000) + 1000);
+    const maintId = `MNT-2026-${randomSuffix}`;
+    const woId = `WO-2026-${randomSuffix}`;
+
+    const formData = new FormData();
+    formData.append('id', maintId);
+    formData.append('workOrderNo', woId);
+    formData.append('mouldId', form.mouldId);
+    formData.append('mouldName', mould?.name || "");
+    formData.append('mouldType', mould?.type || "");
+    formData.append('plant', mould?.plant || "");
+    formData.append('maintenanceType', form.maintenanceType);
+    formData.append('priority', form.priority);
+    formData.append('issueCategory', form.issueCategory);
+    formData.append('issueDescription', form.issueDescription || "Scheduled preventive maintenance");
+    formData.append('reportedBy', form.reportedBy || user.name);
+    formData.append('reportedDate', form.reportedDate || new Date().toISOString().slice(0,10));
+    formData.append('scheduledStart', form.scheduledStart);
+    if(form.scheduledEnd) formData.append('scheduledEnd', form.scheduledEnd);
+    formData.append('assignedTechnician', form.assignedTechnician);
+    if(form.assignedVendor) formData.append('assignedVendor', form.assignedVendor);
+    formData.append('maintenanceLocation', form.maintenanceLocation);
+    formData.append('shotCountAtMaint', mould?.shots || 0);
+    formData.append('estimatedCost', parseFloat(form.estimatedCost) || 0);
+    formData.append('status', "Scheduled");
+    if(form.remarks) formData.append('remarks', form.remarks);
+    if(form.rootCause) formData.append('rootCause', form.rootCause);
+    if(form.correctiveAction) formData.append('correctiveAction', form.correctiveAction);
+    if(form.preventiveAction) formData.append('preventiveAction', form.preventiveAction);
+
+    formData.append('maker', JSON.stringify({ name: user.name }));
+    formData.append('sparesUsed', JSON.stringify(form.sparesUsed));
+    formData.append('checklistItems', JSON.stringify(form.maintenanceType === "preventive" ? form.checklistItems : []));
+    
+    form.beforeImages.forEach(img => { if (img.file) formData.append('beforeImages', img.file); });
+    form.afterImages.forEach(img => { if (img.file) formData.append('afterImages', img.file); });
+
+    const tl = [
+      { event:"Maintenance Request Created", by: user.name, at: new Date().toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`${MAINTENANCE_TYPES.find(t=>t.key===form.maintenanceType)?.label} scheduled` },
+      { event:"Work Order Generated", by:"System", at: new Date().toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`${woId} created` },
+      { event:"Technician Assigned", by: user.name, at: new Date().toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}), note:`Assigned to ${tech?.name || ""}` },
+    ];
+    formData.append('timeline', JSON.stringify(tl));
+
+    try {
+        const res = await fetch("/api/maintenance", {
+            method: "POST",
+            body: formData
+        });
+        
+        if (res.ok) {
+            // Re-fetch from DB to grab the actual URLs that were generated by the server
+            fetch('/api/maintenance?_t=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.ok ? r.json() : []).then(setRecords).catch(console.error);
+            
+            setForm({ ...emptyForm });
+            setView("list");
+            showToast(`✅ Maintenance ${maintId} created with ${woId}`);
+        } else {
+            const data = await res.json();
+            showToast(`❌ Failed to create: ${data.error}`);
+        }
+    } catch (err) {
+        showToast(`❌ System error: ${err.message}`);
+    }
+  };
+
+  const handleDelete = async (id) => {
+      try {
+          const res = await fetch(`/api/maintenance?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+              setRecords(prev => prev.filter(r => r.id !== id));
+              setView("list");
+              showToast(`🗑️ Record ${id} deleted successfully`);
+          }
+      } catch (err) {
+          showToast(`❌ Error deleting record`);
+      }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      localStorage.removeItem("user");
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
   };
 
   // ── Add spare part row ──
@@ -615,26 +596,25 @@ export default function MouldMaintenance() {
         {/* ── SIDEBAR ── */}
         <div className="sidebar">
           <div className="sb-brand">
-            <div className="sb-brand-row">
+            <div className="sb-logo-row">
               <div className="sb-icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9"/>
-                  <rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6"/>
-                  <rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6"/>
-                  <rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9"/>
-                  <circle cx="10" cy="10" r="1.8" fill="white"/>
+                  <rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9" />
+                  <rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6" />
+                  <rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6" />
+                  <rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9" />
+                  <circle cx="10" cy="10" r="1.8" fill="white" />
                 </svg>
               </div>
-              <div>
-                <div className="sb-name">MouldSys <span>Enterprise</span></div>
-                <div className="sb-sub">Asset Management Platform</div>
-              </div>
+              <div><div className="sb-name">MouldSys <span>Enterprise</span></div><div className="sb-sub">Asset Management Platform</div></div>
             </div>
           </div>
           <div className="sb-nav">
             <div className="sb-section">Main</div>
             {NAV_ITEMS.map(n => (
-              <div key={n.label} className={`sb-item${n.active?" active":""}`}
+              <div 
+                key={n.label} 
+                className={`sb-item${n.active?" active":""}`}
                 onClick={() => router.push(n.route)}>
                 <span>{n.icon}</span>{n.label}
               </div>
@@ -669,6 +649,9 @@ export default function MouldMaintenance() {
                 <div className="tb-avatar">{userInitials}</div>
                 <span className="tb-uname">{user.name}</span>
               </div>
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout ➔
+            </button>
             </div>
           </div>
 
@@ -685,10 +668,12 @@ export default function MouldMaintenance() {
                     <div className="page-hdr-sub">Track, schedule and manage all mould maintenance activities</div>
                   </div>
                   <div className="page-hdr-right">
-                    <button className="btn btn-primary" onClick={() => { setForm({...emptyForm}); setErrors({}); setView("create"); }}>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
-                      New Maintenance
-                    </button>
+                    {canEdit && (
+                        <button className="btn btn-primary" onClick={() => { setForm({...emptyForm}); setErrors({}); setView("create"); }}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
+                        New Maintenance
+                        </button>
+                    )}
                   </div>
                 </div>
 
@@ -765,7 +750,7 @@ export default function MouldMaintenance() {
                         <tr><td colSpan={9} style={{textAlign:"center",color:"#9ca3af",padding:40}}>No maintenance records found</td></tr>
                       )}
                       {filtered.map(r => {
-                        const tech = TECHNICIANS.find(t => t.id === r.assignedTechnician);
+                        const tech = dbTechnicians.find(t => t.code === r.assignedTechnician);
                         return (
                           <tr key={r.id}>
                             <td><span className="tbl-link" onClick={()=>{setSelectedRecord(r);setView("detail")}}>{r.id}</span></td>
@@ -801,7 +786,7 @@ export default function MouldMaintenance() {
             )}
 
             {/* ═══════════════════ CREATE VIEW ═══════════════════ */}
-            {view === "create" && (
+            {view === "create" && canEdit && (
               <>
                 <div className="page-hdr">
                   <div>
@@ -827,7 +812,7 @@ export default function MouldMaintenance() {
                       <label className="field-label">Mould ID <span className="req">*</span></label>
                       <select className={`field-select${errors.mouldId?" err":""}`} value={form.mouldId} onChange={e=>set("mouldId",e.target.value)}>
                         <option value="">— Select Mould —</option>
-                        {MOULDS.map(m => <option key={m.id} value={m.id}>{m.id} – {m.name}</option>)}
+                        {dbMoulds.map(m => <option key={m.id} value={m.id}>{m.id} – {m.name}</option>)}
                       </select>
                       {errors.mouldId && <div className="field-err">{errors.mouldId}</div>}
                     </div>
@@ -849,7 +834,7 @@ export default function MouldMaintenance() {
                     </div>
                     <div className="field">
                       <label className="field-label">Current Shot Count</label>
-                      <input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould ? `${selectedMould.shots.toLocaleString()} / ${selectedMould.maxShots.toLocaleString()}` : ""} readOnly placeholder="Auto"/>
+                      <input className={`field-input${selectedMould?" auto-fill":""}`} value={selectedMould ? `${(selectedMould.shots || 0).toLocaleString()} / ${(selectedMould.maxShots || 0).toLocaleString()}` : ""} readOnly placeholder="Auto"/>
                     </div>
                   </div>
                   <div style={{height:1,background:"#e8edff",margin:"0 22px"}}/>
@@ -928,7 +913,7 @@ export default function MouldMaintenance() {
                       <label className="field-label">Assigned Technician <span className="req">*</span></label>
                       <select className={`field-select${errors.assignedTechnician?" err":""}`} value={form.assignedTechnician} onChange={e=>set("assignedTechnician",e.target.value)}>
                         <option value="">— Select Technician —</option>
-                        {TECHNICIANS.map(t => <option key={t.id} value={t.id}>{t.name} ({t.speciality})</option>)}
+                        {dbTechnicians.filter(t => t.status !== 'Inactive').map(t => <option key={t.code} value={t.code}>{t.name} ({t.speciality})</option>)}
                       </select>
                       {errors.assignedTechnician && <div className="field-err">{errors.assignedTechnician}</div>}
                     </div>
@@ -936,7 +921,7 @@ export default function MouldMaintenance() {
                       <label className="field-label">Assigned Vendor (Optional)</label>
                       <select className="field-select" value={form.assignedVendor} onChange={e=>set("assignedVendor",e.target.value)}>
                         <option value="">— None —</option>
-                        {VENDORS.map(v => <option key={v.code} value={v.code}>{v.name} – {v.city}</option>)}
+                        {dbVendors.filter(v => v.status !== 'Inactive').map(v => <option key={v.code} value={v.code}>{v.name} – {v.city}</option>)}
                       </select>
                     </div>
                     <div className="field">
@@ -1015,7 +1000,7 @@ export default function MouldMaintenance() {
                   </div>
                 </div>
 
-                {/* SECTION 5: Root Cause & Images */}
+                {/* SECTION 5: Root Cause & Photos */}
                 <div className="card">
                   <div className="sec-hdr">
                     <div className="sec-hdr-icon" style={{background:"#f5f3ff"}}>🔍</div>
@@ -1036,32 +1021,21 @@ export default function MouldMaintenance() {
                       <textarea className="field-textarea" value={form.preventiveAction} onChange={e=>set("preventiveAction",e.target.value)} placeholder="Recommendations to prevent recurrence…" rows={2}/>
                     </div>
                   </div>
-                  <div className="form-grid cols-2" style={{paddingTop:0}}>
+                  
+                  <div style={{height:1,background:"#e8edff",margin:"0 22px"}}/>
+                  
+                  {/* Photo Upload Zone */}
+                  <div className="form-grid cols-2" style={{paddingTop: 16}}>
                     <div className="field">
-                      <label className="field-label">Before Photos</label>
-                      <div className="file-wrap">
-                        <div className="file-btn">
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                          Upload Before
-                        </div>
-                        <span className="file-name">JPG, PNG · Max 5MB each</span>
-                        <input type="file" accept="image/*" multiple/>
-                      </div>
+                      <label className="field-label" style={{marginBottom: 4}}>Before Photos</label>
+                      <ImageUpload images={form.beforeImages} onChange={v=>set("beforeImages",v)} label="Upload Before" color="#7c3aed" />
                     </div>
                     <div className="field">
-                      <label className="field-label">After Photos</label>
-                      <div className="file-wrap">
-                        <div className="file-btn" style={{background:"linear-gradient(135deg,#10b981,#059669)"}}>
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                          Upload After
-                        </div>
-                        <span className="file-name">JPG, PNG · Max 5MB each</span>
-                        <input type="file" accept="image/*" multiple/>
-                      </div>
+                      <label className="field-label" style={{marginBottom: 4}}>After Photos</label>
+                      <ImageUpload images={form.afterImages} onChange={v=>set("afterImages",v)} label="Upload After" color="#059669" />
                     </div>
                   </div>
                 </div>
-
               </>
             )}
 
@@ -1081,6 +1055,11 @@ export default function MouldMaintenance() {
                     <button className="btn btn-ghost" onClick={()=>{setView("list");setSelectedRecord(null)}}>
                       ← Back to List
                     </button>
+                    {canEdit && (
+                        <button className="btn btn-danger" onClick={() => handleDelete(selectedRecord.id)}>
+                            🗑 Delete Record
+                        </button>
+                    )}
                   </div>
                 </div>
 
@@ -1122,11 +1101,11 @@ export default function MouldMaintenance() {
                     <div className="detail-item"><span className="detail-label">Downtime (hrs)</span><span className="detail-value">{selectedRecord.downtime || "—"}</span></div>
                     <div className="detail-item">
                       <span className="detail-label">Assigned Technician</span>
-                      <span className="detail-value">{TECHNICIANS.find(t=>t.id===selectedRecord.assignedTechnician)?.name || "—"}</span>
+                      <span className="detail-value">{dbTechnicians.find(t=>t.code===selectedRecord.assignedTechnician)?.name || selectedRecord.assignedTechnician || "—"}</span>
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">Assigned Vendor</span>
-                      <span className="detail-value">{VENDORS.find(v=>v.code===selectedRecord.assignedVendor)?.name || "N/A"}</span>
+                      <span className="detail-value">{dbVendors.find(v=>v.code===selectedRecord.assignedVendor)?.name || selectedRecord.assignedVendor || "N/A"}</span>
                     </div>
                     <div className="detail-item"><span className="detail-label">Maker</span><span className="detail-value">{selectedRecord.maker?.name || "—"}</span></div>
                     <div className="detail-item"><span className="detail-label">Approver</span><span className="detail-value">{selectedRecord.approver?.name || "Pending"}</span></div>
@@ -1141,9 +1120,9 @@ export default function MouldMaintenance() {
                       <div className="sec-hdr-title">Cost Summary</div>
                     </div>
                     <div style={{padding:"14px 22px"}}>
-                      <div className="cost-row"><span className="cost-label">Estimated Cost</span><span className="cost-value">₹{selectedRecord.estimatedCost?.toLocaleString()}</span></div>
-                      <div className="cost-row"><span className="cost-label">Spare Parts Cost</span><span className="cost-value">₹{selectedRecord.sparesUsed?.reduce((s,p)=>s+p.total,0).toLocaleString()}</span></div>
-                      <div className="cost-row"><span className="cost-label">Actual Cost</span><span className="cost-value">₹{selectedRecord.actualCost?.toLocaleString() || "—"}</span></div>
+                      <div className="cost-row"><span className="cost-label">Estimated Cost</span><span className="cost-value">₹{Number(selectedRecord.estimatedCost || 0).toLocaleString()}</span></div>
+                      <div className="cost-row"><span className="cost-label">Spare Parts Cost</span><span className="cost-value">₹{(selectedRecord.sparesUsed||[]).reduce((s,p)=>s+p.total,0).toLocaleString()}</span></div>
+                      <div className="cost-row"><span className="cost-label">Actual Cost</span><span className="cost-value">₹{Number(selectedRecord.actualCost || 0).toLocaleString() || "—"}</span></div>
                       <div className="cost-row" style={{borderTop:"2px solid #e5e7eb",marginTop:4,paddingTop:10}}>
                         <span className="cost-label" style={{fontWeight:700}}>Variance</span>
                         <span className="cost-value" style={{color:selectedRecord.actualCost > selectedRecord.estimatedCost ? "#dc2626":"#059669"}}>
@@ -1168,19 +1147,19 @@ export default function MouldMaintenance() {
                             <div style={{fontSize:13,fontWeight:600}}>{sp.name}</div>
                             <div style={{fontSize:11,color:"#6b7280"}}>{sp.code} · Qty: {sp.qty}</div>
                           </div>
-                          <div style={{fontSize:13,fontWeight:700,color:"#111827"}}>₹{sp.total?.toLocaleString()}</div>
+                          <div style={{fontSize:13,fontWeight:700,color:"#111827"}}>₹{Number(sp.total || 0).toLocaleString()}</div>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* RCA */}
-                {(selectedRecord.rootCause || selectedRecord.correctiveAction || selectedRecord.preventiveAction) && (
+                {/* RCA & Photos */}
+                {(selectedRecord.rootCause || selectedRecord.correctiveAction || selectedRecord.preventiveAction || selectedRecord.beforeImages?.length > 0 || selectedRecord.afterImages?.length > 0) && (
                   <div className="card">
                     <div className="sec-hdr">
                       <div className="sec-hdr-icon" style={{background:"#f5f3ff"}}>🔍</div>
-                      <div className="sec-hdr-title">Root Cause Analysis</div>
+                      <div className="sec-hdr-title">Root Cause Analysis & Documentation</div>
                     </div>
                     <div className="form-grid cols-3">
                       <div className="field">
@@ -1196,6 +1175,38 @@ export default function MouldMaintenance() {
                         <div style={{fontSize:13,color:"#374151",background:"#f9fafb",padding:"10px 14px",borderRadius:10,border:"1px solid #e5e7eb",minHeight:50}}>{selectedRecord.preventiveAction || "—"}</div>
                       </div>
                     </div>
+                    
+                    {(selectedRecord.beforeImages?.length > 0 || selectedRecord.afterImages?.length > 0) && (
+                      <>
+                        <div style={{height:1,background:"#e8edff",margin:"0 22px"}}/>
+                        <div className="form-grid cols-2" style={{paddingTop: 16}}>
+                          <div className="field">
+                            <label className="field-label" style={{marginBottom: 4}}>Before Photos</label>
+                            {selectedRecord.beforeImages?.length > 0 ? (
+                                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                                  {selectedRecord.beforeImages.map((img,i)=>(
+                                      <a key={i} href={img.url} target="_blank" rel="noopener noreferrer">
+                                          <img src={img.url} alt={img.name} style={{width:80,height:80,objectFit:"cover",borderRadius:8,border:"1.5px solid #e5e7eb"}}/>
+                                      </a>
+                                  ))}
+                                </div>
+                            ) : <span style={{fontSize:12,color:"#9ca3af"}}>No photos uploaded</span>}
+                          </div>
+                          <div className="field">
+                            <label className="field-label" style={{marginBottom: 4}}>After Photos</label>
+                            {selectedRecord.afterImages?.length > 0 ? (
+                                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                                  {selectedRecord.afterImages.map((img,i)=>(
+                                      <a key={i} href={img.url} target="_blank" rel="noopener noreferrer">
+                                          <img src={img.url} alt={img.name} style={{width:80,height:80,objectFit:"cover",borderRadius:8,border:"1.5px solid #e5e7eb"}}/>
+                                      </a>
+                                  ))}
+                                </div>
+                            ) : <span style={{fontSize:12,color:"#9ca3af"}}>No photos uploaded</span>}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -1226,7 +1237,7 @@ export default function MouldMaintenance() {
           </div>{/* /content */}
 
           {/* ── FOOTER (create view) ── */}
-          {view === "create" && (
+          {view === "create" && canEdit && (
             <div className="form-footer">
               <div className="footer-hint">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#9ca3af" strokeWidth="1.2"/><line x1="7" y1="5" x2="7" y2="7.5" stroke="#9ca3af" strokeWidth="1.4" strokeLinecap="round"/><circle cx="7" cy="9.5" r=".7" fill="#9ca3af"/></svg>
@@ -1246,7 +1257,7 @@ export default function MouldMaintenance() {
         </div>{/* /main */}
       </div>
 
-      {toast && <div className="toast">{toast}</div>}
+      {toast && <div className={`toast ${toast.startsWith('❌') ? "terr" : "tok"}`}>{toast}</div>}
     </>
   );
 }

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // ─── MOCK DATA ────────────────────────────────────────────
@@ -169,6 +169,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;color:#111827
 .tb-pill{display:flex;align-items:center;gap:7px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:9px;padding:4px 10px 4px 5px}
 .tb-av{width:24px;height:24px;border-radius:50%;background:#4f46e5;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
 .tb-nm{font-size:11.5px;font-weight:600;color:#374151}
+.logout-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:11.5px;font-weight:700;color:#ef4444;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:8px;padding:6px 12px;cursor:pointer;transition:all .15s}
+.logout-btn:hover{background:#ef4444;color:#fff}
 
 /* CONTENT */
 .content{flex:1;overflow-y:auto;padding:20px 24px 28px}
@@ -314,11 +316,23 @@ export default function Dashboard() {
     const stored = localStorage.getItem("user");
     if (!stored) { router.push("/login"); return; }
     setUser(JSON.parse(stored));
-  }, []);
+  }, [router]);
 
   const initials = user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
-
   const fmt = d => d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+
+  const handleLogout = async () => {
+    try {
+      // Call the server API to destroy the HTTP-Only Session Cookie
+      await fetch('/api/auth/logout', { method: 'POST' });
+      // Clear the legacy frontend storage
+      localStorage.removeItem("user");
+      // Redirect to login page
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
 
   return (
     <>
@@ -385,6 +399,10 @@ export default function Dashboard() {
                 <div className="tb-av">{initials}</div>
                 <span className="tb-nm">{user.name}</span>
               </div>
+              {/* Secure Logout Button */}
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout ➔
+              </button>
             </div>
           </div>
 

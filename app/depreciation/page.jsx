@@ -209,6 +209,24 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:13px 20px;border-radius:12px;font-size:13.5px;font-weight:500;z-index:2000;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:ti .3s ease;border-left:4px solid #4f46e5}
 @keyframes ti{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.logout-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
 `;
 
 const NAV_ITEMS = [
@@ -323,6 +341,19 @@ export default function MouldDepreciation() {
     flash(`Generated ${count.toLocaleString()} sample moulds`);
   };
 
+  const handleLogout = async () => {
+    try {
+      // Call the server API to destroy the HTTP-Only Session Cookie
+      await fetch('/api/auth/logout', { method: 'POST' });
+      // Clear the legacy frontend storage
+      localStorage.removeItem("user");
+      // Redirect to login page
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   // Export CSV
   const exportCSV = () => {
     const header = "Mould ID,Name,Type,Plant,Cost,Residual Value,SLM Annual,SLM Depr to Date,SLM Book Value,Max Shots,Current Shots,Shot Depr to Date,Shot Book Value,Shot Life %\n";
@@ -358,7 +389,19 @@ export default function MouldDepreciation() {
         <div className="mn">
           <div className="top">
             <div><div className="top-bc">Modules - Depreciation</div><div className="top-title">Bulk Mould Depreciation</div></div>
-            <div className="top-r"><div className="upill"><div className="uav">{userInitials}</div><span className="unm">{user.name}</span></div></div>
+            <div className="top-r">
+              <div className="upill">
+                <div className="uav">
+                  {userInitials}
+                </div>
+                <span className="unm">
+                  {user.name}
+                </span>
+              </div>
+            <button className="logout-btn" onClick={handleLogout}>
+                Logout ➔
+            </button>
+            </div>
           </div>
 
           <div className="cnt">

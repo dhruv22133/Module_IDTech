@@ -17,12 +17,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .sb-icon{width:36px;height:36px;background:rgba(255,255,255,0.18);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .sb-name{font-size:14px;font-weight:700;color:#fff}.sb-name span{font-weight:400;opacity:.8}
 .sb-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
-.sb-nav{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
-.sb-section{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:10px 12px 4px;margin-top:6px}
-.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;color:rgba(255,255,255,.65);font-size:13px;font-weight:500;transition:background .15s}
+.sb-nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;z-index:1;position:relative}
+.sb-sec{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:8px 10px 4px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.6);font-size:12.5px;font-weight:500;transition:background .15s}
 .sb-item:hover{background:rgba(255,255,255,.1);color:#fff}
-.sb-item.active{background:rgba(255,255,255,.18);color:#fff;font-weight:600}
-.sb-footer{padding:16px 14px;border-top:1px solid rgba(255,255,255,.1)}
+.sb-item.active{background:rgba(255,255,255,.18);color:#fff;font-weight:700}
+.sb-footer{padding:14px 12px;border-top:1px solid rgba(255,255,255,.1);z-index:1;position:relative}
 .sb-user-row{display:flex;align-items:center;gap:8px}
 .sb-avatar{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
 .sb-uname{font-size:12px;font-weight:600;color:#fff}
@@ -90,6 +90,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .field-err{font-size:10.5px;color:#ef4444;margin-top:1px}
 .field-input.err,.field-select.err{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.07)}
 
+/* Date input */
+.field-input[type=date]{color:#374151}
+.field-input[type=date]::-webkit-calendar-picker-indicator{opacity:.4;cursor:pointer}
+
 /* File upload */
 .file-wrap{position:relative;display:flex;align-items:center;gap:0;height:42px;border:1.5px dashed #d1d5db;border-radius:10px;overflow:hidden;background:#fafafa;transition:border-color .2s}
 .file-wrap:hover{border-color:#5b2be0;background:#f5f3ff}
@@ -122,7 +126,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .btn-ghost:hover{background:#f3f4f6;color:#374151}
 
 /* Toast */
-.toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:13px 20px;border-radius:12px;font-size:13.5px;font-weight:500;z-index:2000;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:toastIn .3s ease;border-left:4px solid #10b981}
+.toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:13px 20px;border-radius:12px;font-size:13.5px;font-weight:500;z-index:2000;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:toastIn .3s ease}
+.tok{border-left:4px solid #10b981}
+.terr{border-left:4px solid #ef4444}
 @keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* Steps indicator */
@@ -184,32 +190,40 @@ tbody tr:hover td{background:#fafbff}
 .fade-3{animation:fadeUp .4s ease .18s both}
 .fade-4{animation:fadeUp .4s ease .24s both}
 .fade-5{animation:fadeUp .4s ease .30s both}
+.logout-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
 `;
 
-// ── MOCK DATA ──────────────────────────────────────────────
-const COST_CENTERS = ["CC-001 – Mumbai HQ","CC-002 – Pune Plant","CC-003 – Nashik Unit","CC-004 – Aurangabad"];
-const SUPPLIERS = { "SUP-001": "Tata Moulds Pvt Ltd", "SUP-002": "Bharat Engineering Works", "SUP-003": "Precision Tooling Co", "SUP-004": "Elite Mould Makers" };
-const ASSET_CLASSES = ["AC-01 – Injection Moulds","AC-02 – Blow Moulds","AC-03 – Die Cast","AC-04 – Compression"];
-const LOCATIONS = { "LOC-001": "Shop Floor A", "LOC-002": "Shop Floor B", "LOC-003": "Warehouse 1", "LOC-004": "Maintenance Bay" };
-const PLANTS = ["Plant A – Mumbai","Plant B – Pune","Plant C – Nashik","Plant D – Aurangabad"];
-const DEPR_KEYS = ["Straight Line","Written Down Value","Units of Production"];
-const CURRENCIES = ["INR – Indian Rupee","USD – US Dollar","EUR – Euro"];
-const UOM_LIST = ["Nos","Pcs","Sets","Units"];
+const CURRENCIES = ["INR", "USD", "EUR", "GBP", "JPY"];
 
 const NAV_ITEMS = [
-  { label: "Dashboard", icon: "📊", route: "/dashboard" },
-  { label: "User Management", icon: "👥", route: "/user-management" },
-  { label: "Masters", icon: "🗂", route: "/masters"},
-  { label: "Mould Registry", icon: "🔩", route: "/mould-registry", active: true  },
-  { label: "Transfers & Challan", icon: "🔄", route: "/challan" },
-  { label: "Mould Return", icon: "📥", route: "/return" },
-  { label: "Depreciation", icon: "📉", route: "/depreciation" },
-  { label: "Maintenance", icon: "🔧", route: "/maintenance"},
-  { label: "Scrap / Dispose", icon: "🗑", route: "/scrap" },
-  { label: "Reports", icon: "📈", route: "/reports" },
+    { label: "Dashboard", icon: "📊", route: "/dashboard" },
+    { label: "User Management", icon: "👥", route: "/user-management"},
+    { label: "Masters", icon: "🗂", route: "/masters" },
+    { label: "Mould Registry", icon: "🔩", route: "/mould-registry", active: true },
+    { label: "Transfers & Challan", icon: "🔄", route: "/challan" },
+    { label: "Mould Return", icon: "📥", route: "/return" },
+    { label: "Depreciation", icon: "📉", route: "/depreciation" },
+    { label: "Maintenance", icon: "🔧", route: "/maintenance" },
+    { label: "Scrap / Dispose", icon: "🗑", route: "/scrap" },
+    { label: "Reports", icon: "📈", route: "/reports" }
 ];
 
-// ── COMPONENT ─────────────────────────────────────────────
 export default function MouldRegistration() {
   const router = useRouter();
   const [user, setUser] = useState({ name: "User", role: "Viewer" });
@@ -221,36 +235,106 @@ export default function MouldRegistration() {
 
   const [activeTab, setActiveTab] = useState("form");
   const [mouldsList, setMouldsList] = useState([]);
-  const [viewModal, setViewModal] = useState(null); // Controls the "View" modal
+  const [viewModal, setViewModal] = useState(null);
+  const [roles, setRoles] = useState([]);
+
+  // Dropdown Master Data populated via database
+  const [opts, setOpts] = useState({
+      suppliers: [],
+      deprKeys: [],
+      assetClasses: [],
+      locations: [], 
+      costCenters: [],
+      plants: [],
+      uoms: []
+  });
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) { router.push("/login"); return; }
     setUser(JSON.parse(stored));
-  }, []);
+    
+    fetch('/api/roles')
+        .then(res => res.json())
+        .then(data => setRoles(data))
+        .catch(console.error);
 
-  const initials = user.name ? user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) : "U";
+    fetch(`/api/dropdowns?_t=${Date.now()}`, { cache: 'no-store' })
+        .then(res => res.json())
+        .then(data => {
+            setOpts({
+                suppliers: data?.manufacturers || [],
+                deprKeys: data?.deprMethods || [],
+                assetClasses: data?.mouldTypes || [],
+                locations: data?.vendors || [], 
+                costCenters: data?.costCenters || [],
+                plants: data?.plants || [],
+                uoms: data?.uoms || []
+            });
+        }).catch(console.error);
+
+    fetchMoulds();
+  }, [router]);
+
+  const activeRole = roles.find(r => r.name === user.role);
+  const privs = activeRole ? activeRole.privs : null;
+
+  useEffect(() => {
+      if (privs && privs.mouldReg) {
+          if (!privs.mouldReg.add && activeTab === "form") {
+              setActiveTab("list");
+          }
+      }
+  }, [privs, activeTab]);
+
+  const fetchMoulds = async () => {
+      try {
+          const res = await fetch(`/api/moulds?_t=${Date.now()}`, { cache: 'no-store' });
+          if(res.ok) setMouldsList(await res.json());
+      } catch (err) { console.error(err); }
+  };
+
+  const initialsName = user.name ? user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) : "U";
 
   const [form, setForm] = useState({
     tagId: "", mouldIdAssetCode: "", mouldName: "",
     costCenterCode: "", costCenterName: "", supplierCode: "", supplierName: "",
     poNumber: "", poDate: "", capitalizationOn: "", depreciationCalcOn: "", depreciationOnKey: "",
-    assetLife: "", mouldImage: null, mouldImageName: "", assetClassCode: "", assetClassName: "",
+    assetLife: "", mouldImage: null, assetClassCode: "", assetClassName: "",
     subNumber: "", locationCode: "", locationName: "", plant: "", baseUnitOfMeasure: "",
     guaranteedLifeTotalShots: "", currentShotCount: "", description: "",
-    cumAcqValue: "", transAcqValue: "", currency: "", drawingCadFile: null, drawingCadFileName: "",
+    cumAcqValue: "", transAcqValue: "", currency: "INR", cadFile: null,
   });
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  const handleSupplierCode = v => { set("supplierCode", v); set("supplierName", SUPPLIERS[v] || ""); };
-  const handleCostCenterCode = v => { set("costCenterCode", v); const found = COST_CENTERS.find(c => c.startsWith(v)); set("costCenterName", found ? found.split(" – ")[1] || "" : ""); };
-  const handleLocationCode = v => { set("locationCode", v); set("locationName", LOCATIONS[v] || ""); };
-  const handleAssetClass = v => { set("assetClassCode", v); const found = ASSET_CLASSES.find(a => a.startsWith(v)); set("assetClassName", found ? found.split(" – ")[1] || "" : ""); };
+  const handleCostCenter = v => {
+      set("costCenterCode", v);
+      const found = (opts?.costCenters || []).find(c => c.code === v);
+      set("costCenterName", found ? found.name : "");
+  };
 
-  const handleFile = (e, nameKey, fileKey) => {
+  const handleLocation = v => {
+      set("locationCode", v);
+      const found = (opts?.locations || []).find(l => l.code === v);
+      set("locationName", found ? found.name : "");
+  };
+
+  const handleSupplierCode = v => { 
+      set("supplierCode", v); 
+      const found = (opts?.suppliers || []).find(s => s.code === v);
+      set("supplierName", found ? found.name : ""); 
+  };
+  
+  const handleAssetClass = v => { 
+      set("assetClassCode", v); 
+      const found = (opts?.assetClasses || []).find(a => a.code === v);
+      set("assetClassName", found ? found.name : ""); 
+  };
+
+  const handleFile = (e, nameKey) => {
     const f = e.target.files[0];
-    if (f) { set(fileKey, f); set(nameKey, f.name); }
+    if (f) set(nameKey, f); 
   };
 
   const validate = () => {
@@ -261,31 +345,83 @@ export default function MouldRegistration() {
     return e;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
-    setMouldsList(prev => [{ ...form, id: Date.now(), regDate: new Date().toLocaleDateString("en-IN") }, ...prev]);
-    setErrors({});
-    showToast("✅ Mould registered successfully!");
-    handleReset();
-    setActiveTab("list");
+    
+    try {
+        const formData = new FormData();
+        Object.keys(form).forEach(key => {
+            if (form[key] !== null && form[key] !== undefined && form[key] !== "") {
+                formData.append(key, form[key]);
+            }
+        });
+
+        const res = await fetch("/api/moulds", {
+            method: "POST",
+            body: formData 
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.error);
+
+        setErrors({});
+        showToast("Mould registered successfully in Database!", "ok");
+        handleReset();
+        fetchMoulds();
+        setActiveTab("list");
+    } catch (err) {
+        showToast(err.message, "err");
+    }
   };
 
   const handleReset = () => {
     setForm({
-      tagId:"",mouldIdAssetCode:"",mouldName:"", costCenterCode:"",costCenterName:"",supplierCode:"",supplierName:"",
-      poNumber:"",poDate:"",capitalizationOn:"",depreciationCalcOn:"",depreciationOnKey:"", assetLife:"",mouldImage:null,
-      mouldImageName:"",assetClassCode:"",assetClassName:"", subNumber:"",locationCode:"",locationName:"",plant:"",
-      baseUnitOfMeasure:"", guaranteedLifeTotalShots:"",currentShotCount:"",description:"", cumAcqValue:"",
-      transAcqValue:"",currency:"",drawingCadFile:null,drawingCadFileName:"",
+      tagId:"", mouldIdAssetCode:"", mouldName:"", costCenterCode:"", costCenterName:"", 
+      supplierCode:"", supplierName:"", poNumber:"", poDate:"", capitalizationOn:"", 
+      depreciationCalcOn:"", depreciationOnKey:"", assetLife:"", mouldImage: null, 
+      assetClassCode:"", assetClassName:"", subNumber:"", locationCode:"", locationName:"", 
+      plant:"", baseUnitOfMeasure:"", guaranteedLifeTotalShots:"", currentShotCount:"", 
+      description:"", cumAcqValue:"", transAcqValue:"", currency:"INR", cadFile: null,
     });
     setErrors({});
   };
 
-  const showToast = msg => { setToast(msg); setTimeout(() => setToast(null), 3500); };
+  const showToast = (msg, type="ok") => { setToast({msg, type}); setTimeout(() => setToast(null), 3500); };
 
   const step1Done = form.tagId && form.mouldIdAssetCode && form.mouldName;
   const step2Done = step1Done && form.costCenterCode && form.supplierCode;
+
+  const fDate = (d) => d ? String(d).split('T')[0] : "—";
+
+  if (!privs && user.role !== "Admin") {
+      return <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>Loading configurations...</div>;
+  }
+
+  const hasViewAccess = user.role === "Admin" || privs?.mouldReg?.view;
+  const hasAddAccess = user.role === "Admin" || privs?.mouldReg?.add;
+
+  if (!hasViewAccess && !hasAddAccess) {
+      return (
+          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column'}}>
+              <h2>Access Denied</h2>
+              <p>You do not have permission to view the Mould Registry.</p>
+              <button onClick={() => router.push('/dashboard')} style={{ height: 38, padding: "0 18px", borderRadius: 9, border: "1.5px solid #e5e7eb", background: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer", color: "#374151" }}>Return to Dashboard</button>
+          </div>
+      );
+  }
+
+  const handleLogout = async () => {
+    try {
+      // Call the server API to destroy the HTTP-Only Session Cookie
+      await fetch('/api/auth/logout', { method: 'POST' });
+      // Clear the legacy frontend storage
+      localStorage.removeItem("user");
+      // Redirect to login page
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
 
   return (
     <>
@@ -294,6 +430,13 @@ export default function MouldRegistration() {
         {/* SIDEBAR */}
         <div className="sidebar">
           <div className="sb-brand">
+            {/* If you want the ID Tech logo back in the future, uncomment the image below:
+              <div style={{ padding: "20px 16px" }}>
+                <img src="/logo.png" alt="ID Tech Logo" style={{ width: "100%", maxHeight: 45, objectFit: "contain", display: "block", margin: "0 auto" }} />
+              </div>
+            */}
+            
+            {/* Restored original MouldSys logo */}
             <div className="sb-brand-row">
               <div className="sb-icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9"/><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6"/><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6"/><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9"/><circle cx="10" cy="10" r="1.8" fill="white"/></svg>
@@ -302,11 +445,26 @@ export default function MouldRegistration() {
             </div>
           </div>
           <div className="sb-nav">
-            <div className="sb-section">Main</div>
-            {NAV_ITEMS.map(n => <div key={n.label} className={`sb-item${n.active?" active":""}`} onClick={() => router.push(n.route)}><span>{n.icon}</span>{n.label}</div>)}
+            <div className="sb-sec">Main</div>
+            {NAV_ITEMS.map(n => (
+                <div 
+                    key={n.label} 
+                    className={`sb-item${n.active ? " active" : ""}`} 
+                    onClick={() => {
+                        
+                            router.push(n.route);
+                        
+                    }}
+                >
+                    <span>{n.icon}</span>{n.label}
+                </div>
+            ))}
           </div>
           <div className="sb-footer">
-            <div className="sb-user-row"><div className="sb-avatar">{initials}</div><div><div className="sb-uname">{user.name}</div><div className="sb-urole">{user.role}</div></div></div>
+            <div className="sb-user-row">
+                <div className="sb-avatar">{initialsName}</div>
+                <div><div className="sb-uname">{user.name}</div><div className="sb-urole">{user.role}</div></div>
+            </div>
           </div>
         </div>
 
@@ -319,18 +477,21 @@ export default function MouldRegistration() {
               <div className={`reader-status ${readerConnected?"reader-connected":"reader-disconnected"}`}><div className="reader-dot" style={{background:readerConnected?"#16a34a":"#d1d5db"}}/>{readerConnected ? "Reader Connected" : "Reader Disconnected"}</div>
               <button className="btn-connect" onClick={()=>{ setReaderConnected(v=>!v); }}><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v3M7 10v3M1 7h3M10 7h3M3.2 3.2l2.1 2.1M8.7 8.7l2.1 2.1M3.2 10.8l2.1-2.1M8.7 5.3l2.1-2.1" stroke="white" strokeWidth="1.4" strokeLinecap="round"/></svg>{readerConnected ? "Disconnect" : "Connect Reader"}</button>
               <div className="notif-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v2l-1 2h12l-1-2V7a5 5 0 00-5-5zM6.5 13.5a1.5 1.5 0 003 0" stroke="#6b7280" strokeWidth="1.4" strokeLinecap="round"/></svg><div className="notif-dot"/></div>
-              <div className="tb-user-pill"><div className="tb-avatar">{initials}</div><span className="tb-uname">{user.name}</span></div>
+              <div className="tb-user-pill"><div className="tb-avatar">{initialsName}</div><span className="tb-uname">{user.name}</span></div>
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout ➔
+            </button>
             </div>
           </div>
 
           <div className="content">
             <div className="main-tabs fade-1">
-              <button className={`mtab${activeTab === "form" ? " on" : ""}`} onClick={() => setActiveTab("form")}>📝 Register New</button>
-              <button className={`mtab${activeTab === "list" ? " on" : ""}`} onClick={() => setActiveTab("list")}>📋 Registry List ({mouldsList.length})</button>
+              {hasAddAccess && <button className={`mtab${activeTab === "form" ? " on" : ""}`} onClick={() => setActiveTab("form")}>📝 Register New</button>}
+              {hasViewAccess && <button className={`mtab${activeTab === "list" ? " on" : ""}`} onClick={() => setActiveTab("list")}>📋 Registry List ({mouldsList?.length || 0})</button>}
             </div>
 
             {/* FORM TAB */}
-            {activeTab === "form" && (
+            {activeTab === "form" && hasAddAccess && (
               <>
                 <div className="page-hdr fade-1"><div className="page-hdr-left"><div className="page-hdr-title">Register New Mould</div><div className="page-hdr-sub">Fill in identification, manufacturer and asset details to register a mould asset</div></div><div className="page-hdr-right"><button className="btn btn-outline" onClick={handleReset}><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5A4.5 4.5 0 1110.9 4M2 2v4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg> Reset</button></div></div>
                 
@@ -346,7 +507,7 @@ export default function MouldRegistration() {
                 <div className="form-card fade-2">
                   <div className="sec-hdr"><div className="sec-hdr-icon" style={{background:"#eef2ff"}}>🏷</div><div className="sec-hdr-title">Identification</div><span className="sec-hdr-badge">Required</span></div>
                   <div className="form-grid cols-3">
-                    <div className="field"><label className="field-label">Tag ID <span className="req">*</span></label><input className={`field-input${errors.tagId?" err":""}`} value={form.tagId} onChange={e=>{set("tagId",e.target.value);setErrors(v=>({...v,tagId:""}))}} placeholder="e.g. TAG-2025-001"/>{errors.tagId && <div className="field-err">{errors.tagId}</div>}</div>
+                    <div className="field"><label className="field-label">Tag ID <span className="req">*</span></label><input className={`field-input${errors.tagId?" err":""}`} value={form.tagId} onChange={e=>{set("tagId",e.target.value);setErrors(v=>({...v,tagId:""}))}} placeholder="e.g. TAG-2025-001"/>{errors.tagId && <div className="field-err">{errors.tagId}</div>}<div className="field-hint">Scanned from RFID/barcode reader</div></div>
                     <div className="field"><label className="field-label">Mould ID / Asset Code <span className="req">*</span></label><input className={`field-input${errors.mouldIdAssetCode?" err":""}`} value={form.mouldIdAssetCode} onChange={e=>{set("mouldIdAssetCode",e.target.value);setErrors(v=>({...v,mouldIdAssetCode:""}))}} placeholder="e.g. MLD-001-2025"/>{errors.mouldIdAssetCode && <div className="field-err">{errors.mouldIdAssetCode}</div>}</div>
                     <div className="field"><label className="field-label">Mould Name <span className="req">*</span></label><input className={`field-input${errors.mouldName?" err":""}`} value={form.mouldName} onChange={e=>{set("mouldName",e.target.value);setErrors(v=>({...v,mouldName:""}))}} placeholder="e.g. Bumper Front LH Cavity Mould"/>{errors.mouldName && <div className="field-err">{errors.mouldName}</div>}</div>
                   </div>
@@ -355,15 +516,30 @@ export default function MouldRegistration() {
                 <div className="form-card fade-3">
                   <div className="sec-hdr"><div className="sec-hdr-icon" style={{background:"#fff7ed"}}>🏭</div><div className="sec-hdr-title">Manufacturer Details</div><span className="sec-hdr-badge" style={{background:"#fff7ed",color:"#c2410c",borderColor:"#fed7aa"}}>Financial</span></div>
                   <div className="form-grid cols-3">
-                    <div className="field"><label className="field-label">Cost Center</label><select className="field-select" value={form.costCenterCode} onChange={e=>handleCostCenterCode(e.target.value)}><option value="">— Select —</option>{["CC-001","CC-002","CC-003","CC-004"].map(c=><option key={c}>{c}</option>)}</select></div>
-                    <div className="field"><label className="field-label">Cost Center Name</label><select className="field-select" value={form.costCenterName} onChange={e=>set("costCenterName",e.target.value)}><option value="">— Select —</option>{["Mumbai HQ","Pune Plant","Nashik Unit","Aurangabad"].map(c=><option key={c}>{c}</option>)}</select></div>
-                    <div className="field"><label className="field-label">Supplier Code</label><select className="field-select" value={form.supplierCode} onChange={e=>handleSupplierCode(e.target.value)}><option value="">— Select —</option>{Object.keys(SUPPLIERS).map(s=><option key={s}>{s}</option>)}</select></div>
+                    <div className="field"><label className="field-label">Cost Center Code</label>
+                      <select className="field-select" value={form.costCenterCode} onChange={e=>handleCostCenter(e.target.value)}>
+                        <option value="">— Select —</option>{opts?.costCenters?.map(c=><option key={c.code} value={c.code}>{c.code}</option>)}
+                      </select>
+                    </div>
+                    <div className="field"><label className="field-label">Cost Center Name</label><input className={`field-input${form.costCenterName?" auto-fill":""}`} value={form.costCenterName} readOnly placeholder="Auto-populated"/></div>
+                    
+                    <div className="field"><label className="field-label">Supplier Code</label>
+                      <select className="field-select" value={form.supplierCode} onChange={e=>handleSupplierCode(e.target.value)}>
+                        <option value="">— Select —</option>{opts?.suppliers?.map(s=><option key={s.code} value={s.code}>{s.code}</option>)}
+                      </select>
+                    </div>
                     <div className="field"><label className="field-label">Supplier Name</label><input className={`field-input${form.supplierName?" auto-fill":""}`} value={form.supplierName} readOnly placeholder="Auto-populated..."/></div>
+                    
                     <div className="field"><label className="field-label">PO Number</label><input className="field-input" value={form.poNumber} onChange={e=>set("poNumber",e.target.value)} placeholder="PO-..."/></div>
                     <div className="field"><label className="field-label">PO Date</label><input type="date" className="field-input" value={form.poDate} onChange={e=>set("poDate",e.target.value)}/></div>
                     <div className="field"><label className="field-label">Capitalization On</label><input type="date" className="field-input" value={form.capitalizationOn} onChange={e=>set("capitalizationOn",e.target.value)}/></div>
                     <div className="field"><label className="field-label">Depreciation Calculation On</label><input type="date" className="field-input" value={form.depreciationCalcOn} onChange={e=>set("depreciationCalcOn",e.target.value)}/></div>
-                    <div className="field"><label className="field-label">Depreciation On Key</label><select className="field-select" value={form.depreciationOnKey} onChange={e=>set("depreciationOnKey",e.target.value)}><option value="">— Select —</option>{DEPR_KEYS.map(d=><option key={d}>{d}</option>)}</select></div>
+                    
+                    <div className="field"><label className="field-label">Depreciation On Key</label>
+                      <select className="field-select" value={form.depreciationOnKey} onChange={e=>set("depreciationOnKey",e.target.value)}>
+                        <option value="">— Select —</option>{opts?.deprKeys?.map(d=><option key={d.name} value={d.name}>{d.name}</option>)}
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -371,27 +547,47 @@ export default function MouldRegistration() {
                   <div className="sec-hdr"><div className="sec-hdr-icon" style={{background:"#f0fdf4"}}>📦</div><div className="sec-hdr-title">Asset Details</div><span className="sec-hdr-badge" style={{background:"#f0fdf4",color:"#15803d",borderColor:"#bbf7d0"}}>Technical</span></div>
                   <div className="form-grid cols-3" style={{paddingBottom:0}}>
                     <div className="field"><label className="field-label">Asset Life <span style={{fontSize:10,color:"#9ca3af"}}>(Yrs)</span></label><div className="num-wrap"><input type="number" className="field-input" value={form.assetLife} onChange={e=>set("assetLife",e.target.value)} placeholder="0"/><span className="num-tag">Yrs</span></div></div><div/>
-                    <div className="field"><label className="field-label">Mould Image</label><div className="file-wrap"><div className="file-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> File</div><span className={`file-name${form.mouldImageName?" has-file":""}`}>{form.mouldImageName||"No file"}</span><input type="file" accept="image/*" ref={imgRef} onChange={e=>handleFile(e,"mouldImageName","mouldImage")}/></div></div>
+                    <div className="field"><label className="field-label">Mould Image</label><div className="file-wrap"><div className="file-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> File</div><span className={`file-name${form.mouldImage?" has-file":""}`}>{form.mouldImage?.name||"No file"}</span><input type="file" accept="image/*" ref={imgRef} onChange={e=>handleFile(e,"mouldImage")}/></div></div>
                   </div>
                   <div className="form-grid cols-3" style={{paddingTop:0,paddingBottom:0}}>
-                    <div className="field"><label className="field-label">Asset Class Code</label><select className="field-select" value={form.assetClassCode} onChange={e=>handleAssetClass(e.target.value)}><option value="">— Select —</option>{["AC-01","AC-02","AC-03","AC-04"].map(a=><option key={a}>{a}</option>)}</select></div>
+                    <div className="field"><label className="field-label">Asset Class Code</label>
+                      <select className="field-select" value={form.assetClassCode} onChange={e=>handleAssetClass(e.target.value)}>
+                        <option value="">— Select —</option>{opts?.assetClasses?.map(a=><option key={a.code} value={a.code}>{a.code}</option>)}
+                      </select>
+                    </div>
                     <div className="field"><label className="field-label">Asset Class Name</label><input className={`field-input${form.assetClassName?" auto-fill":""}`} value={form.assetClassName} readOnly placeholder="Auto-populated"/></div>
                     <div className="field"><label className="field-label">Sub Number</label><input className="field-input" value={form.subNumber} onChange={e=>set("subNumber",e.target.value)} placeholder="001"/></div>
                   </div>
                   <div className="form-grid cols-3" style={{paddingTop:0,paddingBottom:0}}>
-                    <div className="field"><label className="field-label">Location Code</label><select className="field-select" value={form.locationCode} onChange={e=>handleLocationCode(e.target.value)}><option value="">— Select —</option>{Object.keys(LOCATIONS).map(l=><option key={l}>{l}</option>)}</select></div>
-                    <div className="field"><label className="field-label">Location Name</label><select className="field-select" value={form.locationName} onChange={e=>set("locationName",e.target.value)}><option value="">— Select —</option>{Object.values(LOCATIONS).map(l=><option key={l}>{l}</option>)}</select></div>
-                    <div className="field"><label className="field-label">Plant</label><select className="field-select" value={form.plant} onChange={e=>set("plant",e.target.value)}><option value="">— Select —</option>{PLANTS.map(p=><option key={p}>{p}</option>)}</select></div>
+                    <div className="field"><label className="field-label">Location Code</label>
+                      <select className="field-select" value={form.locationCode} onChange={e=>handleLocation(e.target.value)}>
+                        <option value="">— Select —</option>{opts?.locations?.map(l=><option key={l.code} value={l.code}>{l.code}</option>)}
+                      </select>
+                    </div>
+                    <div className="field"><label className="field-label">Location Name</label><input className={`field-input${form.locationName?" auto-fill":""}`} value={form.locationName} readOnly placeholder="Auto-populated"/></div>
+                    <div className="field"><label className="field-label">Plant</label>
+                      <select className="field-select" value={form.plant} onChange={e=>set("plant",e.target.value)}>
+                        <option value="">— Select —</option>{opts?.plants?.map(p=><option key={p.name} value={p.name}>{p.name}</option>)}
+                      </select>
+                    </div>
                   </div>
                   <div className="form-grid cols-3" style={{paddingTop:0,paddingBottom:0}}>
-                    <div className="field"><label className="field-label">Base UOM</label><select className="field-select" value={form.baseUnitOfMeasure} onChange={e=>set("baseUnitOfMeasure",e.target.value)}><option value="">— Select —</option>{UOM_LIST.map(u=><option key={u}>{u}</option>)}</select></div>
+                    <div className="field"><label className="field-label">Base UOM</label>
+                      <select className="field-select" value={form.baseUnitOfMeasure} onChange={e=>set("baseUnitOfMeasure",e.target.value)}>
+                        <option value="">— Select —</option>{opts?.uoms?.map(u=><option key={u.name} value={u.name}>{u.name}</option>)}
+                      </select>
+                    </div>
                     <div className="field"><label className="field-label">Guaranteed Life (Shots)</label><div className="num-wrap"><input type="number" className="field-input" value={form.guaranteedLifeTotalShots} onChange={e=>set("guaranteedLifeTotalShots",e.target.value)} placeholder="500000"/><span className="num-tag">Shots</span></div></div>
                     <div className="field"><label className="field-label">Current Shot Count</label><div className="num-wrap"><input type="number" className="field-input" value={form.currentShotCount} onChange={e=>set("currentShotCount",e.target.value)} placeholder="0"/><span className="num-tag">Shots</span></div></div>
                   </div>
                   <div className="form-grid cols-3" style={{paddingTop:0,paddingBottom:0}}>
                     <div className="field"><label className="field-label">Description</label><textarea className="field-textarea" value={form.description} onChange={e=>set("description",e.target.value)} placeholder="Notes..." rows={2}/></div>
                     <div className="field"><label className="field-label">Cum. Acq. Value</label><div className="num-wrap"><input type="number" className="field-input" value={form.cumAcqValue} onChange={e=>set("cumAcqValue",e.target.value)} placeholder="0.00"/><span className="num-tag">₹</span></div><label className="field-label" style={{marginTop:10}}>Trans. Acq. Value</label><div className="num-wrap"><input type="number" className="field-input" value={form.transAcqValue} onChange={e=>set("transAcqValue",e.target.value)} placeholder="0.00"/><span className="num-tag">₹</span></div></div>
-                    <div className="field"><label className="field-label">Drawing / CAD (PDF)</label><div className="file-wrap"><div className="file-btn" style={{background:"linear-gradient(135deg,#0891b2,#0e7490)"}}><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> File</div><span className={`file-name${form.drawingCadFileName?" has-file":""}`}>{form.drawingCadFileName||"No file"}</span><input type="file" accept=".pdf,.dwg,.dxf" ref={cadRef} onChange={e=>handleFile(e,"drawingCadFileName","drawingCadFile")}/></div><label className="field-label" style={{marginTop:10}}>Currency</label><select className="field-select" value={form.currency} onChange={e=>set("currency",e.target.value)}><option value="">— Select —</option>{CURRENCIES.map(c=><option key={c}>{c}</option>)}</select></div>
+                    <div className="field"><label className="field-label">Drawing / CAD (PDF)</label><div className="file-wrap"><div className="file-btn" style={{background:"linear-gradient(135deg,#0891b2,#0e7490)"}}><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg> File</div><span className={`file-name${form.cadFile?" has-file":""}`}>{form.cadFile?.name||"No file"}</span><input type="file" accept=".pdf,.dwg,.dxf" ref={cadRef} onChange={e=>handleFile(e,"cadFile")}/></div><label className="field-label" style={{marginTop:10}}>Currency</label>
+                      <select className="field-select" value={form.currency} onChange={e=>set("currency",e.target.value)}>
+                        {CURRENCIES?.map(c=><option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
                   </div><div style={{height:4}}/>
                 </div>
 
@@ -403,11 +599,11 @@ export default function MouldRegistration() {
             )}
 
             {/* LIST TAB */}
-            {activeTab === "list" && (
+            {activeTab === "list" && hasViewAccess && (
               <div className="fade-2">
                 <div className="tbl-card">
-                  <div className="tbl-hdr"><div className="tbl-t">Registered Moulds ({mouldsList.length})</div></div>
-                  {mouldsList.length === 0 ? (
+                  <div className="tbl-hdr"><div className="tbl-t">Registered Moulds ({mouldsList?.length || 0})</div></div>
+                  {!mouldsList || mouldsList.length === 0 ? (
                     <div className="empty-state"><div className="empty-icon">📋</div><div style={{ fontSize: 15, fontWeight: 700, color: "#374151" }}>No moulds registered yet</div></div>
                   ) : (
                     <div style={{ overflowX: "auto" }}>
@@ -416,15 +612,15 @@ export default function MouldRegistration() {
                           <tr><th>Mould ID</th><th>Mould Name</th><th>Tag ID</th><th>Plant</th><th>Asset Class</th><th>Supplier</th><th>Date Reg.</th><th style={{textAlign:"center"}}>Actions</th></tr>
                         </thead>
                         <tbody>
-                          {mouldsList.map(m => (
+                          {mouldsList?.map(m => (
                             <tr key={m.id}>
-                              <td><span style={{ fontWeight: 700, color: "#4f46e5", fontFamily: "monospace", fontSize: 12 }}>{m.mouldIdAssetCode}</span></td>
-                              <td><div style={{ fontWeight: 600, color: "#111827" }}>{m.mouldName}</div></td>
-                              <td><span style={{ fontFamily: "monospace", color: "#6b7280" }}>{m.tagId}</span></td>
+                              <td><span style={{ fontWeight: 700, color: "#4f46e5", fontFamily: "monospace", fontSize: 12 }}>{m.mouldIdAssetCode || m.mould_id_code}</span></td>
+                              <td><div style={{ fontWeight: 600, color: "#111827" }}>{m.mouldName || m.mould_name}</div></td>
+                              <td><span style={{ fontFamily: "monospace", color: "#6b7280" }}>{m.tagId || m.tag_id}</span></td>
                               <td>{m.plant || "—"}</td>
-                              <td>{m.assetClassName || "—"}</td>
-                              <td>{m.supplierName || "—"}</td>
-                              <td>{m.regDate}</td>
+                              <td>{m.assetClassName || m.asset_class_name || "—"}</td>
+                              <td>{m.supplierName || m.supplier_name || "—"}</td>
+                              <td>{m.regDate || fDate(m.created_at)}</td>
                               <td style={{textAlign:"center"}}><button className="act-btn" onClick={() => setViewModal(m)}>👁</button></td>
                             </tr>
                           ))}
@@ -445,8 +641,8 @@ export default function MouldRegistration() {
           <div className="mbox">
             <div className="mhdr">
               <div>
-                <div className="mt">{viewModal.mouldName}</div>
-                <div className="msub">Asset Code: <span style={{color:"#4f46e5",fontFamily:"monospace",fontWeight:700}}>{viewModal.mouldIdAssetCode}</span> • Tag ID: {viewModal.tagId}</div>
+                <div className="mt">{viewModal.mouldName || viewModal.mould_name}</div>
+                <div className="msub">Asset Code: <span style={{color:"#4f46e5",fontFamily:"monospace",fontWeight:700}}>{viewModal.mouldIdAssetCode || viewModal.mould_id_code}</span> • Tag ID: {viewModal.tagId || viewModal.tag_id}</div>
               </div>
               <button className="mcls" onClick={() => setViewModal(null)}>x</button>
             </div>
@@ -454,12 +650,12 @@ export default function MouldRegistration() {
               <div className="v-sec">Identification & Asset Details</div>
               <div className="vg">
                 {[
-                  ["Asset Class", viewModal.assetClassCode ? `${viewModal.assetClassCode} - ${viewModal.assetClassName}` : "—"],
-                  ["Sub Number", viewModal.subNumber || "—"],
-                  ["Location", viewModal.locationCode ? `${viewModal.locationCode} - ${viewModal.locationName}` : "—"],
+                  ["Asset Class", (viewModal.assetClassCode || viewModal.asset_class_code) ? `${viewModal.assetClassCode || viewModal.asset_class_code} - ${viewModal.assetClassName || viewModal.asset_class_name}` : "—"],
+                  ["Sub Number", viewModal.subNumber || viewModal.sub_number || "—"],
+                  ["Location", (viewModal.locationCode || viewModal.location_code) ? `${viewModal.locationCode || viewModal.location_code} - ${viewModal.locationName || viewModal.location_name}` : "—"],
                   ["Plant", viewModal.plant || "—"],
-                  ["Base UOM", viewModal.baseUnitOfMeasure || "—"],
-                  ["Asset Life (Yrs)", viewModal.assetLife || "—"],
+                  ["Base UOM", viewModal.baseUnitOfMeasure || viewModal.base_uom || "—"],
+                  ["Asset Life (Yrs)", viewModal.assetLife || viewModal.asset_life || "—"],
                   ["Description", viewModal.description || "—"]
                 ].map(([l, v]) => <div key={l} className="vf"><div className="vf-l">{l}</div><div className="vf-v">{v}</div></div>)}
               </div>
@@ -467,14 +663,14 @@ export default function MouldRegistration() {
               <div className="v-sec">Manufacturer & Financials</div>
               <div className="vg">
                 {[
-                  ["Cost Center", viewModal.costCenterCode ? `${viewModal.costCenterCode} - ${viewModal.costCenterName}` : "—"],
-                  ["Supplier", viewModal.supplierCode ? `${viewModal.supplierCode} - ${viewModal.supplierName}` : "—"],
-                  ["PO Number & Date", viewModal.poNumber ? `${viewModal.poNumber} (${viewModal.poDate || "No Date"})` : "—"],
-                  ["Capitalization Date", viewModal.capitalizationOn || "—"],
-                  ["Depreciation Key", viewModal.depreciationOnKey || "—"],
-                  ["Depr. Calculation Date", viewModal.depreciationCalcOn || "—"],
-                  ["Cum. Acq. Value", viewModal.cumAcqValue ? `₹${viewModal.cumAcqValue}` : "—"],
-                  ["Trans. Acq. Value", viewModal.transAcqValue ? `₹${viewModal.transAcqValue}` : "—"],
+                  ["Cost Center", (viewModal.costCenterCode || viewModal.cost_center_code) ? `${viewModal.costCenterCode || viewModal.cost_center_code} - ${viewModal.costCenterName || viewModal.cost_center_name}` : "—"],
+                  ["Supplier", (viewModal.supplierCode || viewModal.supplier_code) ? `${viewModal.supplierCode || viewModal.supplier_code} - ${viewModal.supplierName || viewModal.supplier_name}` : "—"],
+                  ["PO Number & Date", (viewModal.poNumber || viewModal.po_number) ? `${viewModal.poNumber || viewModal.po_number} (${viewModal.poDate || viewModal.po_date ? fDate(viewModal.poDate || viewModal.po_date) : "No Date"})` : "—"],
+                  ["Capitalization Date", (viewModal.capitalizationOn || viewModal.cap_date) ? fDate(viewModal.capitalizationOn || viewModal.cap_date) : "—"],
+                  ["Depreciation Key", viewModal.depreciationOnKey || viewModal.depr_key || "—"],
+                  ["Depr. Calculation Date", (viewModal.depreciationCalcOn || viewModal.depr_calc_date) ? fDate(viewModal.depreciationCalcOn || viewModal.depr_calc_date) : "—"],
+                  ["Cum. Acq. Value", (viewModal.cumAcqValue || viewModal.cum_acq_value) ? `₹${viewModal.cumAcqValue || viewModal.cum_acq_value}` : "—"],
+                  ["Trans. Acq. Value", (viewModal.transAcqValue || viewModal.trans_acq_value) ? `₹${viewModal.transAcqValue || viewModal.trans_acq_value}` : "—"],
                   ["Currency", viewModal.currency || "—"]
                 ].map(([l, v]) => <div key={l} className="vf"><div className="vf-l">{l}</div><div className="vf-v">{v}</div></div>)}
               </div>
@@ -482,10 +678,10 @@ export default function MouldRegistration() {
               <div className="v-sec">Technical Data</div>
               <div className="vg">
                 {[
-                  ["Guaranteed Life (Shots)", viewModal.guaranteedLifeTotalShots || "—"],
-                  ["Current Shot Count", viewModal.currentShotCount || "—"],
-                  ["Mould Image", viewModal.mouldImageName || "Not Uploaded"],
-                  ["Drawing / CAD File", viewModal.drawingCadFileName || "Not Uploaded"]
+                  ["Guaranteed Life (Shots)", viewModal.guaranteedLifeTotalShots || viewModal.guaranteed_shots || "—"],
+                  ["Current Shot Count", viewModal.currentShotCount || viewModal.current_shots || "—"],
+                  ["Mould Image", (viewModal.mouldImage || viewModal.mould_image) ? <a href={viewModal.mouldImage || viewModal.mould_image} target="_blank" style={{color:"#4f46e5", textDecoration:"underline", fontWeight:600}}>View Image</a> : "Not Uploaded"],
+                  ["Drawing / CAD File", (viewModal.drawingCadFile || viewModal.cad_file) ? <a href={viewModal.drawingCadFile || viewModal.cad_file} target="_blank" style={{color:"#4f46e5", textDecoration:"underline", fontWeight:600}}>View Document</a> : "Not Uploaded"]
                 ].map(([l, v]) => <div key={l} className="vf"><div className="vf-l">{l}</div><div className="vf-v">{v}</div></div>)}
               </div>
             </div>
@@ -496,7 +692,7 @@ export default function MouldRegistration() {
         </div>
       )}
 
-      {toast && <div className="toast">{toast}</div>}
+      {toast && <div className={`toast ${toast.type === "ok" ? "tok" : "terr"}`}>{toast.type === "ok" ? "✅" : "❌"} <span style={{marginLeft: 8}}>{toast.msg}</span></div>}
     </>
   );
 }

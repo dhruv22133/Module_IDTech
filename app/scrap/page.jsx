@@ -1,24 +1,10 @@
 'use client';
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // ══════════════════════════════════════════════════════════════
 //  MOULD SCRAP MODULE — MouldSys Enterprise
 // ══════════════════════════════════════════════════════════════
-
-// ── MASTER DATA ─────────────────────────────────────────────
-const MOULDS = [
-  { id: "MLD-0042", name: "Bumper Front LH", type: "Injection Mould", plant: "Plant A – Mumbai", location: "Shop Floor A", shots: 470000, maxShots: 500000, assetValue: 1850000, bookValue: 185000, age: "6.2 yrs", status: "Active", lastMaint: "2025-01-15", condition: "Fair" },
-  { id: "MLD-0118", name: "Dashboard Panel RH", type: "Injection Mould", plant: "Plant B – Pune", location: "Shop Floor B", shots: 440000, maxShots: 500000, assetValue: 2200000, bookValue: 264000, age: "5.8 yrs", status: "Active", lastMaint: "2025-02-01", condition: "Poor" },
-  { id: "MLD-0203", name: "Door Trim Inner LH", type: "Blow Mould", plant: "Plant A – Mumbai", location: "Warehouse 1", shots: 499200, maxShots: 500000, assetValue: 1600000, bookValue: 32000, age: "7.5 yrs", status: "End of Life", lastMaint: "2024-12-20", condition: "Critical" },
-  { id: "MLD-0087", name: "Grille Centre", type: "Die Cast Mould", plant: "Plant C – Nashik", location: "Shop Floor A", shots: 395000, maxShots: 500000, assetValue: 2800000, bookValue: 560000, age: "4.1 yrs", status: "Active", lastMaint: "2025-01-28", condition: "Good" },
-  { id: "MLD-0311", name: "Headlamp Bezel RH", type: "Injection Mould", plant: "Plant D – Aurangabad", location: "Maintenance Bay", shots: 498500, maxShots: 500000, assetValue: 1950000, bookValue: 48750, age: "8.0 yrs", status: "Under Maintenance", lastMaint: "2025-02-10", condition: "Poor" },
-  { id: "MLD-0512", name: "A-Pillar Cover RH", type: "Blow Mould", plant: "Plant B – Pune", location: "Shop Floor A", shots: 220000, maxShots: 500000, assetValue: 1400000, bookValue: 700000, age: "3.2 yrs", status: "Active", lastMaint: "2025-01-05", condition: "Good" },
-  { id: "MLD-0634", name: "Rear Bumper Assembly", type: "Compression Mould", plant: "Plant A – Mumbai", location: "Warehouse 2", shots: 495000, maxShots: 500000, assetValue: 3200000, bookValue: 96000, age: "9.1 yrs", status: "End of Life", lastMaint: "2024-11-30", condition: "Critical" },
-  { id: "MLD-0721", name: "Console Side Panel", type: "Injection Mould", plant: "Plant B – Pune", location: "Maintenance Bay", shots: 310000, maxShots: 500000, assetValue: 1750000, bookValue: 437500, age: "4.8 yrs", status: "Under Maintenance", lastMaint: "2025-02-18", condition: "Fair" },
-  { id: "MLD-0819", name: "Fender Extension LH", type: "Die Cast Mould", plant: "Plant C – Nashik", location: "Shop Floor B", shots: 497800, maxShots: 500000, assetValue: 2100000, bookValue: 42000, age: "7.8 yrs", status: "End of Life", lastMaint: "2024-10-12", condition: "Critical" },
-  { id: "MLD-0923", name: "Tailgate Inner Panel", type: "Injection Mould", plant: "Plant A – Mumbai", location: "Warehouse 1", shots: 492000, maxShots: 500000, assetValue: 2450000, bookValue: 122500, age: "8.5 yrs", status: "Retired", lastMaint: "2024-09-05", condition: "Scrap" },
-];
 
 const SCRAP_REASONS = [
   { key: "eol", label: "End of Life – Shot Count Exceeded", icon: "⏱", color: "#6b7280" },
@@ -40,14 +26,6 @@ const DISPOSAL_METHODS = [
   { key: "recycle", label: "Recycle Components", icon: "♻️", description: "Salvage reusable components before scrap" },
 ];
 
-const CONDITION_RATINGS = [
-  { key: "critical", label: "Critical – Unusable", color: "#dc2626", bg: "#fef2f2", border: "#fca5a5", pct: 0 },
-  { key: "poor", label: "Poor – Major Issues", color: "#d97706", bg: "#fffbeb", border: "#fcd34d", pct: 25 },
-  { key: "fair", label: "Fair – Needs Repair", color: "#0891b2", bg: "#e0f2fe", border: "#7dd3fc", pct: 50 },
-  { key: "good", label: "Good – Minor Wear", color: "#059669", bg: "#f0fdf4", border: "#6ee7b7", pct: 75 },
-  { key: "excellent", label: "Excellent – Like New", color: "#15803d", bg: "#dcfce7", border: "#86efac", pct: 100 },
-];
-
 const EVALUATION_CHECKLIST = [
   { id: "EV01", task: "Cavity surface condition assessment", category: "Surface", weight: 15 },
   { id: "EV02", task: "Core & cavity alignment check", category: "Alignment", weight: 10 },
@@ -67,15 +45,6 @@ const SCRAP_VENDORS = [
   { code: "SV-004", name: "Industrial Salvage Corp", city: "Aurangabad", rate: 44, uom: "₹/kg" },
 ];
 
-const PLANTS = ["Plant A – Mumbai", "Plant B – Pune", "Plant C – Nashik", "Plant D – Aurangabad"];
-
-const USERS = {
-  maker: { id: "USR-001", name: "Rajesh Kumar", role: "Maker", avatar: "RK" },
-  reviewer: { id: "USR-003", name: "Priya Mehta", role: "Technical Reviewer", avatar: "PM" },
-  approver: { id: "USR-002", name: "Sunita Rao", role: "Approver", avatar: "SR" },
-  finance: { id: "USR-004", name: "Amit Desai", role: "Finance Head", avatar: "AD" },
-};
-
 const NAV_ITEMS = [
   { label: "Dashboard", icon: "📊", route: "/dashboard" },
   { label: "User Management", icon: "👥", route: "/user-management" },
@@ -87,81 +56,6 @@ const NAV_ITEMS = [
   { label: "Maintenance", icon: "🔧", route: "/maintenance" },
   { label: "Scrap / Dispose", icon: "🗑", route: "/scrap", active: true },
   { label: "Reports", icon: "📈", route: "/reports" },
-];
-
-// ── Counters ────────────────────────────────────────────────
-let scrapCounter = 18;
-const nextScrapId = () => `SCR-2025-${String(++scrapCounter).padStart(4, "0")}`;
-
-// ── SEED SCRAP RECORDS ──────────────────────────────────────
-const SEED_RECORDS = [
-  {
-    id: "SCR-2025-0016", mouldId: "MLD-0203", mouldName: "Door Trim Inner LH", mouldType: "Blow Mould", plant: "Plant A – Mumbai",
-    scrapReason: "eol", reasonDetail: "Shot count 499,200 exceeds guaranteed life of 500,000. Cavity wear beyond acceptable limits. Multiple repair attempts exhausted.",
-    conditionRating: "critical",
-    evaluationScore: 18, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 2, remark: "Failed" })),
-    disposalMethod: "scrap_sale", scrapVendor: "SV-001", scrapWeight: 4200, scrapRate: 42, estimatedScrapValue: 176400,
-    originalAssetValue: 1600000, currentBookValue: 32000, accumulatedDepreciation: 1568000, netLoss: 0, salvageValue: 176400,
-    mouldWeight: 4200, mouldMaterial: "Aluminium",
-    lastMaintenanceDate: "2024-12-20", totalMaintenanceCost: 385000, lifetimeShots: 499200, maxShots: 500000,
-    requestedBy: USERS.maker, reviewedBy: USERS.reviewer, approvedBy: USERS.approver, financeApprovedBy: USERS.finance,
-    requestDate: "2025-02-20", reviewDate: "2025-02-22", approvalDate: "2025-02-24", financeApprovalDate: "2025-02-25", disposalDate: "2025-03-01",
-    gatePassNo: "GP-2025-0312", invoiceNo: "INV-SCR-2025-0089", ewayBillNo: "EWB-2025-44556",
-    certificateOfDestruction: "", environmentalClearance: "ENV-CLR-2025-044",
-    beforeImages: [], afterImages: [], documents: [],
-    remarks: "End of life. All repair options exhausted. Scrap sale to Metro Scrap Dealers completed.",
-    status: "Disposed",
-    timeline: [
-      { event: "Scrap Request Created", by: "Rajesh Kumar", at: "20 Feb 2025, 10:00 AM", note: "EOL – 499,200 shots completed" },
-      { event: "Technical Review Started", by: "Priya Mehta", at: "21 Feb 2025, 09:30 AM", note: "Evaluation checklist initiated" },
-      { event: "Review Completed", by: "Priya Mehta", at: "22 Feb 2025, 04:00 PM", note: "Score: 18/100 – Recommended for scrap" },
-      { event: "Management Approval", by: "Sunita Rao", at: "24 Feb 2025, 11:00 AM", note: "Approved for disposal" },
-      { event: "Finance Approval", by: "Amit Desai", at: "25 Feb 2025, 02:00 PM", note: "Asset write-off approved" },
-      { event: "Disposal Completed", by: "Rajesh Kumar", at: "01 Mar 2025, 03:30 PM", note: "Scrap sale completed. GP-2025-0312 issued" },
-    ]
-  },
-  {
-    id: "SCR-2025-0017", mouldId: "MLD-0634", mouldName: "Rear Bumper Assembly", mouldType: "Compression Mould", plant: "Plant A – Mumbai",
-    scrapReason: "irreparable", reasonDetail: "Major structural crack in cavity block (150mm+). Cooling channel corrosion severe. Repair estimate ₹22,00,000 exceeds 60% of asset value.",
-    conditionRating: "critical",
-    evaluationScore: 12, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 1, remark: "Critical" })),
-    disposalMethod: "recycle", scrapVendor: "SV-002", scrapWeight: 6800, scrapRate: 45, estimatedScrapValue: 306000,
-    originalAssetValue: 3200000, currentBookValue: 96000, accumulatedDepreciation: 3104000, netLoss: 0, salvageValue: 306000,
-    mouldWeight: 6800, mouldMaterial: "P20 Steel",
-    lastMaintenanceDate: "2024-11-30", totalMaintenanceCost: 620000, lifetimeShots: 495000, maxShots: 500000,
-    requestedBy: USERS.maker, reviewedBy: USERS.reviewer, approvedBy: null, financeApprovedBy: null,
-    requestDate: "2025-03-02", reviewDate: "2025-03-04", approvalDate: "", financeApprovalDate: "", disposalDate: "",
-    gatePassNo: "", invoiceNo: "", ewayBillNo: "",
-    certificateOfDestruction: "", environmentalClearance: "",
-    beforeImages: [], afterImages: [], documents: [],
-    remarks: "Crack propagation beyond repair. Components to be salvaged before scrap.",
-    status: "Pending Approval",
-    timeline: [
-      { event: "Scrap Request Created", by: "Rajesh Kumar", at: "02 Mar 2025, 09:00 AM", note: "Irreparable damage – structural crack" },
-      { event: "Technical Review Started", by: "Priya Mehta", at: "03 Mar 2025, 10:00 AM", note: "On-site evaluation with CMM" },
-      { event: "Review Completed", by: "Priya Mehta", at: "04 Mar 2025, 03:00 PM", note: "Score: 12/100 – Scrap recommended" },
-    ]
-  },
-  {
-    id: "SCR-2025-0018", mouldId: "MLD-0819", mouldName: "Fender Extension LH", mouldType: "Die Cast Mould", plant: "Plant C – Nashik",
-    scrapReason: "obsolete", reasonDetail: "Vehicle model XM-200 discontinued. No alternate usage identified. Customer confirmed no further requirement.",
-    conditionRating: "poor",
-    evaluationScore: 35, evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 4, remark: "Moderate wear" })),
-    disposalMethod: "return_customer", scrapVendor: "", scrapWeight: 5100, scrapRate: 0, estimatedScrapValue: 0,
-    originalAssetValue: 2100000, currentBookValue: 42000, accumulatedDepreciation: 2058000, netLoss: 42000, salvageValue: 0,
-    mouldWeight: 5100, mouldMaterial: "H13 Steel",
-    lastMaintenanceDate: "2024-10-12", totalMaintenanceCost: 290000, lifetimeShots: 497800, maxShots: 500000,
-    requestedBy: USERS.maker, reviewedBy: null, approvedBy: null, financeApprovedBy: null,
-    requestDate: "2025-03-05", reviewDate: "", approvalDate: "", financeApprovalDate: "", disposalDate: "",
-    gatePassNo: "", invoiceNo: "", ewayBillNo: "",
-    certificateOfDestruction: "", environmentalClearance: "",
-    beforeImages: [], afterImages: [], documents: [],
-    remarks: "Customer (OEM) confirmed model discontinuation. Awaiting return logistics.",
-    status: "Under Review",
-    timeline: [
-      { event: "Scrap Request Created", by: "Rajesh Kumar", at: "05 Mar 2025, 11:30 AM", note: "Product obsolescence – model XM-200 discontinued" },
-    ]
-  },
 ];
 
 // ── STYLES ──────────────────────────────────────────────────
@@ -286,13 +180,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .btn-sm{height:34px;padding:0 14px;font-size:12px;border-radius:8px}
 .btn-xs{height:28px;padding:0 10px;font-size:11px;border-radius:6px}
 
-/* ── FILE UPLOAD ── */
-.file-wrap{position:relative;display:flex;align-items:center;gap:0;height:42px;border:1.5px dashed #d1d5db;border-radius:10px;overflow:hidden;background:#fafafa;transition:border-color .2s}
-.file-wrap:hover{border-color:#dc2626;background:#fffafa}
-.file-wrap input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.file-btn{height:100%;padding:0 14px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0}
-.file-name{flex:1;padding:0 12px;font-size:12px;color:#9ca3af;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-
 /* ── REASON SELECTOR ── */
 .reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:20px 22px}
 .reason-card{border:1.5px solid #e5e7eb;border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .15s;background:#fafafa;display:flex;align-items:flex-start;gap:12px}
@@ -395,7 +282,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 .footer-actions{display:flex;gap:10px}
 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:13px 20px;border-radius:12px;font-size:13.5px;font-weight:500;z-index:2000;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:toastIn .3s ease;border-left:4px solid #dc2626}
+.toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:13px 20px;border-radius:12px;font-size:13.5px;font-weight:500;z-index:2000;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:toastIn .3s ease;border-left:4px solid #10b981}
 @keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── CONDITION BAR ── */
@@ -405,6 +292,37 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 /* ── SHOT PROGRESS ── */
 .shot-bar{height:6px;background:#f3f4f6;border-radius:3px;overflow:hidden;margin-top:4px}
 .shot-fill{height:100%;border-radius:3px}
+
+/* ── FILE UPLOAD ── */
+.file-wrap{position:relative;display:flex;align-items:center;gap:0;height:42px;border:1.5px dashed #d1d5db;border-radius:10px;overflow:hidden;background:#fafafa;transition:border-color .2s}
+.file-wrap:hover{border-color:#dc2626;background:#fffafa}
+.file-btn{height:100%;padding:0 14px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0;cursor:pointer}
+.file-name{flex:1;padding:0 12px;font-size:12px;color:#9ca3af;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.file-name.has-file{color:#111827;font-weight:600}
+.img-upload-zone{border:1.5px dashed #d1d5db;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;background:#fafafa;transition:border-color .15s;cursor:pointer}
+.img-upload-zone:hover{border-color:#dc2626;background:#fffafa}
+.img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.img-thumb{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:#f3f4f6;border:1.5px solid #e5e7eb}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-rm{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:4px;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:10px}
+
+.logout-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
 `;
 
 // ── HELPERS ─────────────────────────────────────────────────
@@ -421,12 +339,6 @@ function statusBadge(s) {
   return <span className="badge" style={{ background: m.bg, color: m.color, border: `1px solid ${m.border}` }}><span className="badge-dot" style={{ background: m.color }} />{s}</span>;
 }
 
-function conditionBadge(c) {
-  const cr = CONDITION_RATINGS.find(x => x.key === c);
-  if (!cr) return null;
-  return <span className="badge" style={{ background: cr.bg, color: cr.color, border: `1px solid ${cr.border}` }}>{cr.label.split(" – ")[0]}</span>;
-}
-
 function reasonBadge(r) {
   const sr = SCRAP_REASONS.find(x => x.key === r);
   if (!sr) return null;
@@ -440,14 +352,54 @@ function getScoreColor(score) {
   return "#059669";
 }
 
-function initials(name) { return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2); }
+function initials(name) { return name ? name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) : "U"; }
+
+// ── FILE UPLOAD COMPONENT ───────────────────────────────────
+function FileUpload({ files, onChange, label, color, accept = "image/*" }) {
+  const inputRef = useRef(null);
+  
+  const handleFiles = useCallback((newFiles) => {
+    const arr = [...newFiles];
+    const newItems = arr.map(file => ({
+        file: file,
+        url: URL.createObjectURL(file),
+        name: file.name
+    }));
+    onChange([...files, ...newItems]);
+  }, [files, onChange]);
+
+  return (
+    <div>
+      <div className="img-upload-zone" onClick={() => inputRef.current?.click()}>
+        <button type="button" className="btn btn-sm" style={{ background: color, color: "#fff", pointerEvents: "none" }}>
+          ⬆ {label}
+        </button>
+        <span style={{ fontSize: 11, color: "#9ca3af" }}>{accept.includes("pdf") ? "JPG, PNG, PDF" : "JPG, PNG"} · Max 5MB each</span>
+        <input ref={inputRef} type="file" accept={accept} multiple style={{ display: "none" }} onChange={e => handleFiles(e.target.files)} />
+      </div>
+      
+      {files.length > 0 && (
+        <div className="img-grid">
+          {files.map((f, i) => (
+            <div key={i} className="img-thumb">
+              {f.name.toLowerCase().endsWith('.pdf') 
+                  ? <div style={{width:'100%', height:'100%', background:'#eef2ff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24}}>📄</div>
+                  : <img src={f.url} alt={f.name} />}
+              <div className="img-rm" onClick={(e) => { e.stopPropagation(); onChange(files.filter((_, j) => j !== i)); }}>✕</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ══════════════════════════════════════════════════════════════
 //  COMPONENT
 // ══════════════════════════════════════════════════════════════
 export default function MouldScrap() {
   const router = useRouter();
-  const [records, setRecords] = useState(SEED_RECORDS);
+  const [records, setRecords] = useState([]);
   const [currentView, setCurrentView] = useState("list");
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
@@ -455,32 +407,66 @@ export default function MouldScrap() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [toast, setToast] = useState(null);
   const [errors, setErrors] = useState({});
-  const [createStep, setCreateStep] = useState(1); // 1: Mould & Reason, 2: Evaluation, 3: Disposal & Finance, 4: Review & Submit
+  const [createStep, setCreateStep] = useState(1); 
+  
   const [user, setUser] = useState({ name: "User", role: "Viewer" });
+  const [roles, setRoles] = useState([]);
+  const [dbMoulds, setDbMoulds] = useState([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) { router.push("/login"); return; }
     setUser(JSON.parse(stored));
-  }, []);
 
-  const userInitials = user.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+    fetch('/api/roles').then(r=>r.json()).then(setRoles).catch(console.error);
+
+    Promise.all([
+      fetch('/api/moulds?_t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : []),
+      fetch('/api/scrap?_t=' + Date.now(), { cache: 'no-store' }).then(r => r.ok ? r.json() : [])
+    ]).then(([mouldsData, scrapData]) => {
+      setDbMoulds(Array.isArray(mouldsData) ? mouldsData.map(m => ({
+          id: m.mouldIdAssetCode || m.mould_id_code,
+          name: m.mouldName || m.mould_name,
+          type: m.assetClassName || m.asset_class_name,
+          plant: m.plant || "Unknown Plant",
+          location: m.locationName || m.location_name || "Unknown Location",
+          shots: m.currentShotCount || m.current_shots || 0,
+          maxShots: m.guaranteedLifeTotalShots || m.guaranteed_shots || 500000,
+          assetValue: Number(m.cumAcqValue || m.cum_acq_value || 0),
+          bookValue: Number(m.transAcqValue || m.trans_acq_value || 0),
+          age: (() => {
+              const capDate = m.capitalizationOn || m.cap_date;
+              if (!capDate) return "N/A";
+              const yrs = (new Date() - new Date(capDate)) / (1000 * 60 * 60 * 24 * 365.25);
+              return yrs >= 0 ? `${yrs.toFixed(1)} yrs` : "N/A";
+          })(),
+          status: "Active"
+      })) : []);
+      setRecords(Array.isArray(scrapData) ? scrapData : []);
+    }).catch(console.error);
+  }, [router]);
+
+  const userInitials = initials(user.name);
+
+  // ── Role Privileges ──
+  const activeRole = roles.find(r => r.name === user.role);
+  const privs = activeRole ? activeRole.privs : null;
+  const canEdit = user.role === 'Admin' || privs?.scrap === true;
 
   // ── Form state ──
   const emptyForm = {
-    mouldId: "", scrapReason: "", reasonDetail: "",
-    conditionRating: "", evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 0, remark: "" })),
+    mouldId: "", scrapReason: "", reasonDetail: "", conditionRating: "", 
+    evaluationChecklist: EVALUATION_CHECKLIST.map(c => ({ ...c, score: 0, remark: "" })),
     disposalMethod: "", scrapVendor: "", scrapWeight: "", scrapRate: "",
-    remarks: "",
-    gatePassNo: "", invoiceNo: "", ewayBillNo: "",
-    environmentalClearance: "",
+    remarks: "", environmentalClearance: "",
+    conditionPhotos: [], documents: []
   };
   const [form, setForm] = useState({ ...emptyForm });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const showToast = msg => { setToast(msg); setTimeout(() => setToast(null), 3500); };
 
-  const selectedMould = MOULDS.find(m => m.id === form.mouldId);
+  const selectedMould = dbMoulds.find(m => m.id === form.mouldId);
 
   // ── Evaluation score ──
   const evalScore = form.evaluationChecklist.reduce((sum, c) => {
@@ -488,7 +474,7 @@ export default function MouldScrap() {
     return sum + Math.round((c.score / 3) * c.weight);
   }, 0);
   const evalTotal = EVALUATION_CHECKLIST.reduce((sum, c) => sum + c.weight, 0);
-  const evalPct = Math.round((evalScore / evalTotal) * 100);
+  const evalPct = Math.round((evalScore / evalTotal) * 100) || 0;
 
   // ── Financial calculations ──
   const estScrapValue = (parseFloat(form.scrapWeight) || 0) * (parseFloat(form.scrapRate) || 0);
@@ -513,8 +499,8 @@ export default function MouldScrap() {
     total: records.length,
     pending: records.filter(r => ["Under Review", "Pending Approval"].includes(r.status)).length,
     disposed: records.filter(r => r.status === "Disposed").length,
-    totalAssetValue: records.reduce((s, r) => s + (r.originalAssetValue || 0), 0),
-    totalSalvage: records.reduce((s, r) => s + (r.salvageValue || r.estimatedScrapValue || 0), 0),
+    totalAssetValue: records.reduce((s, r) => s + (Number(r.originalAssetValue) || 0), 0),
+    totalSalvage: records.reduce((s, r) => s + (Number(r.salvageValue) || Number(r.estimatedScrapValue) || 0), 0),
   };
 
   // ── Validate ──
@@ -524,6 +510,7 @@ export default function MouldScrap() {
       if (!form.mouldId) e.mouldId = "Required";
       if (!form.scrapReason) e.scrapReason = "Select a reason";
       if (!form.reasonDetail.trim()) e.reasonDetail = "Provide detail";
+      if (!form.conditionRating.trim()) e.conditionRating = "Enter mould condition";
     }
     if (step === 3) {
       if (!form.disposalMethod) e.disposalMethod = "Select disposal method";
@@ -541,50 +528,80 @@ export default function MouldScrap() {
   const handleBack = () => setCreateStep(s => Math.max(s - 1, 1));
 
   // ── Submit ──
-  const handleSubmit = () => {
-    const mould = MOULDS.find(m => m.id === form.mouldId);
+  const handleSubmit = async () => {
     const vendor = SCRAP_VENDORS.find(v => v.code === form.scrapVendor);
-    const newRec = {
-      id: nextScrapId(),
-      mouldId: form.mouldId, mouldName: mould?.name || "", mouldType: mould?.type || "", plant: mould?.plant || "",
-      scrapReason: form.scrapReason,
-      reasonDetail: form.reasonDetail,
-      conditionRating: form.conditionRating,
-      evaluationScore: evalPct,
-      evaluationChecklist: form.evaluationChecklist,
-      disposalMethod: form.disposalMethod,
-      scrapVendor: form.scrapVendor,
-      scrapWeight: parseFloat(form.scrapWeight) || 0,
-      scrapRate: parseFloat(form.scrapRate) || (vendor?.rate || 0),
-      estimatedScrapValue: estScrapValue,
-      originalAssetValue: mould?.assetValue || 0,
-      currentBookValue: mould?.bookValue || 0,
-      accumulatedDepreciation: (mould?.assetValue || 0) - (mould?.bookValue || 0),
-      netLoss: Math.max(0, (mould?.bookValue || 0) - estScrapValue),
-      salvageValue: estScrapValue,
-      mouldWeight: parseFloat(form.scrapWeight) || 0,
-      mouldMaterial: mould?.type?.includes("Die Cast") ? "H13 Steel" : mould?.type?.includes("Blow") ? "Aluminium" : "P20 Steel",
-      lastMaintenanceDate: mould?.lastMaint || "",
-      totalMaintenanceCost: 0,
-      lifetimeShots: mould?.shots || 0,
-      maxShots: mould?.maxShots || 0,
-      requestedBy: USERS.maker, reviewedBy: null, approvedBy: null, financeApprovedBy: null,
-      requestDate: new Date().toISOString().slice(0, 10),
-      reviewDate: "", approvalDate: "", financeApprovalDate: "", disposalDate: "",
-      gatePassNo: "", invoiceNo: "", ewayBillNo: "",
-      certificateOfDestruction: "", environmentalClearance: form.environmentalClearance,
-      beforeImages: [], afterImages: [], documents: [],
-      remarks: form.remarks,
-      status: "Under Review",
-      timeline: [
-        { event: "Scrap Request Created", by: USERS.maker.name, at: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }), note: `${SCRAP_REASONS.find(r => r.key === form.scrapReason)?.label || ""}` },
-      ]
-    };
-    setRecords(prev => [newRec, ...prev]);
-    setForm({ ...emptyForm });
-    setCreateStep(1);
-    setCurrentView("list");
-    showToast(`🗑 Scrap request ${newRec.id} created for ${newRec.mouldId}`);
+    const scrapId = `SCR-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9000) + 1000)}`;
+
+    const formData = new FormData();
+    formData.append('id', scrapId);
+    formData.append('mouldId', form.mouldId);
+    formData.append('mouldName', selectedMould?.name || "");
+    formData.append('mouldType', selectedMould?.type || "");
+    formData.append('plant', selectedMould?.plant || "");
+    formData.append('scrapReason', form.scrapReason);
+    formData.append('reasonDetail', form.reasonDetail);
+    formData.append('conditionRating', form.conditionRating); // Saves User Text Input to DB
+    formData.append('evaluationScore', evalPct);
+    formData.append('disposalMethod', form.disposalMethod);
+    formData.append('scrapVendor', form.scrapVendor);
+    formData.append('scrapWeight', parseFloat(form.scrapWeight) || 0);
+    formData.append('scrapRate', parseFloat(form.scrapRate) || (vendor?.rate || 0));
+    formData.append('estimatedScrapValue', estScrapValue);
+    formData.append('originalAssetValue', selectedMould?.assetValue || 0);
+    formData.append('currentBookValue', selectedMould?.bookValue || 0);
+    formData.append('accumulatedDepreciation', (selectedMould?.assetValue || 0) - (selectedMould?.bookValue || 0));
+    formData.append('netLoss', Math.max(0, (selectedMould?.bookValue || 0) - estScrapValue));
+    formData.append('salvageValue', estScrapValue);
+    formData.append('environmentalClearance', form.environmentalClearance);
+    formData.append('remarks', form.remarks);
+    formData.append('status', "Under Review");
+    formData.append('requestDate', new Date().toISOString().slice(0, 10));
+
+    formData.append('requestedBy', JSON.stringify({ name: user.name }));
+    formData.append('evaluationChecklist', JSON.stringify(form.evaluationChecklist));
+    
+    const tl = [
+        { event: "Scrap Request Created", by: user.name, at: new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }), note: `${SCRAP_REASONS.find(r => r.key === form.scrapReason)?.label || ""}` }
+    ];
+    formData.append('timeline', JSON.stringify(tl));
+
+    form.conditionPhotos.forEach(img => { if (img.file) formData.append('conditionPhotos', img.file); });
+    form.documents.forEach(doc => { if (doc.file) formData.append('documents', doc.file); });
+
+    try {
+        const res = await fetch("/api/scrap", {
+            method: "POST",
+            body: formData
+        });
+        
+        if (res.ok) {
+            fetch('/api/scrap?_t=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.ok ? r.json() : []).then(setRecords).catch(console.error);
+            
+            setForm({ ...emptyForm });
+            setCreateStep(1);
+            setCurrentView("list");
+            showToast(`🗑 Scrap request ${scrapId} created for ${form.mouldId}`);
+        } else {
+            const data = await res.json();
+            showToast(`❌ Failed to create: ${data.error}`);
+        }
+    } catch (err) {
+        showToast(`❌ System error: ${err.message}`);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+        const res = await fetch(`/api/scrap?id=${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            setRecords(prev => prev.filter(r => r.id !== id));
+            setCurrentView("list");
+            showToast(`Record ${id} deleted successfully`);
+        }
+    } catch (err) {
+        showToast(`Error deleting record`);
+    }
   };
 
   // ── Update evaluation score ──
@@ -624,6 +641,19 @@ export default function MouldScrap() {
     }));
   };
 
+  const handleLogout = async () => {
+    try {
+      // Call the server API to destroy the HTTP-Only Session Cookie
+      await fetch('/api/auth/logout', { method: 'POST' });
+      // Clear the legacy frontend storage
+      localStorage.removeItem("user");
+      // Redirect to login page
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   // ═══════════════════════════════════════════════════════════
   //  RENDER
   // ═══════════════════════════════════════════════════════════
@@ -635,7 +665,11 @@ export default function MouldScrap() {
         {/* ── SIDEBAR ── */}
         <div className="sidebar">
           <div className="sb-brand">
-            <div className="sb-brand-row">
+            {/* <div style={{ padding: "20px 16px" }}>
+               <img src="/logo.png" alt="ID Tech Logo" style={{ width: "100%", maxHeight: 45, objectFit: "contain", display: "block", margin: "0 auto" }} />
+            </div>
+            */}
+            <div className="sb-brand-row" >
               <div className="sb-icon">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><rect x="12" y="2" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="2" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".6" /><rect x="12" y="12" width="6" height="6" rx="1.5" fill="white" opacity=".9" /><circle cx="10" cy="10" r="1.8" fill="white" /></svg>
               </div>
@@ -676,6 +710,9 @@ export default function MouldScrap() {
                 <div className="notif-dot" />
               </div>
               <div className="tb-user-pill"><div className="tb-avatar">{userInitials}</div><span className="tb-uname">{user.name}</span></div>
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout ➔
+            </button>
             </div>
           </div>
 
@@ -689,10 +726,12 @@ export default function MouldScrap() {
                   <div className="page-hdr-sub">Evaluate, approve and track mould scrap requests with full asset write-off</div>
                 </div>
                 <div className="page-hdr-right">
-                  <button className="btn btn-danger" onClick={() => { setForm({ ...emptyForm }); setErrors({}); setCreateStep(1); setCurrentView("create"); }}>
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round" /></svg>
-                    New Scrap Request
-                  </button>
+                  {canEdit && (
+                      <button className="btn btn-danger" onClick={() => { setForm({ ...emptyForm }); setErrors({}); setCreateStep(1); setCurrentView("create"); }}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round" /></svg>
+                        New Scrap Request
+                      </button>
+                  )}
                 </div>
               </div>
 
@@ -755,7 +794,9 @@ export default function MouldScrap() {
                           <div style={{ fontSize: 11, color: "#6b7280" }}>{r.mouldName}</div>
                         </td>
                         <td>{reasonBadge(r.scrapReason)}</td>
-                        <td>{conditionBadge(r.conditionRating)}</td>
+                        <td>
+                          <span className="badge" style={{background: "#f3f4f6", color: "#374151", border: "1px solid #e5e7eb"}}>{r.conditionRating}</span>
+                        </td>
                         <td>
                           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                             <div style={{ width: 50, height: 6, background: "#f3f4f6", borderRadius: 3, overflow: "hidden" }}>
@@ -764,8 +805,8 @@ export default function MouldScrap() {
                             <span style={{ fontSize: 12, fontWeight: 700, color: getScoreColor(r.evaluationScore) }}>{r.evaluationScore}%</span>
                           </div>
                         </td>
-                        <td style={{ fontWeight: 600 }}>₹{(r.currentBookValue / 1000).toFixed(0)}K</td>
-                        <td style={{ fontWeight: 600, color: "#059669" }}>₹{((r.salvageValue || r.estimatedScrapValue) / 1000).toFixed(0)}K</td>
+                        <td style={{ fontWeight: 600 }}>₹{(Number(r.currentBookValue) / 1000).toFixed(0)}K</td>
+                        <td style={{ fontWeight: 600, color: "#059669" }}>₹{((Number(r.salvageValue) || Number(r.estimatedScrapValue)) / 1000).toFixed(0)}K</td>
                         <td>{statusBadge(r.status)}</td>
                         <td><button className="btn btn-outline btn-xs" onClick={() => { setSelectedRecord(r); setCurrentView("detail") }}>View</button></td>
                       </tr>
@@ -776,7 +817,7 @@ export default function MouldScrap() {
             </>)}
 
             {/* ══════════════ CREATE VIEW ══════════════ */}
-            {currentView === "create" && (<>
+            {currentView === "create" && canEdit && (<>
               <div className="page-hdr">
                 <div>
                   <div className="page-hdr-title">New Scrap Request</div>
@@ -820,7 +861,7 @@ export default function MouldScrap() {
                       <label className="field-label">Mould ID <span className="req">*</span></label>
                       <select className={`field-select${errors.mouldId ? " err" : ""}`} value={form.mouldId} onChange={e => set("mouldId", e.target.value)}>
                         <option value="">— Select Mould —</option>
-                        {MOULDS.map(m => <option key={m.id} value={m.id}>{m.id} – {m.name} ({m.condition})</option>)}
+                        {dbMoulds.map(m => <option key={m.id} value={m.id}>{m.id} – {m.name}</option>)}
                       </select>
                       {errors.mouldId && <div className="field-err">{errors.mouldId}</div>}
                     </div>
@@ -828,7 +869,17 @@ export default function MouldScrap() {
                     <div className="field"><label className="field-label">Mould Type</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.type || ""} readOnly /></div>
                     <div className="field"><label className="field-label">Plant / Location</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould ? `${selectedMould.plant} – ${selectedMould.location}` : ""} readOnly /></div>
                     <div className="field"><label className="field-label">Current Status</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.status || ""} readOnly /></div>
-                    <div className="field"><label className="field-label">Condition</label><input className={`field-input${selectedMould ? " auto-fill" : ""}`} value={selectedMould?.condition || ""} readOnly /></div>
+                    
+                    <div className="field">
+                      <label className="field-label">Condition <span className="req">*</span></label>
+                      <input 
+                        className={`field-input${errors.conditionRating ? " err" : ""}`} 
+                        value={form.conditionRating} 
+                        onChange={e => set("conditionRating", e.target.value)} 
+                        placeholder="e.g. End of life, Rusted..." 
+                      />
+                      {errors.conditionRating && <div className="field-err">{errors.conditionRating}</div>}
+                    </div>
                   </div>
                   {selectedMould && (
                     <div style={{ padding: "0 22px 16px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16 }}>
@@ -877,20 +928,9 @@ export default function MouldScrap() {
                       <textarea className={`field-textarea${errors.reasonDetail ? " err" : ""}`} value={form.reasonDetail} onChange={e => set("reasonDetail", e.target.value)} placeholder="Provide detailed justification for scrapping this mould…" rows={4} />
                       {errors.reasonDetail && <div className="field-err">{errors.reasonDetail}</div>}
                     </div>
-                    <div className="field">
-                      <label className="field-label">Condition Rating</label>
-                      <select className="field-select" value={form.conditionRating} onChange={e => set("conditionRating", e.target.value)}>
-                        <option value="">— Select —</option>
-                        {CONDITION_RATINGS.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
-                      </select>
-                    </div>
-                    <div className="field">
+                    <div className="field full-span">
                       <label className="field-label">Mould Condition Photos</label>
-                      <div className="file-wrap">
-                        <div className="file-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg> Upload Photos</div>
-                        <span className="file-name">JPG, PNG · Max 5MB each</span>
-                        <input type="file" accept="image/*" multiple />
-                      </div>
+                      <FileUpload files={form.conditionPhotos} onChange={v=>set("conditionPhotos",v)} label="Upload Photos" color="#dc2626" />
                     </div>
                   </div>
                 </div>
@@ -1036,11 +1076,7 @@ export default function MouldScrap() {
                     </div>
                     <div className="field">
                       <label className="field-label">Supporting Documents</label>
-                      <div className="file-wrap">
-                        <div className="file-btn" style={{ background: "linear-gradient(135deg,#7c3aed,#6d28d9)" }}><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3 4l3-3 3 3M1 9v1a1 1 0 001 1h8a1 1 0 001-1V9" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg> Upload</div>
-                        <span className="file-name">PDF, Images · Max 10MB</span>
-                        <input type="file" multiple />
-                      </div>
+                      <FileUpload files={form.documents} onChange={v=>set("documents",v)} label="Upload Documents" color="#7c3aed" accept=".pdf,image/*" />
                     </div>
                     <div className="field">
                       <label className="field-label">Remarks / Notes</label>
@@ -1063,7 +1099,7 @@ export default function MouldScrap() {
                     <div className="detail-item"><span className="detail-label">Type</span><span className="detail-value">{selectedMould?.type}</span></div>
                     <div className="detail-item"><span className="detail-label">Plant</span><span className="detail-value">{selectedMould?.plant}</span></div>
                     <div className="detail-item"><span className="detail-label">Scrap Reason</span><span className="detail-value">{SCRAP_REASONS.find(r => r.key === form.scrapReason)?.label || "—"}</span></div>
-                    <div className="detail-item"><span className="detail-label">Condition</span><span className="detail-value">{CONDITION_RATINGS.find(c => c.key === form.conditionRating)?.label || "—"}</span></div>
+                    <div className="detail-item"><span className="detail-label">Condition</span><span className="detail-value"><span className="badge" style={{background: "#f3f4f6", color: "#374151", border: "1px solid #e5e7eb"}}>{form.conditionRating}</span></span></div>
                     <div className="detail-item"><span className="detail-label">Eval Score</span><span className="detail-value" style={{ color: getScoreColor(evalPct) }}>{evalPct}%</span></div>
                     <div className="detail-item"><span className="detail-label">Disposal Method</span><span className="detail-value">{DISPOSAL_METHODS.find(d => d.key === form.disposalMethod)?.label || "—"}</span></div>
                     <div className="detail-item"><span className="detail-label">Scrap Vendor</span><span className="detail-value">{SCRAP_VENDORS.find(v => v.code === form.scrapVendor)?.name || "N/A"}</span></div>
@@ -1105,12 +1141,15 @@ export default function MouldScrap() {
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                     <div className="page-hdr-title">{selectedRecord.id}</div>
                     {statusBadge(selectedRecord.status)}
-                    {conditionBadge(selectedRecord.conditionRating)}
+                    <span className="badge" style={{background: "#f3f4f6", color: "#374151", border: "1px solid #e5e7eb"}}>{selectedRecord.conditionRating}</span>
                   </div>
                   <div className="page-hdr-sub">{selectedRecord.mouldId} – {selectedRecord.mouldName} | {selectedRecord.plant}</div>
                 </div>
                 <div className="page-hdr-right">
                   <button className="btn btn-ghost" onClick={() => { setCurrentView("list"); setSelectedRecord(null) }}>← Back to List</button>
+                  {canEdit && (
+                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(selectedRecord.id)}>🗑 Delete</button>
+                  )}
                 </div>
               </div>
 
@@ -1147,7 +1186,7 @@ export default function MouldScrap() {
                   <div className="detail-item"><span className="detail-label">Mould Type</span><span className="detail-value">{selectedRecord.mouldType}</span></div>
                   <div className="detail-item"><span className="detail-label">Plant</span><span className="detail-value">{selectedRecord.plant}</span></div>
                   <div className="detail-item"><span className="detail-label">Lifetime Shots</span><span className="detail-value">{selectedRecord.lifetimeShots?.toLocaleString()} / {selectedRecord.maxShots?.toLocaleString()}</span></div>
-                  <div className="detail-item"><span className="detail-label">Mould Material</span><span className="detail-value">{selectedRecord.mouldMaterial}</span></div>
+                  <div className="detail-item"><span className="detail-label">Condition</span><span className="detail-value">{selectedRecord.conditionRating || "—"}</span></div>
                   <div className="detail-item"><span className="detail-label">Weight</span><span className="detail-value">{selectedRecord.mouldWeight?.toLocaleString()} Kg</span></div>
                   <div className="detail-item"><span className="detail-label">Eval Score</span><span className="detail-value" style={{ color: getScoreColor(selectedRecord.evaluationScore) }}>{selectedRecord.evaluationScore}%</span></div>
                   <div className="detail-item"><span className="detail-label">Disposal Method</span><span className="detail-value">{DISPOSAL_METHODS.find(d => d.key === selectedRecord.disposalMethod)?.label || "—"}</span></div>
@@ -1170,8 +1209,7 @@ export default function MouldScrap() {
                     {[
                       ["Original Asset Value", `₹${(selectedRecord.originalAssetValue / 100000).toFixed(2)}L`],
                       ["Accumulated Depreciation", `₹${(selectedRecord.accumulatedDepreciation / 100000).toFixed(2)}L`],
-                      ["Current Book Value", `₹${(selectedRecord.currentBookValue / 1000).toFixed(0)}K`],
-                      ["Total Maintenance Spent", `₹${(selectedRecord.totalMaintenanceCost / 1000).toFixed(0)}K`],
+                      ["Current Book Value", `₹${(Number(selectedRecord.currentBookValue) / 1000).toFixed(0)}K`],
                     ].map(([l, v], i) => (
                       <div key={i} className="wo-row"><span className="wo-label">{l}</span><span className="wo-value">{v}</span></div>
                     ))}
@@ -1182,8 +1220,8 @@ export default function MouldScrap() {
                       ["Scrap Vendor", SCRAP_VENDORS.find(v => v.code === selectedRecord.scrapVendor)?.name || "N/A"],
                       ["Scrap Weight", `${selectedRecord.scrapWeight?.toLocaleString()} Kg`],
                       ["Scrap Rate", `₹${selectedRecord.scrapRate}/kg`],
-                      ["Salvage / Scrap Value", `₹${(selectedRecord.salvageValue || selectedRecord.estimatedScrapValue || 0).toLocaleString()}`],
-                      ["Net Loss", `₹${(selectedRecord.netLoss || 0).toLocaleString()}`],
+                      ["Salvage / Scrap Value", `₹${(Number(selectedRecord.salvageValue) || Number(selectedRecord.estimatedScrapValue) || 0).toLocaleString()}`],
+                      ["Net Loss", `₹${(Number(selectedRecord.netLoss) || 0).toLocaleString()}`],
                     ].map(([l, v], i) => (
                       <div key={i} className="wo-row"><span className="wo-label">{l}</span><span className="wo-value" style={{ color: i === 4 ? "#dc2626" : i === 3 ? "#059669" : "#111827" }}>{v}</span></div>
                     ))}
@@ -1207,6 +1245,39 @@ export default function MouldScrap() {
                   <div className="detail-item"><span className="detail-label">Approved By</span><span className="detail-value">{selectedRecord.approvedBy?.name || "Pending"}</span></div>
                   <div className="detail-item"><span className="detail-label">Finance Approved</span><span className="detail-value">{selectedRecord.financeApprovedBy?.name || "Pending"}</span></div>
                 </div>
+                
+                {/* Embedded Uploads Display */}
+                {(selectedRecord.conditionPhotos?.length > 0 || selectedRecord.documents?.length > 0) && (
+                    <div style={{ padding: "0 22px 16px" }}>
+                        <div style={{height:1,background:"#e8edff",margin:"8px 0 16px"}}/>
+                        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+                            {selectedRecord.conditionPhotos?.length > 0 && (
+                                <div>
+                                    <div className="detail-label" style={{marginBottom: 4}}>Condition Photos</div>
+                                    <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                                      {selectedRecord.conditionPhotos.map((img,i)=>(
+                                          <a key={i} href={img.url} target="_blank" rel="noopener noreferrer">
+                                              <img src={img.url} alt={img.name} style={{width:80,height:80,objectFit:"cover",borderRadius:8,border:"1.5px solid #e5e7eb"}}/>
+                                          </a>
+                                      ))}
+                                    </div>
+                                </div>
+                            )}
+                            {selectedRecord.documents?.length > 0 && (
+                                <div>
+                                    <div className="detail-label" style={{marginBottom: 4}}>Documents</div>
+                                    <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                                      {selectedRecord.documents.map((doc,i)=>(
+                                          <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer">
+                                              <div style={{width:80, height:80, background:'#eef2ff', borderRadius:8, border:"1.5px solid #e5e7eb", display:'flex', alignItems:'center', justifyContent:'center', fontSize:24}} title={doc.name}>📄</div>
+                                          </a>
+                                      ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
               </div>
 
               {/* Timeline */}
@@ -1233,7 +1304,7 @@ export default function MouldScrap() {
           </div>{/* /content */}
 
           {/* Footer for create view */}
-          {currentView === "create" && (
+          {currentView === "create" && canEdit && (
             <div className="form-footer">
               <div className="footer-hint">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#9ca3af" strokeWidth="1.2" /><line x1="7" y1="5" x2="7" y2="7.5" stroke="#9ca3af" strokeWidth="1.4" strokeLinecap="round" /><circle cx="7" cy="9.5" r=".7" fill="#9ca3af" /></svg>
@@ -1256,7 +1327,7 @@ export default function MouldScrap() {
         </div>{/* /main */}
       </div>
 
-      {toast && <div className="toast">{toast}</div>}
+      {toast && <div className={`toast ${toast.startsWith('❌') ? "terr" : "tok"}`}>{toast}</div>}
     </>
   );
 }

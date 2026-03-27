@@ -279,6 +279,24 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#f0f2f5;min-height:10
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:13px 20px;border-radius:12px;font-size:13.5px;font-weight:500;z-index:2000;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:tin .3s ease;border-left:4px solid #0891b2}
 @keyframes tin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.logout-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
 `;
 
 // Helpers
@@ -327,6 +345,19 @@ export default function MouldReturn() {
 
   const openDetail = r => { setSel(r); setView("detail"); };
 
+  const handleLogout = async () => {
+    try {
+      // Call the server API to destroy the HTTP-Only Session Cookie
+      await fetch('/api/auth/logout', { method: 'POST' });
+      // Clear the legacy frontend storage
+      localStorage.removeItem("user");
+      // Redirect to login page
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   // ════════════════════════════════════════════════════════════
   return (
     <>
@@ -353,6 +384,9 @@ export default function MouldReturn() {
             <div className="top-r">
               <div className="notif"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v2l-1 2h12l-1-2V7a5 5 0 00-5-5zM6.5 13.5a1.5 1.5 0 003 0" stroke="#6b7280" strokeWidth="1.4" strokeLinecap="round"/></svg>{records.length>SEED.length&&<div className="ndot"/>}</div>
               <div className="upill"><div className="uav">{userInitials}</div><span className="unm">{user.name}</span></div>
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout ➔
+            </button>
             </div>
           </div>
 
